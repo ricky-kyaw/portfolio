@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ricky Kyaw</title>
+<meta name="description" content="Ricky Kyaw writes software and solves math problems. Projects, resume, and a way to get in touch.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F8F7F2">
+<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<script type="module" src="/assets/js/main.js"></script>
+</head>
+<body data-page="home">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand hover-u" href="/"><span class="u">Ricky Kyaw</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="when-closed">Menu</span><span class="when-open">Close</span></button>
+    <nav id="site-nav" class="site-nav" aria-label="Site">
+      <div class="nav-tabs" data-nav>
+        <ul role="list">
+          <li><a class="hover-u" href="/" aria-current="page"><span class="u">Home</span></a></li>
+          <li><a class="hover-u" href="/story/"><span class="u">My Story</span></a></li>
+          <li><a class="hover-u" href="/education/"><span class="u">Education</span></a></li>
+          <li><a class="hover-u" href="/projects/"><span class="u">Projects</span></a></li>
+          <li><a class="hover-u" href="/resume/"><span class="u">Resume</span></a></li>
+          <li><a class="hover-u" href="/contact/"><span class="u">Contact</span></a></li>
+        </ul>
+        <span class="nav-rule" aria-hidden="true"></span>
+      </div>
+      <div class="nav-tail">
+        <button class="theme-btn" type="button" data-theme-toggle><span class="when-light">Dark</span><span class="when-dark">Light</span></button>
+        <a class="nav-work hover-u" href="/projects/"><span class="u">Just show me the work</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="route-announcer" aria-live="polite" aria-atomic="true"></div>
+<div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
+
+<main id="main" tabindex="-1">
+
+  <section class="hero" aria-labelledby="name">
+    <div class="container">
+      <div class="hero-text">
+        <a class="work-link hover-u" href="/projects/" data-reveal><span class="u u--rest">Busy? Just show me the work</span><span class="arrow" aria-hidden="true">→</span></a>
+        <h1 id="name" data-reveal>Ricky Kyaw</h1>
+        <p class="statement" data-reveal data-reveal-delay="80">I write software and solve math problems.</p>
+        <p class="lead" data-reveal data-reveal-delay="160">I like problems that make you think for a while and then need code that is correct and fast. I want to work in quant finance, or write software at a big tech company.</p>
+        <ul class="hero-links" role="list" data-reveal data-reveal-delay="240">
+          <li><a class="hover-u" href="/projects/"><span class="u">See the projects</span><span class="arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="hover-u" href="/resume/"><span class="u">Read the resume</span><span class="arrow" aria-hidden="true">→</span></a></li>
+        </ul>
+      </div>
+
+      <figure class="hero-fig" id="fig1" data-reveal data-reveal-delay="240">
+        <svg class="fig" viewBox="0 0 480 240" role="img" aria-labelledby="fig1-title fig1-desc" data-figure>
+          <title id="fig1-title">Figure 1</title>
+          <desc id="fig1-desc">A random walk of 240 coin flips.</desc>
+          <line class="axis" x1="32" y1="104.7" x2="470" y2="104.7"/>
+          <g class="y-ticks"><text class="tick" x="24" y="197.3" dy="0.35em" text-anchor="end">−1</text><text class="tick" x="24" y="104.7" dy="0.35em" text-anchor="end">0</text></g>
+          <g class="x-ticks"><text class="tick" x="32.0" y="232" text-anchor="start">0</text><text class="tick" x="141.5" y="232" text-anchor="middle">60</text><text class="tick" x="251.0" y="232" text-anchor="middle">120</text><text class="tick" x="360.5" y="232" text-anchor="middle">180</text><text class="tick" x="470.0" y="232" text-anchor="end">240</text></g>
+          <path class="walk" d="M32.0 104.7 L33.8 95.5 L35.6 104.7 L37.5 95.5 L39.3 86.2 L41.1 95.5 L43.0 104.7 L44.8 95.5 L46.6 86.2 L48.4 77.0 L50.2 67.7 L52.1 58.4 L53.9 67.7 L55.7 58.4 L57.5 67.7 L59.4 77.0 L61.2 67.7 L63.0 58.4 L64.8 49.2 L66.7 39.9 L68.5 49.2 L70.3 58.4 L72.2 49.2 L74.0 39.9 L75.8 49.2 L77.6 39.9 L79.5 49.2 L81.3 58.4 L83.1 67.7 L84.9 58.4 L86.8 49.2 L88.6 39.9 L90.4 30.7 L92.2 39.9 L94.0 49.2 L95.9 39.9 L97.7 49.2 L99.5 58.4 L101.3 67.7 L103.2 58.4 L105.0 67.7 L106.8 77.0 L108.6 86.2 L110.5 77.0 L112.3 67.7 L114.1 58.4 L116.0 67.7 L117.8 77.0 L119.6 67.7 L121.4 77.0 L123.2 67.7 L125.1 58.4 L126.9 49.2 L128.7 58.4 L130.6 67.7 L132.4 58.4 L134.2 67.7 L136.0 58.4 L137.8 49.2 L139.7 58.4 L141.5 67.7 L143.3 58.4 L145.2 67.7 L147.0 58.4 L148.8 67.7 L150.6 58.4 L152.4 49.2 L154.3 58.4 L156.1 67.7 L157.9 58.4 L159.8 67.7 L161.6 77.0 L163.4 86.2 L165.2 95.5 L167.1 104.7 L168.9 114.0 L170.7 104.7 L172.5 114.0 L174.3 104.7 L176.2 114.0 L178.0 123.3 L179.8 114.0 L181.7 104.7 L183.5 95.5 L185.3 86.2 L187.1 77.0 L188.9 67.7 L190.8 77.0 L192.6 67.7 L194.4 58.4 L196.2 67.7 L198.1 58.4 L199.9 67.7 L201.7 77.0 L203.6 86.2 L205.4 95.5 L207.2 86.2 L209.0 77.0 L210.8 86.2 L212.7 77.0 L214.5 67.7 L216.3 77.0 L218.2 86.2 L220.0 95.5 L221.8 86.2 L223.6 95.5 L225.4 104.7 L227.3 114.0 L229.1 123.3 L230.9 132.5 L232.8 123.3 L234.6 132.5 L236.4 123.3 L238.2 132.5 L240.0 123.3 L241.9 114.0 L243.7 104.7 L245.5 114.0 L247.3 123.3 L249.2 114.0 L251.0 104.7 L252.8 114.0 L254.6 104.7 L256.5 95.5 L258.3 104.7 L260.1 114.0 L262.0 123.3 L263.8 132.5 L265.6 141.8 L267.4 132.5 L269.2 141.8 L271.1 132.5 L272.9 123.3 L274.7 114.0 L276.6 123.3 L278.4 114.0 L280.2 104.7 L282.0 114.0 L283.9 123.3 L285.7 132.5 L287.5 123.3 L289.3 114.0 L291.1 123.3 L293.0 132.5 L294.8 141.8 L296.6 132.5 L298.4 141.8 L300.3 151.0 L302.1 141.8 L303.9 151.0 L305.8 160.3 L307.6 151.0 L309.4 160.3 L311.2 169.6 L313.1 178.8 L314.9 169.6 L316.7 178.8 L318.5 188.1 L320.4 197.3 L322.2 188.1 L324.0 178.8 L325.8 169.6 L327.7 178.8 L329.5 188.1 L331.3 178.8 L333.1 169.6 L334.9 178.8 L336.8 169.6 L338.6 178.8 L340.4 169.6 L342.2 178.8 L344.1 169.6 L345.9 160.3 L347.7 151.0 L349.6 160.3 L351.4 151.0 L353.2 141.8 L355.0 132.5 L356.9 141.8 L358.7 151.0 L360.5 141.8 L362.3 151.0 L364.1 160.3 L366.0 169.6 L367.8 160.3 L369.6 169.6 L371.4 160.3 L373.3 169.6 L375.1 178.8 L376.9 169.6 L378.8 160.3 L380.6 151.0 L382.4 141.8 L384.2 132.5 L386.1 123.3 L387.9 132.5 L389.7 123.3 L391.5 114.0 L393.3 123.3 L395.2 132.5 L397.0 123.3 L398.8 132.5 L400.6 141.8 L402.5 132.5 L404.3 123.3 L406.1 114.0 L407.9 104.7 L409.8 95.5 L411.6 86.2 L413.4 77.0 L415.2 67.7 L417.1 77.0 L418.9 67.7 L420.7 58.4 L422.6 67.7 L424.4 77.0 L426.2 86.2 L428.0 95.5 L429.9 104.7 L431.7 95.5 L433.5 86.2 L435.3 77.0 L437.2 67.7 L439.0 58.4 L440.8 67.7 L442.6 58.4 L444.4 67.7 L446.3 77.0 L448.1 67.7 L449.9 77.0 L451.8 67.7 L453.6 77.0 L455.4 86.2 L457.2 95.5 L459.1 86.2 L460.9 95.5 L462.7 86.2 L464.5 77.0 L466.4 67.7 L468.2 58.4 L470.0 49.2"/>
+          <circle class="dot" cx="470.0" cy="49.2" r="2.5"/>
+          <text class="end" x="462.0" y="49.2" dy="0.35em" text-anchor="end">ends at +0.6</text>
+        </svg>
+        <figcaption class="fig-caption label">Fig. 1: 240 coin flips. Heads moves the line up, tails moves it down. <span class="js-only">Type <button type="button" class="linklike" data-cmd="random">random</button> in the box below to flip again.</span><span class="visually-hidden" id="fig1-end"> The line ends at +0.6.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="cell-section" aria-labelledby="cell-label" id="cell">
+    <div class="container">
+      <div class="cell-wrap" data-cell data-reveal data-reveal-delay="320">
+        <h2 id="cell-label" class="label">Type a command, or tap one.</h2>
+        <div class="cell">
+          <ol class="cell-rows" role="list" aria-live="polite" aria-relevant="additions"></ol>
+          <form class="cell-in" action="/projects/" method="get" autocomplete="off">
+            <button type="submit" class="gutter" aria-label="Run, In [1]">In [1]:</button>
+            <label class="visually-hidden" for="cmd">Command</label>
+            <div class="cell-input-wrap">
+              <input class="cell-input" id="cmd" name="q" type="text" maxlength="64" placeholder="show projects" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" autocomplete="off">
+              <span class="cell-ghost" aria-hidden="true"></span>
+            </div>
+          </form>
+          <ul class="chips" role="list" aria-label="Things to try">
+            <li><a href="/projects/" data-cmd="show projects">show projects</a></li>
+            <li><a href="/resume/" data-cmd="show resume">show resume</a></li>
+            <li><a href="/contact/" data-cmd="contact">contact</a></li>
+            <li><a href="#fig1" data-cmd="random">random</a></li>
+            <li><a href="#cell" data-cmd="2^64">2^64</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="plates-section" aria-labelledby="ways">
+    <div class="container">
+      <h2 class="label" id="ways" data-reveal>Three ways to see the work</h2>
+      <ul class="plates" role="list" data-reveal-group="60">
+        <li data-reveal>
+          <a class="plate" href="/projects/#from-scratch">
+            <span class="plate-num num">01</span>
+            <span class="plate-title"><span class="u">Code I wrote from scratch</span></span>
+            <span class="plate-text">Hard problems, solved by hand. No shortcuts.</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="plate" href="/projects/#built-fast">
+            <span class="plate-num num">02</span>
+            <span class="plate-title"><span class="u">Apps I built fast</span></span>
+            <span class="plate-text">Small products, built fast with AI tools. Every one of them finished.</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="plate" href="/resume/">
+            <span class="plate-num num">03</span>
+            <span class="plate-title"><span class="u">Resume</span></span>
+            <span class="plate-text">One page: skills, school, and how to reach me.</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bridge" aria-label="My story, in one line">
+    <div class="container">
+      <div data-reveal>
+        <p>I grew up where life was hard and things changed fast. It made me calm when things break, and stubborn about finishing what I start.</p>
+        <a class="hover-u" href="/story/"><span class="u">Read my story</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <ul class="footer-links" role="list">
+      <li><a class="u" href="mailto:[MY_EMAIL_ADDRESS]">[MY_EMAIL_ADDRESS]</a><button class="copy-btn" type="button" data-copy="[MY_EMAIL_ADDRESS]">copy</button></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[GITHUB_URL]" target="_blank" rel="noopener">GitHub</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[LINKEDIN_URL]" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+    <div class="footer-note label">
+      <p>Made by hand, in plain HTML, CSS and JavaScript.</p>
+      <p>Visits are counted with GoatCounter. No cookies. It does not track who you are.</p>
+      <p>© <span class="num">2026</span> Ricky Kyaw</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

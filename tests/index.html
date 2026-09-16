@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tests</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font: 14px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 2rem; color: #14161A; background: #F8F7F2; }
+  .ok { color: #1a7f37; } .bad { color: #b42318; } h1 { font-size: 1rem; }
+</style>
+</head>
+<body>
+<h1>mathkit and cell tests</h1>
+<pre id="out">running…</pre>
+<script type="module">
+  import { evaluate, isPrime, primeReport, fibReport, factorial, isqrt, looksLikeMath } from '../assets/js/mathkit.js';
+  import { normalize, resolve } from '../assets/js/cell.js';
+  const results = [];
+  let pass = 0, fail = 0;
+  function eq(name, got, want) {
+    const ok = got === want;
+    ok ? pass++ : fail++;
+    results.push(`${ok ? '<span class=ok>ok  </span>' : '<span class=bad>FAIL</span>'} ${name}${ok ? '' : `\n     got:  ${got}\n     want: ${want}`}`);
+  }
+  const ev = (s) => evaluate(s).text;
+  const ISQRT_10_61 = 3162277660168379331998893544432n;
+
+  // ---- arithmetic ----
+  eq('2^64 exact', ev('2^64'), '18,446,744,073,709,551,616');
+  eq('2**10', ev('2**10'), '1024');
+  eq('precedence', ev('2+3*4'), '14');
+  eq('right-assoc power', ev('2^3^2'), '512');
+  eq('unary minus power', ev('-2^2'), '-4');
+  eq('brackets', ev('(2+3)*4'), '20');
+  eq('exact division', ev('84/12'), '7');
+  eq('float division', ev('1/3'), '0.333333333333');
+  eq('decimal', ev('0.1+0.2'), '0.3');
+  eq('factorial', ev('20!'), '2,432,902,008,176,640,000');
+  eq('nested factorial', ev('(3!)!'), '720');
+  eq('modulo', ev('17 % 5'), '2');
+  eq('negative modulo', ev('-7 % 3'), '2');
+  eq('big product', ev('123456789 * 987654321'), '121,932,631,112,635,269');
+  eq('exact sqrt', ev('sqrt(144)'), '12');
+  eq('float sqrt', ev('sqrt(2)'), '1.41421356237');
+  eq('pi', ev('2*pi'), '6.28318530718');
+  eq('divide by zero', ev('1/0'), 'You cannot divide by zero.');
+  eq('unclosed bracket', ev('(1+2'), 'A bracket was not closed.');
+  eq('junk', ev('2 +'), 'The sum ended early.');
+  eq('power cap', ev('2^5000'), 'Powers above 4096 are too big to print here.');
+  eq('result size cap', ev('(2^4000)^4000'), 'That result would have too many digits to print here.');
+  eq('big base small power still fine', ev('(2^4000)^2').includes('(2409 digits)'), true);
+  eq('long result shortened', ev('2^1000').includes('(302 digits)'), true);
+  eq('no real answer', ev('sqrt(-4)'), 'There is no real answer to that.');
+  eq('float overflow', ev('10.5^400'), 'That number is too big to work out here.');
+  eq('unicode times', ev('6 × 7'), '42');
+  eq('underscore digits', ev('1_000_000 + 1'), '1,000,001');
+  eq('scientific', ev('1e3 + 1'), '1001');
+
+  // ---- primes ----
+  eq('isPrime 2', isPrime(2n), true);
+  eq('isPrime 1', isPrime(1n), false);
+  eq('isPrime 561 (Carmichael)', isPrime(561n), false);
+  eq('isPrime 1e9+7', isPrime(1000000007n), true);
+  eq('isPrime 2^61-1', isPrime(2305843009213693951n), true);
+  eq('isPrime 2^61+1', isPrime(2305843009213693953n), false);
+  eq('isPrime 10^18+9', isPrime(1000000000000000009n), true);
+  eq('isPrime strong pseudoprime to bases 2..37', isPrime(318665857834031151167461n), false);
+  eq('prime report composite', primeReport('91'), '91 is not prime. It divides by 7: 7 × 13.');
+  eq('prime report prime', primeReport('97'), '97 is prime.');
+  eq('prime report big', primeReport('1000000007'), '1,000,000,007 is prime.');
+  eq('prime report 24 digits composite', primeReport('318665857834031151167461'), '318,665,857,834,031,151,167,461 is not prime, but all of its factors are above a million.');
+  eq('prime report 25 digits refused', primeReport('1000000000000000000000000'), 'I can check numbers up to 24 digits exactly. That one is longer.');
+  eq('prime report junk', primeReport('abc'), 'Give me a whole number, like: prime 1000000007');
+
+  // ---- fibonacci ----
+  eq('fib 10', fibReport('10'), 'fib(10) = 55');
+  eq('fib 90', fibReport('90'), 'fib(90) = 2,880,067,194,370,816,120');
+  eq('fib 100', fibReport('100'), 'fib(100) = 354,224,848,179,261,915,075');
+  eq('fib 0', fibReport('0'), 'fib(0) = 0');
+  eq('fib cap', fibReport('99999').startsWith('I stop at fib'), true);
+
+  eq('factorial 0', factorial(0n), 1n);
+  eq('isqrt big', isqrt(10n ** 40n), 10n ** 20n);
+  eq('isqrt 99', isqrt(99n), 9n);
+  eq('isqrt huge non-square', isqrt(10n ** 61n), ISQRT_10_61);
+  eq('isqrt just below a square', isqrt(10n ** 40n - 1n), 10n ** 20n - 1n);
+  eq('sqrt huge float returns fast', ev('sqrt(10^61)').startsWith('3.16227766017e'), true);
+  eq('thousands separators', ev('1,000 + 1'), '1001');
+  eq('thousands separators big', ev('18,446,744,073,709,551,616 - 1'), '18,446,744,073,709,551,615');
+
+  // ---- what counts as math ----
+  eq('looksLikeMath 2^64', looksLikeMath('2^64'), true);
+  eq('looksLikeMath 20!', looksLikeMath('20!'), true);
+  eq('looksLikeMath sqrt', looksLikeMath('sqrt(2)'), true);
+  eq('looksLikeMath words', looksLikeMath('show projects'), false);
+  eq('looksLikeMath pi', looksLikeMath('pi*2'), true);
+  eq('looksLikeMath 2*pi', looksLikeMath('2*pi'), true);
+  eq('looksLikeMath 2*sqrt(2)', looksLikeMath('2*sqrt(2)'), true);
+  eq('looksLikeMath pi alone', looksLikeMath('pi'), true);
+  eq('looksLikeMath e-mail', looksLikeMath('e-mail'), false);
+  eq('looksLikeMath hire me', looksLikeMath('hire me'), false);
+  eq('looksLikeMath show 2 projects', looksLikeMath('show 2 projects'), false);
+
+  // ---- the cell's normalizer (what you type before it is understood) ----
+  eq('normalize keeps factorial', normalize('20!'), '20!');
+  eq('normalize keeps nested factorial', normalize('(3!)!'), '(3!)!');
+  eq('normalize drops sentence punctuation', normalize('Show projects.'), 'show projects');
+  eq('normalize drops shout', normalize('hello!'), 'hello');
+  eq('normalize keeps lone question mark', normalize('?'), '?');
+  eq('normalize collapses spaces', normalize('  show   me  the work '), 'show me the work');
+
+  // ---- the cell's dispatcher (what a typed line means) ----
+  eq('resolve exact', resolve('show projects').cmd.name, 'show projects');
+  eq('resolve filler words', resolve('show me the projects please').cmd.name, 'show projects');
+  eq('resolve polite sentence', resolve('can you show your resume now').cmd.name, 'show resume');
+  eq('resolve who', resolve('who are you').cmd.name, 'show story');
+  eq('resolve word inside sentence', resolve('how fast can you build').cmd.name, 'show apps');
+  eq('resolve prefix', resolve('proj').cmd.name, 'show projects');
+  eq('resolve typo suggests', resolve('projcts').out[1].cmd, 'show projects');
+  eq('resolve e-mail suggests contact', resolve('e-mail').out[1].cmd, 'contact');
+  eq('resolve math', resolve('2^10').out[0].s, '1024');
+  eq('resolve prime', resolve('is 97 prime').out[0].s, '97 is prime.');
+  eq('resolve fib', resolve('fib(10)').out[0].s, 'fib(10) = 55');
+  eq('resolve unknown', resolve('purple monkey dishwasher').out[1].cmd, 'help');
+
+  document.getElementById('out').innerHTML = `${pass} passed, ${fail} failed\n\n` + results.join('\n');
+  document.title = fail ? `FAIL ${fail}` : `ok ${pass}`;
+</script>
+</body>
+</html>

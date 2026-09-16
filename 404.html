@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not here — Ricky Kyaw</title>
+<meta name="description" content="That page is not here.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F8F7F2">
+<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<script type="module" src="/assets/js/main.js"></script>
+</head>
+<body data-page="404">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand hover-u" href="/"><span class="u">Ricky Kyaw</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="when-closed">Menu</span><span class="when-open">Close</span></button>
+    <nav id="site-nav" class="site-nav" aria-label="Site">
+      <div class="nav-tabs" data-nav>
+        <ul role="list">
+          <li><a class="hover-u" href="/"><span class="u">Home</span></a></li>
+          <li><a class="hover-u" href="/story/"><span class="u">My Story</span></a></li>
+          <li><a class="hover-u" href="/education/"><span class="u">Education</span></a></li>
+          <li><a class="hover-u" href="/projects/"><span class="u">Projects</span></a></li>
+          <li><a class="hover-u" href="/resume/"><span class="u">Resume</span></a></li>
+          <li><a class="hover-u" href="/contact/"><span class="u">Contact</span></a></li>
+        </ul>
+        <span class="nav-rule" aria-hidden="true"></span>
+      </div>
+      <div class="nav-tail">
+        <button class="theme-btn" type="button" data-theme-toggle><span class="when-light">Dark</span><span class="when-dark">Light</span></button>
+        <a class="nav-work hover-u" href="/projects/"><span class="u">Just show me the work</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="route-announcer" aria-live="polite" aria-atomic="true"></div>
+<div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
+
+<main id="main" tabindex="-1" class="page">
+  <div class="container">
+    <div class="page-head">
+      <p class="label" data-reveal>404</p>
+      <h1 data-reveal>That page is not here.</h1>
+      <p class="page-intro" data-reveal data-reveal-delay="80">The link may be old, or the address may have a typo. Everything worth seeing is one click away.</p>
+      <ul class="hero-links" role="list" data-reveal data-reveal-delay="160">
+        <li><a class="hover-u" href="/"><span class="u">Go home</span><span class="arrow" aria-hidden="true">→</span></a></li>
+        <li><a class="hover-u" href="/projects/"><span class="u">See the projects</span><span class="arrow" aria-hidden="true">→</span></a></li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <ul class="footer-links" role="list">
+      <li><a class="u" href="mailto:[MY_EMAIL_ADDRESS]">[MY_EMAIL_ADDRESS]</a><button class="copy-btn" type="button" data-copy="[MY_EMAIL_ADDRESS]">copy</button></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[GITHUB_URL]" target="_blank" rel="noopener">GitHub</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[LINKEDIN_URL]" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+    <div class="footer-note label">
+      <p>Made by hand, in plain HTML, CSS and JavaScript.</p>
+      <p>Visits are counted with GoatCounter. No cookies. It does not track who you are.</p>
+      <p>© <span class="num">2026</span> Ricky Kyaw</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
