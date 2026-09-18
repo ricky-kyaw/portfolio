@@ -69,6 +69,15 @@ function announce(title) {
   if (live) live.textContent = title;
 }
 
+// Pages change here without a reload, so the tags that describe the page
+// (its address, summary and link preview) are copied over from the new page.
+// That way a browser's Share button always gets the page on screen.
+const HEAD_SYNC = 'link[rel="canonical"], meta[name="description"], meta[name="robots"], meta[property^="og:"], meta[name^="twitter:"]';
+function syncHead(doc) {
+  document.head.querySelectorAll(HEAD_SYNC).forEach((el) => el.remove());
+  doc.head.querySelectorAll(HEAD_SYNC).forEach((el) => document.head.appendChild(document.importNode(el, true)));
+}
+
 // The stylesheet asks for smooth scrolling. Route changes must not animate
 // the scroll, so we switch it off for one frame.
 function instantly(fn) {
@@ -126,6 +135,7 @@ async function go(url, { push = true, restoreY = null } = {}) {
     }
     current = url.pathname + url.search;
     document.title = doc.title;
+    syncHead(doc);
     document.body.dataset.page = doc.body.dataset.page || '';
     document.dispatchEvent(new CustomEvent('page:unload', { detail: { main } }));
 

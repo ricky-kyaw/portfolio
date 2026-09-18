@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /tests/
+Disallow: /tools/
+
+Sitemap: https://rickydx.dev/sitemap.xml

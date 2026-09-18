@@ -32,7 +32,7 @@ export async function fetchRepos(user) {
   return repos;
 }
 
-// Fill in any <a data-github-repo="name"> whose href is still a placeholder,
+// Fill in any <a data-github-repo="name"> whose href is still the plain profile link,
 // and any [data-github-meta="name"] with language and star count.
 export async function hydrateGithubLinks(user, root = document) {
   const links = root.querySelectorAll('[data-github-repo]');
@@ -47,7 +47,10 @@ export async function hydrateGithubLinks(user, root = document) {
   links.forEach((a) => {
     const r = byName.get(a.dataset.githubRepo.toLowerCase());
     if (!r) return;
-    if (a.tagName === 'A' && /\[GITHUB_URL\]|^#?$/.test(a.getAttribute('href') || '')) a.href = r.url;
+    // Point at the repo when the link is empty or still the plain profile address.
+    const href = (a.getAttribute('href') || '').replace(/\/$/, '');
+    const profile = 'https://github.com/' + user;
+    if (a.tagName === 'A' && (href === '' || href === '#' || href.toLowerCase() === profile.toLowerCase())) a.href = r.url;
     const meta = root.querySelector(`[data-github-meta="${a.dataset.githubRepo}"]`);
     if (meta) {
       const bits = [];

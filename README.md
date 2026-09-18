@@ -1,6 +1,8 @@
 # Ricky Kyaw — portfolio site
 
-A hand-written static site. Plain HTML, CSS and JavaScript. No framework, no build step, nothing to install.
+Live at https://rickydx.dev
+
+A hand-written static site. Plain HTML, CSS and JavaScript. No framework, no build step, nothing to install. The files in this folder are the website, exactly as they are.
 
 ## Run it locally
 
@@ -17,8 +19,9 @@ Then open http://localhost:4173/. The site uses root-relative links (`/projects/
 ```
 index.html              Home
 story/  education/  projects/  resume/  contact/     one folder per page (clean URLs)
+404.html                the page shown for a wrong address (GitHub Pages and Cloudflare Pages pick it up by name)
 assets/css/site.css     all styles, mobile first
-assets/js/main.js       entry point: page transitions, fade-ins, theme, menu, visit counting
+assets/js/main.js       entry point: page transitions, fade-ins, theme, menu, copy buttons, contact form
 assets/js/router.js     fetch-and-swap page transitions (no white flash, no reload)
 assets/js/reveal.js     scroll fade-ins
 assets/js/theme.js      light / dark
@@ -26,29 +29,61 @@ assets/js/cell.js       the notebook cell on Home (commands)
 assets/js/mathkit.js    exact math, primes, Fibonacci — written by hand, no eval()
 assets/js/figure.js     Figure 1, the random walk
 assets/js/github.js     pulls your public repos to fill project links
-assets/js/site.config.js   your name, links and service codes
+assets/js/site.config.js   your name, email, site address and links
+assets/img/og.png       the picture shown when the site is shared (1200 x 630)
+favicon.ico, assets/img/favicon.svg, assets/img/apple-touch-icon.png   icons
+robots.txt, sitemap.xml    for search engines
+CNAME, .nojekyll        for GitHub Pages: the custom domain, and "serve these files as they are"
 tests/index.html        browser tests for mathkit and the cell (open /tests/)
 tools/serve.py          local server for editing (no caching, serves 404.html)
-404.html                the page shown for a wrong address (GitHub Pages and Netlify pick it up by name)
+tools/make_images.py    redraws og.png and the PNG icons (needs Pillow; only if you change the name or look)
 ```
 
-## Fill in your details
+## What is already connected
 
-1. **Links and email.** Search the project for `[LINKEDIN_URL]`, `[GITHUB_URL]` and `[MY_EMAIL_ADDRESS]` and replace them. They appear in the HTML pages and in `assets/js/site.config.js`.
-2. **Your name.** It is "Ricky Kyaw" everywhere (taken from your GitHub handle). Search and replace if you want something else.
-3. **Resume PDF.** Put it at `assets/ricky-kyaw-resume.pdf`, or change the path in `resume/index.html` and `site.config.js`.
-4. **Projects, education, skills, bullet points.** Replace the `[PLACEHOLDER]` text on those pages.
+- **Email.** `origin@rickydx.dev` in every footer, on Resume and Contact, and in `site.config.js`. Contact also lists `human@` and `stdin@`.
+- **Links.** GitHub `https://github.com/ricky-kyaw` and LinkedIn `https://www.linkedin.com/in/ricky-kyaw/` in every footer, on Resume and Contact, in `site.config.js`, and in the Home page's search-engine data.
+- **Site address.** `https://rickydx.dev` in every page's canonical link, Open Graph and Twitter tags, `sitemap.xml`, `robots.txt` and `CNAME`.
+- **Contact form (Formspree).** `contact/index.html` posts to `https://formspree.io/f/xrpbbowj`. With scripts on, the message is sent in place and the page says thank you; with scripts off, it is a normal form post.
+- **Visit counting (GoatCounter).** The GoatCounter script tag is in the `<head>` of every page. It counts the first page by itself; `main.js` reports each later page, because moving between pages does not reload anything. GoatCounter ignores visits on `localhost`. No cookies, no personal tracking.
+- **GitHub.** `githubUser` in `site.config.js` is `ricky-kyaw`. Any project link with `data-github-repo="repo-name"` fills itself in from your public repos.
 
-## Connect the free services
+## Still to fill in
 
-- **Contact form (Formspree).** Make a free form at formspree.io, copy its id (looks like `xabcdefg`), and replace `[FORMSPREE_ID]` in `contact/index.html`. Messages then go straight to your email, and the page thanks the sender in place.
-- **Visit counting (GoatCounter).** Make a free account at goatcounter.com, pick a site code, and put it in `goatcounterCode` in `site.config.js`. Nothing loads until the code is set. No cookies, no personal tracking.
-- **GitHub.** `githubUser` in `site.config.js` is already `ricky-kyaw`. Any project link with `data-github-repo="repo-name"` fills itself in from your public repos.
-- **Booking (optional).** Replace `[CALCOM_URL]` in `contact/index.html` with your Cal.com link, or delete that row.
+1. **Your name.** It is "Ricky Kyaw" everywhere (taken from your GitHub handle). Search and replace if you want something else, then run `python tools/make_images.py` to redraw the share picture.
+2. **Resume PDF.** Put it at `assets/ricky-kyaw-resume.pdf`, or change the path in `resume/index.html` and `site.config.js`.
+3. **Projects, education, skills, bullet points.** Each project's "Code" link points at your GitHub profile for now; give it `data-github-repo="repo-name"` and it fills in the exact repo by itself. Replace the `[PLACEHOLDER]` text on those pages.
+4. **Booking (optional).** Replace `[CALCOM_URL]` in `contact/index.html` with your Cal.com link, or delete that row.
 
 ## Deploy
 
-Upload the folder to GitHub Pages (user site), Netlify, Cloudflare Pages or Vercel. No build command; the publish folder is the project root. The site expects to live at the root of a domain (for example `ricky-kyaw.github.io` or your own domain).
+There is no build command. The folder to publish is the project root. The site must live at the root of a domain, which `rickydx.dev` is.
+
+Where the domain stands today (checked 2026-09-18): DNS is at **Porkbun**, email is **Zoho** (three `MX` records plus `TXT` records), and both `rickydx.dev` and `www` still point at Porkbun's parking page. Whichever host you pick, **never delete the Zoho `MX` and `TXT` records**, or `origin@`, `human@` and `stdin@` stop receiving mail.
+
+**GitHub Pages (the simpler route here: DNS stays at Porkbun)**
+
+1. Commit everything, then push this repository to GitHub. On a free account the repository must be public.
+2. Settings → Pages → Source: "Deploy from a branch", branch `main`, folder `/ (root)`.
+3. Custom domain: `rickydx.dev` (the `CNAME` file already says so).
+4. In Porkbun → DNS for `rickydx.dev`, first delete the parking records: the `ALIAS` for the bare domain and the `CNAME` for `www` (and `*`, if present) that point to `pixie.porkbun.com`. Leave every Zoho record alone. Then add four `A` records for the bare domain (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) and a `CNAME` record for `www` pointing to `<your-github-username>.github.io`.
+5. Wait for GitHub to issue the certificate (usually under an hour), then tick "Enforce HTTPS". A `.dev` domain only works over HTTPS, so until the certificate exists browsers will refuse to open the site. That is normal.
+
+**Cloudflare Pages (needs the domain's DNS moved to Cloudflare)**
+
+1. Workers & Pages → Create → Pages → Connect to Git, and pick this repository.
+2. Framework preset: **None**. Build command: **leave empty**. Build output directory: **/**.
+3. To use `rickydx.dev` without `www`, Cloudflare requires the domain to be a zone on your Cloudflare account: add the site to Cloudflare, check that it imported every Zoho record (3 `MX`, the SPF `TXT`, the Zoho verification `TXT`, and the DKIM `TXT`), delete the imported Porkbun parking records, then switch the nameservers at Porkbun to the two Cloudflare gives you.
+4. Pages project → Custom domains → add `rickydx.dev` and `www.rickydx.dev`, and add a redirect rule from `www` to the bare domain.
+5. Security → Settings → turn off **Email Address Obfuscation** for the zone. The pages already opt their addresses out with `<!--email_off-->` comments, because Cloudflare's un-scrambling script does not run when pages change without a reload; turning the feature off as well is the safe double lock.
+
+**After the first deploy, on either host**
+
+- Send yourself one message from the live Contact page. If the page thanks you in place, the form is perfect. If it jumps to a Formspree page with an "are you human" check instead, the message still arrives, but to keep visitors on your site open the form in Formspree → Settings and switch reCAPTCHA off (the hidden honeypot field and Formspree's own spam filter stay on).
+- Open GoatCounter and check the visit shows up. Visits from `localhost` are ignored on purpose.
+- Paste `https://rickydx.dev` into a LinkedIn post draft or https://www.opengraph.xyz to see the preview card.
+
+Publishing the project root also publishes `README.md`, `tools/` and `tests/`. They hold nothing private, and `robots.txt` keeps the last two out of search engines. The `CNAME` and `.nojekyll` files are only read by GitHub Pages and do no harm elsewhere.
 
 ## Design notes
 

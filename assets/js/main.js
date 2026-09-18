@@ -98,49 +98,64 @@ function initForms() {
     const button = form.querySelector('[type="submit"]');
     const was = button ? button.textContent : '';
     if (button) { button.disabled = true; button.textContent = 'Sending…'; }
-    let ok = false;
+
+    // Give up after 15 seconds so a stalled connection cannot lock the form.
+    const ctl = 'AbortController' in window ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => ctl.abort(), 15000) : null;
+    let res = null;
     try {
-      const res = await fetch(form.action, {
-        method: form.method || 'POST',
+      res = await fetch(form.action, {
+        method: 'POST',
         body: new FormData(form),
         headers: { Accept: 'application/json' },
+        signal: ctl ? ctl.signal : undefined,
       });
-      ok = res.ok;
     } catch (err) {
-      ok = false;
+      res = null;
     }
-    if (ok) {
+    if (timer) clearTimeout(timer);
+
+    if (res && res.ok) {
       const done = document.createElement('p');
       done.className = 'form-done';
+      done.tabIndex = -1;
       done.textContent = 'Sent. Thank you. I read everything and I answer.';
       form.replaceWith(done);
+      done.focus({ preventScroll: true });
       say('Message sent.');
-    } else {
-      if (button) { button.disabled = false; button.textContent = was; }
-      let note = form.querySelector('.form-error');
-      if (!note) {
-        note = document.createElement('p');
-        note.className = 'form-error';
-        form.appendChild(note);
-      }
-      note.textContent = 'That did not send. Please email me instead: ' + site.email;
-      say('The message did not send.');
+      return;
     }
+
+    if (res) {
+      // The form service answered, but said no. Usually it wants to show its
+      // own "are you human" check, which it cannot do in the background.
+      // Send the ordinary way instead, so the message is never lost.
+      form.submit();
+      return;
+    }
+
+    // No answer at all: offline, blocked, or timed out.
+    if (button) { button.disabled = false; button.textContent = was; button.focus(); }
+    let note = form.querySelector('.form-error');
+    if (!note) {
+      note = document.createElement('p');
+      note.className = 'form-error';
+      form.appendChild(note);
+    }
+    note.textContent = 'That did not send. Please email me instead: ';
+    const mail = document.createElement('a');
+    mail.className = 'u u--rest';
+    mail.href = 'mailto:' + site.email;
+    mail.textContent = site.email;
+    note.appendChild(mail);
+    say(note.textContent);
   });
 }
 
-// ---------- visit counting (GoatCounter, only when a site code is set) ----------
-function initCounter() {
-  const code = site.goatcounterCode;
-  if (!code || /^\[.*\]$/.test(code)) return;
-  window.goatcounter = { no_onload: true };
-  const s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://gc.zgo.at/count.js';
-  s.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
-  s.addEventListener('load', () => countView());
-  document.body.appendChild(s);
-}
+// ---------- visit counting (GoatCounter) ----------
+// The GoatCounter script tag sits in the <head> of every page and counts the
+// first page by itself. Moving between pages here does not reload anything,
+// so we tell it about each later page ourselves.
 function countView() {
   if (window.goatcounter && typeof window.goatcounter.count === 'function') {
     window.goatcounter.count({ path: location.pathname + location.search });
@@ -187,7 +202,6 @@ window.addEventListener('resize', () => placeNavRule());
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeNavRule);
 
 pageInit(document.querySelector('main'));
-safely('counter', initCounter);
 
 // Smooth scroll for same-page anchors. The skip link is left to the browser
 // so that it also moves keyboard focus.

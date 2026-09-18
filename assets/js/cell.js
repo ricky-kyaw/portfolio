@@ -26,6 +26,8 @@ const run = (s, cmd) => ({ t: 'run', s, cmd });
 const copy = (s) => ({ t: 'copy', s });
 
 const isPlaceholder = (s) => /^\[[A-Z_]+\]$/.test(String(s || ''));
+// "https://www.example.com/me/" reads better as "example.com/me".
+const pretty = (u) => String(u).replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 
 // One quiet status line for screen readers.
 function say(text) {
@@ -115,8 +117,8 @@ function makeCommands() {
         if (alias.startsWith('hire')) out.push(text("Good. Let's talk."), br());
         out.push(
           text('Email: '), link(site.email, 'mailto:' + site.email), copy(site.email), br(),
-          text('GitHub: '), link(site.githubUrl, site.githubUrl, true), br(),
-          text('LinkedIn: '), link(site.linkedinUrl, site.linkedinUrl, true), br(),
+          text('GitHub: '), link(pretty(site.githubUrl), site.githubUrl, true), br(),
+          text('LinkedIn: '), link(pretty(site.linkedinUrl), site.linkedinUrl, true), br(),
           text('Or use '), link('the form on the Contact page', '/contact/'), text('. I read everything and I answer.')
         );
         return out;
@@ -139,9 +141,9 @@ function makeCommands() {
       run: () => {
         if (!isPlaceholder(site.githubUrl)) {
           window.open(site.githubUrl, '_blank', 'noopener');
-          return [text('Opening GitHub in a new tab: '), link(site.githubUrl, site.githubUrl, true)];
+          return [text('Opening GitHub in a new tab: '), link(pretty(site.githubUrl), site.githubUrl, true)];
         }
-        return [text('GitHub: '), link(site.githubUrl, site.githubUrl, true)];
+        return [text('GitHub: '), link(pretty(site.githubUrl), site.githubUrl, true)];
       },
     },
     {
@@ -149,9 +151,9 @@ function makeCommands() {
       run: () => {
         if (!isPlaceholder(site.linkedinUrl)) {
           window.open(site.linkedinUrl, '_blank', 'noopener');
-          return [text('Opening LinkedIn in a new tab: '), link(site.linkedinUrl, site.linkedinUrl, true)];
+          return [text('Opening LinkedIn in a new tab: '), link(pretty(site.linkedinUrl), site.linkedinUrl, true)];
         }
-        return [text('LinkedIn: '), link(site.linkedinUrl, site.linkedinUrl, true)];
+        return [text('LinkedIn: '), link(pretty(site.linkedinUrl), site.linkedinUrl, true)];
       },
     },
     {

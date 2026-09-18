@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact — Ricky Kyaw</title>
 <meta name="description" content="Send Ricky Kyaw a message. Every message gets read and answered.">
+<link rel="canonical" href="https://rickydx.dev/contact/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ricky Kyaw">
+<meta property="og:title" content="Contact — Ricky Kyaw">
+<meta property="og:description" content="Send Ricky Kyaw a message. Every message gets read and answered.">
+<meta property="og:url" content="https://rickydx.dev/contact/">
+<meta property="og:image" content="https://rickydx.dev/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ricky Kyaw. I write software and solve math problems. A random walk drawn on graph paper.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact — Ricky Kyaw">
+<meta name="twitter:description" content="Send Ricky Kyaw a message. Every message gets read and answered.">
+<meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F8F7F2">
 <style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
@@ -13,8 +27,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
 <script type="module" src="/assets/js/main.js"></script>
+<script data-goatcounter="https://rickydx.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body data-page="contact">
 <a class="skip" href="#main">Skip to content</a>
@@ -52,7 +70,7 @@
       <p class="page-intro" data-reveal data-reveal-delay="80">Send me a note. I read everything and I answer.</p>
     </div>
 
-    <form class="form" action="https://formspree.io/f/[FORMSPREE_ID]" method="POST" data-no-router data-ajax data-reveal data-reveal-delay="160">
+    <form class="form" action="https://formspree.io/f/xrpbbowj" method="POST" data-no-router data-ajax data-reveal data-reveal-delay="160">
       <div class="field">
         <label for="c-name">Your name</label>
         <input id="c-name" name="name" type="text" autocomplete="name" required>
@@ -65,6 +83,7 @@
         <label for="c-message">Message</label>
         <textarea id="c-message" name="message" required></textarea>
       </div>
+      <input type="hidden" name="_subject" value="New message from rickydx.dev">
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="visually-hidden" aria-hidden="true">
       <button class="submit" type="submit">Send</button>
     </form>
@@ -72,9 +91,18 @@
     <section class="section" aria-labelledby="other-title">
       <h2 id="other-title" data-reveal>Other ways to reach me</h2>
       <ul class="rows-list" role="list" data-reveal-group="60">
-        <li data-reveal><span class="when">Email</span><span class="what"><a class="u" href="mailto:[MY_EMAIL_ADDRESS]">[MY_EMAIL_ADDRESS]</a><button class="copy-btn" type="button" data-copy="[MY_EMAIL_ADDRESS]">copy</button></span></li>
-        <li data-reveal><span class="when">GitHub</span><a class="what u" href="[GITHUB_URL]" target="_blank" rel="noopener">[GITHUB_URL]</a></li>
-        <li data-reveal><span class="when">LinkedIn</span><a class="what u" href="[LINKEDIN_URL]" target="_blank" rel="noopener">[LINKEDIN_URL]</a></li>
+        <li data-reveal>
+          <span class="when">Email</span>
+          <span class="what"><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></span>
+          <span class="note alt-mail">
+            <!--email_off--><a class="u u--rest" href="mailto:human@rickydx.dev">human@rickydx.dev</a><!--/email_off-->
+            <span class="sep" aria-hidden="true">·</span>
+            <!--email_off--><a class="u u--rest" href="mailto:stdin@rickydx.dev">stdin@rickydx.dev</a><!--/email_off-->
+            <span class="label alt-mail-line">yes, they all reach the same human.</span>
+          </span>
+        </li>
+        <li data-reveal><span class="when">GitHub</span><a class="what u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">github.com/ricky-kyaw</a></li>
+        <li data-reveal><span class="when">LinkedIn</span><a class="what u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">linkedin.com/in/ricky-kyaw</a></li>
         <li data-reveal><span class="when">Book a chat</span><a class="what u" href="[CALCOM_URL]" target="_blank" rel="noopener">[CALCOM_URL]</a></li>
       </ul>
     </section>
@@ -84,9 +112,9 @@
 <footer class="site-footer">
   <div class="container">
     <ul class="footer-links" role="list">
-      <li><a class="u" href="mailto:[MY_EMAIL_ADDRESS]">[MY_EMAIL_ADDRESS]</a><button class="copy-btn" type="button" data-copy="[MY_EMAIL_ADDRESS]">copy</button></li>
-      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[GITHUB_URL]" target="_blank" rel="noopener">GitHub</a></li>
-      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="[LINKEDIN_URL]" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
     </ul>
     <div class="footer-note label">
       <p>Made by hand, in plain HTML, CSS and JavaScript.</p>

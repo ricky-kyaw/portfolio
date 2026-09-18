@@ -1,13 +1,12 @@
-// One place for everything you will fill in later.
-// Links in the HTML use the same placeholders, so search the project for
-// [LINKEDIN_URL], [GITHUB_URL] and [MY_EMAIL_ADDRESS] when you are ready.
+// Your details in one place for the scripts. The HTML pages carry the same
+// links and email written out in full, so change both if one ever changes.
 export const site = {
   name: 'Ricky Kyaw',
   githubUser: 'ricky-kyaw',        // used to pull your repos automatically
-  githubUrl: '[GITHUB_URL]',
-  linkedinUrl: '[LINKEDIN_URL]',
-  email: '[MY_EMAIL_ADDRESS]',
+  githubUrl: 'https://github.com/ricky-kyaw',
+  linkedinUrl: 'https://www.linkedin.com/in/ricky-kyaw/',
+  url: 'https://rickydx.dev',
+  email: 'origin@rickydx.dev',
   resumePdf: '/assets/ricky-kyaw-resume.pdf',
   skills: [],                      // e.g. ['Python', 'C++', 'probability', 'linear algebra'] — shown by the "skills" command and on the Resume page
-  goatcounterCode: '[GOATCOUNTER_CODE]', // your GoatCounter site code, e.g. "ricky"
 };

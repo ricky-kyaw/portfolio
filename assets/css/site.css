@@ -730,7 +730,7 @@ html:not(.js) .cell-input { pointer-events: none; }
   .site-footer .container { grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
   .footer-links { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; }
   .footer-links li { min-height: 0; }
-  .footer-links .sep { display: inline; color: var(--muted); }
+  .footer-links .sep { display: inline; margin-right: 12px; color: var(--muted); }
   .copy-btn { min-height: 0; }
 }
 
@@ -755,6 +755,22 @@ html:not(.js) .cell-input { pointer-events: none; }
 .rows-list .what { font-weight: 600; }
 .rows-list .note { color: var(--muted); font-size: .9375rem; }
 .rows-list a.what { justify-self: start; }
+.rows-list .alt-mail { font-size: .875rem; }
+.alt-mail a { font-family: var(--mono); color: var(--fg); }
+.alt-mail .sep { margin: 0 6px; }
+.alt-mail-line { display: block; margin-top: 6px; }
+/* The copy button keeps its 44px tap area without making its row taller than the others. */
+.rows-list .what .copy-btn { margin-top: -8px; margin-bottom: -8px; }
+/* On touch screens the two small addresses get a taller tap area, grown downward only. */
+@media (pointer: coarse) {
+  .alt-mail a { position: relative; }
+  .alt-mail a::after { content: ""; position: absolute; inset: 0 0 -22px; }
+}
+/* Very narrow phones: one address per line, no dangling dot. */
+@media (max-width: 349px) {
+  .alt-mail .sep { display: none; }
+  .alt-mail a { display: block; width: fit-content; margin-top: 4px; }
+}
 .button-link {
   display: inline-flex;
   align-items: center;
@@ -798,6 +814,7 @@ html:not(.js) .cell-input { pointer-events: none; }
 .submit:active { transform: scale(.98); }
 @media (hover: hover) { .submit:hover { background: var(--fg); color: var(--bg); } }
 .form-done { margin-top: 24px; max-width: 52ch; font-size: 1.125rem; }
+.form-done:focus { outline: none; }
 .form-error { color: var(--muted); font-size: .9375rem; max-width: 52ch; }
 
 @media (min-width: 720px) {
