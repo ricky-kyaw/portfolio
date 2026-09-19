@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>running…</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font: 14px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 1.5rem; color: #14161A; background: #F8F7F2; }
+  .bad { color: #B42318; } .ok { color: #1F7A3A; }
+</style>
+</head>
+<body>
+<h1 style="font-size:1rem">Chess rules tests (the Play page's referee)</h1>
+<pre id="log"></pre>
+<script type="module">
+  // Counts positions to a fixed depth ("perft") and compares with the published numbers,
+  // and with every position of the engine's own test suite (counted by python-chess).
+  import { fromFen, toFen, legalMoves, makeMove, perft, toSan, parseMove, gameState, repetitionKey, START_FEN } from '../assets/js/play/rules.js';
+
+  const log = document.getElementById('log');
+  let pass = 0, fail = 0;
+  const say = (ok, text) => { (ok ? pass++ : fail++); if (!ok) log.insertAdjacentHTML('beforeend', `<span class="bad">FAIL ${text}</span>\n`); };
+  const eq = (got, want, text) => say(JSON.stringify(got) === JSON.stringify(want), `${text}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
+
+  const PERFT = [
+    [START_FEN, [20, 400, 8902, 197281]],
+    ['r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1', [48, 2039, 97862]],
+    ['8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1', [14, 191, 2812, 43238]],
+    ['r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1', [6, 264, 9467]],
+    ['rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8', [44, 1486, 62379]],
+    ['r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10', [46, 2079, 89890]],
+  ];
+  for (const [fen, counts] of PERFT) counts.forEach((want, i) => eq(perft(fromFen(fen), i + 1), want, `perft ${i + 1} of ${fen}`));
+
+  const suite = await (await fetch('../engine-port/tests/suite.json')).json();
+  for (const p of suite) {
+    const pos = fromFen(p.fen);
+    eq(toFen(pos).split(' ').slice(0, 4).join(' '), p.fen.split(' ').slice(0, 4).join(' '), `FEN round trip #${p.id}`);
+    eq(perft(pos, 1), p.perft1, `suite #${p.id} perft 1`);
+    eq(perft(pos, 2), p.perft2, `suite #${p.id} perft 2`);
+    if (p.perft3 < 60000) eq(perft(pos, 3), p.perft3, `suite #${p.id} perft 3`);
+    eq(gameState(pos).check, p.in_check, `suite #${p.id} check`);
+  }
+
+  // notation
+  const play = (fen, sans) => { let pos = fromFen(fen); const out = []; for (const s of sans) { const m = parseMove(pos, s); if (!m) { out.push('?' + s); break; } out.push(toSan(pos, m)); pos = makeMove(pos, m); } return { pos, out }; };
+  eq(play(START_FEN, ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O', 'Be7']).out, ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'Nf6', 'O-O', 'Be7'], 'Ruy Lopez in SAN');
+  eq(play(START_FEN, ['f3', 'e5', 'g4', 'Qh4']).out, ['f3', 'e5', 'g4', 'Qh4#'], "fool's mate");
+  eq(gameState(play(START_FEN, ['f3', 'e5', 'g4', 'Qh4']).pos).reason, 'checkmate', "fool's mate ends the game");
+  eq(play('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1', ['0-0-0', 'o-o']).out, ['O-O-O', 'O-O'], 'castling typed loosely');
+  eq(play('8/P7/8/8/8/8/8/k6K w - - 0 1', ['a8=R']).out, ['a8=R+'], 'promotion with check');
+  eq(play('8/P7/8/8/8/8/8/k6K w - - 0 1', ['a7a8q']).out, ['a8=Q+'], 'promotion typed as e7e8q');
+  eq(play('4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1', ['exd6']).out, ['exd6'], 'en passant');
+  eq(play('k7/8/8/8/8/8/8/1N1N3K w - - 0 1', ['Nbc3']).out, ['Nbc3'], 'two knights, file tells them apart');
+  eq(play('k7/8/8/1N6/8/8/8/1N5K w - - 0 1', ['N1c3']).out, ['N1c3'], 'two knights, rank tells them apart');
+  eq(play('4k3/8/8/8/8/2p5/1P1B4/4K3 w - - 0 1', ['bc3']).out, ['bxc3'], 'bc3 typed exactly is the pawn capture, not the bishop');
+  eq(parseMove(fromFen(START_FEN), 'Ke2'), null, 'an illegal move is refused');
+  eq(parseMove(fromFen(START_FEN), 'nf3') && toSan(fromFen(START_FEN), parseMove(fromFen(START_FEN), 'nf3')), 'Nf3', 'lower-case knight move');
+  eq(parseMove(fromFen('rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 1 2'), 'bc5') && toSan(fromFen('rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 1 2'), parseMove(fromFen('rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 1 2'), 'bc5')), 'Bc5', 'lower-case bishop move when no pawn can go there');
+
+  // capitals are taken at their word: "Bxc3" is a bishop move or nothing (here the bishop is blocked by its own pawn)
+  eq(parseMove(fromFen('4k3/8/8/8/8/2n5/1P6/B3K3 w - - 0 1'), 'Bxc3'), null, 'Bxc3 never turns into the pawn capture bxc3');
+  eq(play('4k3/8/8/8/8/2n5/1P6/B3K3 w - - 0 1', ['bxc3']).out, ['bxc3'], 'bxc3 is still the pawn capture');
+  // an en passant square that makes no sense is dropped, so it cannot invent a capture
+  eq(toFen(fromFen('4k3/8/4N3/3P4/8/8/8/4K3 w - e6 0 1')).split(' ')[3], '-', 'en passant square with a piece standing on it is dropped');
+  eq(toFen(fromFen('4k3/8/8/3P4/8/8/8/4K3 w - e6 0 1')).split(' ')[3], '-', 'en passant square with no pawn in front of it is dropped');
+  eq(toFen(fromFen('4k3/8/8/3Pp3/8/8/8/4K3 w - e6 0 1')).split(' ')[3], 'e6', 'a real en passant square is kept');
+  for (const bad of ['P3k3/8/8/8/8/8/8/4K3 w - - 0 1', '4k3/8/8/8/8/8/8/p3K3 b - - 0 1']) {
+    let threw = false; try { fromFen(bad); } catch (e) { threw = true; }
+    say(threw, `a pawn on the first or last rank must be refused: "${bad}"`);
+  }
+
+  // the end of the game
+  eq(gameState(fromFen('7k/5Q2/6K1/8/8/8/8/8 b - - 0 1')).reason, 'stalemate', 'stalemate');
+  eq(gameState(fromFen('7k/8/8/8/8/8/8/K1B5 w - - 0 1')).reason, 'not enough pieces to mate', 'king and bishop');
+  eq(gameState(fromFen('7k/8/8/8/8/8/8/K1BB4 w - - 0 1')).over, false, 'two bishops on different colours can mate');
+  eq(gameState(fromFen('7k/8/8/8/8/8/8/K1B1B3 w - - 0 1')).reason, 'not enough pieces to mate', 'two bishops on one colour');
+  eq(gameState(fromFen('7k/8/8/8/8/8/8/K1N5 w - - 99 80')).over, true, 'lone knight');
+  eq(gameState(fromFen('4k3/8/8/8/8/8/R7/4K3 w - - 100 90')).reason, 'fifty moves without a capture or pawn move', 'fifty moves');
+  {
+    let pos = fromFen(START_FEN); const seen = [];
+    for (const s of ['Nf3', 'Nf6', 'Ng1', 'Ng8', 'Nf3', 'Nf6', 'Ng1', 'Ng8']) { seen.push(repetitionKey(pos)); pos = makeMove(pos, parseMove(pos, s)); }
+    eq(gameState(pos, seen).reason, 'the same position three times', 'threefold repetition');
+  }
+  for (const bad of ['', 'hello', '8/8/8/8/8/8/8/8 w - - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1', 'k6R/8/8/8/8/8/8/K7 w - - 0 1']) {
+    let threw = false; try { fromFen(bad); } catch (e) { threw = true; }
+    say(threw, `a bad FEN must be refused: "${bad}"`);
+  }
+
+  log.insertAdjacentHTML('beforeend', `<span class="${fail ? 'bad' : 'ok'}">${pass} passed, ${fail} failed</span>\n`);
+  document.title = fail ? `FAILED ${fail}` : `ok ${pass}`;
+</script>
+</body>
+</html>

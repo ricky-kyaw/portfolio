@@ -1,0 +1,68 @@
+# Rebuilds the chess engine's WebAssembly files from the C source and compares them with
+# the numbers recorded from the original Python engine. The site itself needs no build:
+# GitHub Pages serves the files as they are. This only guards the engine.
+name: engine port
+
+on:
+  push:
+    paths: ['engine-port/**', 'assets/wasm/**', '.github/workflows/engine-port.yml']
+  pull_request:
+    paths: ['engine-port/**', 'assets/wasm/**', '.github/workflows/engine-port.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  same-as-the-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install the C compiler and the WebAssembly runtime
+        run: pip install ziglang==0.16.0 wasmtime==48.0.0
+      - name: The committed files must pass
+        run: |
+          python engine-port/tests/run_fidelity.py
+          python engine-port/tests/run_fidelity.py --simd
+      - name: Build again from the C source
+        run: python engine-port/build.py
+      - name: The fresh build must pass too
+        run: |
+          python engine-port/tests/run_fidelity.py
+          python engine-port/tests/run_fidelity.py --simd
+
+  # Records the reference numbers again from the original engine and checks that they are
+  # the ones committed here, so the tests above really are tests against the original.
+  reference-is-the-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ricky-kyaw/optiver-chessathon-engine
+          ref: e92401c97ed5324691da926b33a266d9905a8af8
+          path: original
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install what the original engine needs
+        run: pip install numba==0.67.0 numpy chess
+      - name: Record the numbers again
+        run: |
+          cp engine-port/tests/golden_strict.json /tmp/golden_strict.json
+          cp engine-port/tests/golden_games.json /tmp/golden_games.json
+          python engine-port/tools/gen_golden.py original/engine
+          python engine-port/tools/gen_golden_games.py original/engine
+      - name: They must be the committed ones
+        run: |
+          cmp engine-port/tests/golden_strict.json /tmp/golden_strict.json
+          cmp engine-port/tests/golden_games.json /tmp/golden_games.json
+      - name: The weights on the site must be the original weights
+        run: |
+          python engine-port/tools/export_net.py original/engine/weights/net.npz /tmp/net.bin
+          cmp /tmp/net.bin assets/wasm/ransom-net.bin

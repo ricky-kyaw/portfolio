@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play — Ricky Kyaw</title>
+<meta name="description" content="Play chess against Ransom, the engine Ricky Kyaw built for the Optiver AI Chessathon. It runs in your browser.">
+<link rel="canonical" href="https://rickydx.dev/play/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ricky Kyaw">
+<meta property="og:title" content="Play — Ricky Kyaw">
+<meta property="og:description" content="Play chess against Ransom, the engine Ricky Kyaw built for the Optiver AI Chessathon. It runs in your browser.">
+<meta property="og:url" content="https://rickydx.dev/play/">
+<meta property="og:image" content="https://rickydx.dev/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ricky Kyaw. I write software and solve math problems. A random walk drawn on graph paper.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Play — Ricky Kyaw">
+<meta name="twitter:description" content="Play chess against Ransom, the engine Ricky Kyaw built for the Optiver AI Chessathon. It runs in your browser.">
+<meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F8F7F2">
+<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
+<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<script type="module" src="/assets/js/main.js"></script>
+<script data-goatcounter="https://rickydx.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body data-page="play">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand hover-u" href="/"><span class="u">Ricky Kyaw</span></a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><span class="when-closed">Menu</span><span class="when-open">Close</span></button>
+    <nav id="site-nav" class="site-nav" aria-label="Site">
+      <div class="nav-tabs" data-nav>
+        <ul role="list">
+          <li><a class="hover-u" href="/"><span class="u">Home</span></a></li>
+          <li><a class="hover-u" href="/story/"><span class="u">Story</span></a></li>
+          <li><a class="hover-u" href="/education/"><span class="u">Education</span></a></li>
+          <li><a class="hover-u" href="/projects/"><span class="u">Projects</span></a></li>
+          <li><a class="hover-u" href="/play/" aria-current="page"><span class="u">Play</span></a></li>
+          <li><a class="hover-u" href="/resume/"><span class="u">Resume</span></a></li>
+          <li><a class="hover-u" href="/contact/"><span class="u">Contact</span></a></li>
+        </ul>
+        <span class="nav-rule" aria-hidden="true"></span>
+      </div>
+      <div class="nav-tail">
+        <button class="theme-btn" type="button" data-theme-toggle><span class="when-light">Dark</span><span class="when-dark">Light</span></button>
+        <a class="nav-work hover-u" href="/projects/"><span class="u">Just show me the work</span><span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="route-announcer" aria-live="polite" aria-atomic="true"></div>
+<div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
+
+<main id="main" tabindex="-1" class="page play" data-play>
+  <div class="container">
+    <p class="label">Play</p>
+    <h1>Play my chess engine</h1>
+    <p class="lead play-lead">This is Ransom, the chess engine I built for the Optiver AI Chessathon. It runs right here in your browser, so nothing you do is sent anywhere.</p>
+
+    <div class="play-grid">
+      <div class="play-board-col">
+        <div class="board" data-board></div>
+        <p class="play-status" data-status role="status" aria-live="polite">This page needs JavaScript to show the board.</p>
+      </div>
+
+      <div class="play-side">
+        <section class="play-panel" aria-labelledby="play-you">
+          <h2 class="label" id="play-you">You</h2>
+          <div class="choice" role="group" aria-label="Your colour">
+            <button type="button" data-side="w" aria-pressed="true">White</button>
+            <button type="button" data-side="b" aria-pressed="false">Black</button>
+          </div>
+          <div class="choice" role="group" aria-label="How strong the engine plays">
+            <button type="button" data-level="gentle" aria-pressed="false">Gentle</button>
+            <button type="button" data-level="club" aria-pressed="false">Club</button>
+            <button type="button" data-level="full" aria-pressed="true">Full strength</button>
+          </div>
+          <div class="play-actions">
+            <button type="button" class="linklike" data-new>New game</button>
+            <button type="button" class="linklike" data-undo>Take back</button>
+            <button type="button" class="linklike" data-flip>Flip board</button>
+          </div>
+        </section>
+
+        <section class="play-panel" aria-labelledby="play-engine">
+          <h2 class="label" id="play-engine">What the engine sees</h2>
+          <dl class="readout">
+            <div><dt>Looking ahead</dt><dd data-depth>–</dd></div>
+            <div><dt>Its score</dt><dd data-score>–</dd></div>
+            <div><dt>Positions checked</dt><dd data-nodes>–</dd></div>
+            <div><dt>Best move so far</dt><dd data-best>–</dd></div>
+          </dl>
+        </section>
+
+        <section class="play-panel" aria-labelledby="play-moves">
+          <h2 class="label" id="play-moves">Moves</h2>
+          <ol class="moves" data-moves></ol>
+          <form class="move-form" data-move-form autocomplete="off">
+            <label class="label" for="move-input">Or type your move</label>
+            <div class="move-row">
+              <input id="move-input" data-move-input type="text" inputmode="text" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="8" placeholder="e4, Nf3, O-O">
+              <button type="submit" class="linklike">play</button>
+            </div>
+            <p class="move-hint" data-move-hint role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <section class="section play-about" aria-labelledby="play-how">
+      <h2 id="play-how">How this works</h2>
+      <p>The engine I entered is written in Python, and a browser cannot run that. So what you are playing is the same engine rewritten in C and built as WebAssembly, which a browser can run.</p>
+      <p>A rewrite is only worth showing if it behaves like the original. This one is tested against the original on 104 positions. On each it has to choose the same move, give the same score and check exactly the same number of positions.</p>
+      <p>The three strength settings are the same engine. Gentle stops looking after 2 half-moves and Club after 5. Full strength thinks for about one second.</p>
+      <p>The original engine was built during the competition with Claude Code, and so was this port. <a class="u u--rest" href="https://github.com/ricky-kyaw/optiver-chessathon-engine" target="_blank" rel="noopener">The engine&rsquo;s code and its write-up are on GitHub</a>.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <ul class="footer-links" role="list">
+      <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+    <div class="footer-note label">
+      <p>Made by hand, in plain HTML, CSS and JavaScript.</p>
+      <p>Visits are counted with GoatCounter. No cookies. It does not track who you are.</p>
+      <p>© <span class="num">2026</span> Ricky Kyaw</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

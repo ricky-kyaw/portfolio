@@ -165,6 +165,7 @@ function countView() {
 // ---------- per-page setup, run on first load and after every soft navigation ----------
 let cell = null;
 let story = null;
+let play = null;
 async function pageInit(main) {
   safely('reveal', () => initReveal(main));
   safely('nav', placeNavRule);
@@ -179,6 +180,21 @@ async function pageInit(main) {
       // The slides could not start: fall back to the plain scrolling article.
       if (deck) deck.classList.add('is-plain');
       console.error('story', e);
+    }
+    return;
+  }
+  if (main.matches('[data-play]')) {
+    try {
+      const mod = await import('./play.js');
+      if (!main.isConnected) return;
+      play = mod.initPlay(main);
+      if (!play) throw new Error('the page is missing its board');
+    } catch (e) {
+      // Say what is true (scripts are on, the board just did not load) and hide the controls that cannot work.
+      main.classList.add('is-broken');
+      const status = main.querySelector('[data-status]');
+      if (status) status.textContent = 'The board could not load. Reload the page to try again.';
+      console.error('play', e);
     }
     return;
   }
@@ -204,6 +220,7 @@ async function pageInit(main) {
 function pageTeardown() {
   if (cell) { cell.destroy(); cell = null; }
   if (story) { story.destroy(); story = null; }
+  if (play) { play.destroy(); play = null; }
 }
 
 safely('theme', initTheme);

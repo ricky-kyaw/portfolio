@@ -1,0 +1,5 @@
+*.wasm binary
+*.bin binary
+*.png binary
+*.ico binary
+engine-port/tests/*.json text eol=lf

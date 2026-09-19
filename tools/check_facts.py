@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TRUTH = ROOT / "tools" / "ground_truth.txt"
 # Each page, and the sections of the ground truth its numbers and dates may come from.
 # (A year from the Education list must not drift onto a Story slide.)
-PAGES = {"story/index.html": ["story", "credits"]}
+PAGES = {"story/index.html": ["story", "credits"], "play/index.html": ["play"]}
 
 COUNTING = """one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty
 hundred thousand million first second third fourth fifth half dozen double twice""".split()

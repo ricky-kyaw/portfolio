@@ -109,6 +109,7 @@ function makeCommands() {
           : [text('Opening my story…')];
       },
     },
+    { name: 'play chess', aliases: ['play', 'chess', 'game', 'play a game', 'ransom', 'engine', 'chess engine', 'play you'], run: goTo('/play/', 'Setting up the board…') },
     { name: 'show education', aliases: ['education', 'school', 'degree', 'grades', 'studies', 'university'], run: goTo('/education/', 'Opening my education…') },
     {
       name: 'contact', aliases: ['email', 'hire', 'hire me', 'say hello', 'reach you', 'get in touch', 'talk', 'chat'],

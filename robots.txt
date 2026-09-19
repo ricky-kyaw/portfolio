@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /tests/
 Disallow: /tools/
+Disallow: /engine-port/
 
 Sitemap: https://rickydx.dev/sitemap.xml

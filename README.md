@@ -18,7 +18,7 @@ Then open http://localhost:4173/. The site uses root-relative links (`/projects/
 
 ```
 index.html              Home
-story/  education/  projects/  resume/  contact/     one folder per page (clean URLs)
+story/  education/  projects/  play/  resume/  contact/     one folder per page (clean URLs)
 404.html                the page shown for a wrong address (GitHub Pages and Cloudflare Pages pick it up by name)
 assets/css/site.css     all styles, mobile first
 assets/js/main.js       entry point: page transitions, fade-ins, theme, menu, copy buttons, contact form
@@ -34,6 +34,13 @@ assets/js/voxel/engine.js   draws the little block cities: a small 3D renderer w
 assets/js/voxel/scenes.js   builds Loikaw, Yangon and London out of blocks, and sets the mood of each slide
 assets/js/pixelfont.js  the chunky block lettering on the slide titles (drawn from grids, no font file)
 assets/img/story/       one still picture per slide, shown when scripts are off and while the scene loads
+assets/js/play.js       the Play page: a game of chess against Ransom, the engine
+assets/js/play/rules.js    the rules of chess (the page's own referee): legal moves, check, mate, draws, notation
+assets/js/play/board.js    the board: click, drag or arrow keys; assets/js/play/pieces.js draws the pieces from grids
+assets/js/play/engine.js   downloads the engine once and talks to its thread; assets/js/play/worker.js is that thread
+assets/wasm/            the engine itself, built from engine-port/: ransom.wasm, ransom-simd.wasm (faster), ransom-net.bin (its weights)
+engine-port/            the chess engine rewritten in C, with the tests that prove it plays like the original (see its README)
+.github/workflows/engine-port.yml   rebuilds the engine and runs those tests on GitHub whenever engine-port/ changes
 assets/js/site.config.js   your name, email, site address and links
 assets/img/og.png       the picture shown when the site is shared (1200 x 630)
 favicon.ico, assets/img/favicon.svg, assets/img/apple-touch-icon.png   icons
@@ -42,6 +49,7 @@ CNAME, .nojekyll        for GitHub Pages: the custom domain, and "serve these fi
 tests/index.html        browser tests for mathkit and the cell (open /tests/)
 tools/serve.py          local server for editing (no caching, serves 404.html)
 tests/voxel.html        draws every scene in every mood and shows how long each frame takes (open /tests/voxel.html)
+tests/rules.html        tests for the chess rules: move counts to a fixed depth on 110 positions, notation, draws (open /tests/rules.html)
 tools/make_images.py    redraws og.png and the PNG icons (needs Pillow; only if you change the name or look)
 tools/ground_truth.txt  the facts the site is allowed to state, in your own words
 tools/check_facts.py    checks a page against ground_truth.txt: every number, date, grade, name and link must be found there
@@ -55,6 +63,16 @@ The words live in `story/index.html`, one `<section class="slide">` per slide. E
 1. Run `python tools/serve.py` and open `http://127.0.0.1:4173/story/?capture=1`. This saves a fresh still picture for every slide into `assets/img/story/`. It only works on your own machine.
 2. Run `python tools/pack_posters.py` to make the pictures small.
 3. Run `python tools/check_facts.py`. It must say that everything was found in the ground truth. If you are adding a new fact, add it to `tools/ground_truth.txt` first.
+
+## Changing the chess engine
+
+The Play page runs `assets/wasm/ransom.wasm`. It is built from the C files in `engine-port/src/`, which are a line-by-line port of the Python engine in your `optiver-chessathon-engine` repository. If you change the engine:
+
+1. `pip install ziglang wasmtime` once (a C compiler and a WebAssembly runtime, both as Python packages).
+2. `python engine-port/build.py` builds both `.wasm` files.
+3. `python engine-port/tests/run_fidelity.py` and again with `--simd`. Both must say PASS: same move, same score and same node count as the original on 104 positions and through four whole games.
+
+`engine-port/README.md` explains how the reference numbers were recorded. Update `tools/ground_truth.txt` if the numbers on the Play page change.
 
 ## What is already connected
 
@@ -100,7 +118,7 @@ Where the domain stands today (checked 2026-09-18): DNS is at **Porkbun**, email
 - Open GoatCounter and check the visit shows up. Visits from `localhost` are ignored on purpose.
 - Paste `https://rickydx.dev` into a LinkedIn post draft or https://www.opengraph.xyz to see the preview card.
 
-Publishing the project root also publishes `README.md`, `tools/` and `tests/`. They hold nothing private, and `robots.txt` keeps the last two out of search engines. The `CNAME` and `.nojekyll` files are only read by GitHub Pages and do no harm elsewhere.
+Publishing the project root also publishes `README.md`, `tools/`, `tests/` and `engine-port/`. They hold nothing private, and `robots.txt` keeps the last three out of search engines. The `CNAME` and `.nojekyll` files are only read by GitHub Pages and do no harm elsewhere.
 
 ## Design notes
 

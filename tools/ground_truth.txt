@@ -28,6 +28,18 @@ At Acumen: full foundation year in five months while learning to speak English; 
 Arrived London 2024 speaking English I had owned for less than a year. Now: AWS Student Builder leader, ICPC this October.
 Aiming at a master's in Mathematics and Computational Finance at Oxford. I build things that last — because I know what it feels like when things don't.
 
+[play]
+# Not from Ricky's fact sheet: each line here was checked first-hand on 2026-09-19.
+# From the engine repository github.com/ricky-kyaw/optiver-chessathon-engine (README and engine/ folder):
+Ransom is the chess engine Ricky built for the Optiver AI Chessathon. The original engine is written in Python.
+Its README says: "Engine, data pipeline, test harness and research built during the competition with Claude Code."
+# From this repository (engine-port/): measured by engine-port/tests/run_fidelity.py.
+The browser version is the same engine rewritten in C and built as WebAssembly, and this port was also built with Claude Code.
+It is tested against the original on 104 positions: same move, same score, same number of positions checked.
+The engine's code and its write-up are on GitHub. The Play page needs JavaScript and WebAssembly; nothing is sent to a server.
+# From assets/js/play.js (LEVELS):
+There are three strength settings. Gentle stops after 2 half-moves, Club after 5, Full strength thinks for about one second.
+
 [credits]
 # Ricky asked for this credit on 2026-09-19: "Add Chris Tate and node that leads to original creation."
 The voxel scenes are inspired by Chris Tate's Next.js Conf 2024 scene.
@@ -37,3 +49,4 @@ https://rickydx.dev
 https://github.com/ricky-kyaw
 https://www.linkedin.com/in/ricky-kyaw/
 https://github.com/ctate/nextjs-conf-2024
+https://github.com/ricky-kyaw/optiver-chessathon-engine
