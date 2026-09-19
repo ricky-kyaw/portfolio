@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voxel scene check</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 1.5rem; color: #ECEEF2; background: #0B0D10; }
+  canvas { display: block; width: 640px; height: 360px; image-rendering: pixelated; margin: 0 0 4px; border: 1px solid #232833; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, 642px); gap: 16px; }
+</style>
+</head>
+<body>
+<h1 style="font-size:1rem">Voxel scene check (dev only)</h1>
+<pre id="log">building…</pre>
+<div class="grid" id="grid"></div>
+<script type="module">
+  // Renders every scene in every mood at a fixed size, reports timings, and
+  // (with ?save=1 on the local dev server) saves each picture as a poster.
+  import { Renderer } from '../assets/js/voxel/engine.js';
+  import { SCENES, MOODS } from '../assets/js/voxel/scenes.js';
+
+  const params = new URLSearchParams(location.search);
+  const save = params.get('save') === '1';
+  const only = params.get('scene');
+  const clarity = Number(params.get('clarity') || 0);
+  const yawOffset = Number(params.get('yaw') || 0);
+  const W = Number(params.get('w') || 640), H = Number(params.get('h') || 360);
+  const log = document.getElementById('log');
+  const lines = [];
+  const plan = [
+    ['loikaw', 'loikaw-day'], ['loikaw', 'loikaw-drained'], ['loikaw', 'loikaw-dark'], ['loikaw', 'loikaw-leaving'],
+    ['yangon', 'yangon-day'], ['yangon', 'yangon-return'], ['yangon', 'yangon-dawn'],
+    ['london', 'london-day'], ['london', 'london-night'],
+  ].filter(([s]) => !only || s === only);
+
+  const built = {};
+  for (const [name, moodName] of plan) {
+    if (!built[name]) {
+      const t0 = performance.now();
+      built[name] = SCENES[name]();
+      lines.push(`${name}: built in ${(performance.now() - t0).toFixed(0)} ms, ${built[name].faces.n} faces`);
+    }
+    const scene = built[name];
+    const canvas = document.createElement('canvas');
+    const r = new Renderer(canvas);
+    r.resize(W, H);
+    const zoom = Number(params.get('zoom') || 1);
+    const cam = { yaw: scene.start.yaw + yawOffset, pitch: scene.start.pitch, zoom: (moodName === 'loikaw-leaving' ? 0.62 : 1) * zoom, shiftX: Number(params.get('sx') || 0), shiftY: Number(params.get('sy') || 0) };
+    const t1 = performance.now();
+    for (let i = 0; i < 5; i++) r.render(scene, cam, MOODS[moodName], clarity);
+    lines.push(`  ${moodName}: ${((performance.now() - t1) / 5).toFixed(1)} ms per frame at ${W}x${H}`);
+    const box = document.createElement('div');
+    box.append(canvas, moodName);
+    document.getElementById('grid').append(box);
+    if (save) {
+      const blob = await new Promise((ok) => canvas.toBlob(ok, 'image/png'));
+      const res = await fetch(`/__capture/${moodName}${clarity ? '-clear' : ''}.png`, { method: 'POST', body: blob });
+      lines.push(`  saved ${moodName}: ${res.status}, ${blob.size} bytes`);
+    }
+    log.textContent = lines.join('\n');
+  }
+  document.title = 'done';
+</script>
+</body>
+</html>

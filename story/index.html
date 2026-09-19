@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Story — Ricky Kyaw</title>
-<meta name="description" content="Where Ricky Kyaw comes from, and why it matters for the work.">
+<title>Story — Ricky Kyaw</title>
+<meta name="description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
 <link rel="canonical" href="https://rickydx.dev/story/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ricky Kyaw">
-<meta property="og:title" content="My Story — Ricky Kyaw">
-<meta property="og:description" content="Where Ricky Kyaw comes from, and why it matters for the work.">
+<meta property="og:title" content="Story — Ricky Kyaw">
+<meta property="og:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
 <meta property="og:url" content="https://rickydx.dev/story/">
 <meta property="og:image" content="https://rickydx.dev/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Ricky Kyaw. I write software and solve math problems. A random walk drawn on graph paper.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="My Story — Ricky Kyaw">
-<meta name="twitter:description" content="Where Ricky Kyaw comes from, and why it matters for the work.">
+<meta name="twitter:title" content="Story — Ricky Kyaw">
+<meta name="twitter:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
 <meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F8F7F2">
@@ -45,7 +45,7 @@
       <div class="nav-tabs" data-nav>
         <ul role="list">
           <li><a class="hover-u" href="/"><span class="u">Home</span></a></li>
-          <li><a class="hover-u" href="/story/" aria-current="page"><span class="u">My Story</span></a></li>
+          <li><a class="hover-u" href="/story/" aria-current="page"><span class="u">Story</span></a></li>
           <li><a class="hover-u" href="/education/"><span class="u">Education</span></a></li>
           <li><a class="hover-u" href="/projects/"><span class="u">Projects</span></a></li>
           <li><a class="hover-u" href="/resume/"><span class="u">Resume</span></a></li>
@@ -63,14 +63,109 @@
 <div id="route-announcer" aria-live="polite" aria-atomic="true"></div>
 <div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
 
-<main id="main" tabindex="-1" class="page">
-  <div class="container">
-    <div class="page-head">
-      <h1 data-reveal>My Story</h1>
-      <p class="page-intro" data-reveal data-reveal-delay="80">I grew up in a place where life was hard and things changed fast. It taught me to stay calm when things go wrong, to learn by myself, and to never give up.</p>
-      <p class="page-intro" data-reveal data-reveal-delay="160">I am not sharing this to get pity. I am sharing it to show why I work so hard, and why I care so much about building things that last.</p>
+<main id="main" tabindex="-1" class="story" data-story>
+  <h1 class="visually-hidden">My story</h1>
+  <div class="deck" data-deck>
+    <canvas class="deck-canvas" aria-hidden="true"></canvas>
+      <div class="deck-slides">
+        <section class="slide" id="slide-1" aria-label="Slide 1 of 9" data-scene="loikaw" data-mood="loikaw-day" data-zoom="1.0" data-yaw="0" data-pitch="0" data-hold>
+          <img class="slide-poster" src="/assets/img/story/slide-1.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>Loikaw</h2>
+            <div class="slide-plate">
+              <p>I grew up in Loikaw, a small town in the hills of Myanmar. It is still the most beautiful place I know.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-2" aria-label="Slide 2 of 9" data-scene="yangon" data-mood="yangon-day" data-zoom="1.0" data-yaw="0" data-pitch="0">
+          <img class="slide-poster" src="/assets/img/story/slide-2.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>Yangon</h2>
+            <div class="slide-plate">
+              <p>I moved to Yangon for school. I was class monitor. My report card never dropped below A*.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-3" aria-label="Slide 3 of 9" data-scene="loikaw" data-mood="loikaw-drained" data-zoom="1.0" data-yaw="0.55" data-pitch="0" data-hold>
+          <img class="slide-poster" src="/assets/img/story/slide-3.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <div class="slide-plate">
+              <p>COVID sent me home to Loikaw. Then the coup came. My home state was one of the first places the fighting reached.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-4" aria-label="Slide 4 of 9" data-scene="loikaw" data-mood="loikaw-dark" data-zoom="1.25" data-yaw="0.2" data-pitch="0.06" data-hold>
+          <img class="slide-poster" src="/assets/img/story/slide-4.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>2020–2022</h2>
+            <div class="slide-plate">
+              <p>On paper there is a gap between 2020 and 2022. COVID closed the schools, the coup closed the country, the war closed our door.</p>
+              <p>I kept a notebook anyway.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-5" aria-label="Slide 5 of 9" data-scene="loikaw" data-mood="loikaw-leaving" data-zoom="0.6" data-yaw="3.1" data-pitch="0" data-hold>
+          <img class="slide-poster" src="/assets/img/story/slide-5.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <div class="slide-plate">
+              <p>When the fighting came closer we were told to leave.</p>
+              <p>So we left.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-6" aria-label="Slide 6 of 9" data-scene="yangon" data-mood="yangon-return" data-zoom="1.1" data-yaw="-0.5" data-pitch="0">
+          <img class="slide-poster" src="/assets/img/story/slide-6.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>2022</h2>
+            <div class="slide-plate">
+              <p>I walked back into a classroom after two years without one. I sat my IGCSEs at ALSA International School, a school that no longer exists.</p>
+              <p>I left with four A*s including Further Pure Maths, top of my school.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-7" aria-label="Slide 7 of 9" data-scene="yangon" data-mood="yangon-dawn" data-zoom="0.95" data-yaw="2.4" data-pitch="0">
+          <img class="slide-poster" src="/assets/img/story/slide-7.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>Acumen</h2>
+            <div class="slide-plate">
+              <p>At Acumen I did a full foundation year in five months while learning to speak English.</p>
+              <p>I began English in February and finished the year by July, with A*s in Maths and Computer Science.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-8" aria-label="Slide 8 of 9" data-scene="london" data-mood="london-day" data-zoom="1.0" data-yaw="0.8" data-pitch="0">
+          <img class="slide-poster" src="/assets/img/story/slide-8.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <h2 class="slide-title" data-pixel>London 2024</h2>
+            <div class="slide-plate">
+              <p>I arrived in London in 2024, speaking English I had owned for less than a year.</p>
+              <p>Now I lead the AWS Student Builder Group at Kingston, and I compete at ICPC this October.</p>
+            </div>
+          </div>
+        </section>
+        <section class="slide" id="slide-9" aria-label="Slide 9 of 9" data-scene="london" data-mood="london-night" data-zoom="0.85" data-yaw="1.15" data-pitch="0">
+          <img class="slide-poster" src="/assets/img/story/slide-9.png" alt="" width="720" height="405" loading="lazy" decoding="async">
+          <div class="slide-body">
+            <div class="slide-plate">
+              <p>I am aiming at a master's in Mathematics and Computational Finance at Oxford.</p>
+              <p>I build things that last — because I know what it feels like when things don't.</p>
+              <p class="slide-links"><a class="hover-u" href="/projects/"><span class="u">See what I have built</span><span class="arrow" aria-hidden="true">→</span></a><a class="hover-u" href="/contact/"><span class="u">Get in touch</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            </div>
+          </div>
+        </section>
+      </div>
+    <div class="deck-tools">
+      <button class="deck-tool" type="button" data-clear hidden aria-pressed="false">hold to see it clearly</button>
+      <button class="deck-tool" type="button" data-look hidden aria-pressed="false">look around</button>
+      <button class="deck-tool" type="button" data-rotate>pause</button>
     </div>
+    <nav class="deck-nav" aria-label="Slides">
+      <button type="button" data-prev aria-label="Previous slide"><span aria-hidden="true">‹</span></button>
+      <span class="deck-ticks" aria-hidden="true"></span>
+      <button type="button" data-next aria-label="Next slide"><span aria-hidden="true">›</span></button>
+    </nav>
   </div>
+  <p class="story-credit label container">The cities are drawn by code written for this site. The idea of a dithered world you can turn in your hand comes from <a class="u u--rest" href="https://github.com/ctate/nextjs-conf-2024" target="_blank" rel="noopener">Chris Tate’s Next.js Conf 2024 scene</a>.</p>
 </main>
 
 <footer class="site-footer">

@@ -29,6 +29,11 @@ assets/js/cell.js       the notebook cell on Home (commands)
 assets/js/mathkit.js    exact math, primes, Fibonacci — written by hand, no eval()
 assets/js/figure.js     Figure 1, the random walk
 assets/js/github.js     pulls your public repos to fill project links
+assets/js/story.js      the Story page: nine slides, arrows / arrow keys / swipe, drag to look around, hold to see clearly
+assets/js/voxel/engine.js   draws the little block cities: a small 3D renderer written by hand (no WebGL, no library)
+assets/js/voxel/scenes.js   builds Loikaw, Yangon and London out of blocks, and sets the mood of each slide
+assets/js/pixelfont.js  the chunky block lettering on the slide titles (drawn from grids, no font file)
+assets/img/story/       one still picture per slide, shown when scripts are off and while the scene loads
 assets/js/site.config.js   your name, email, site address and links
 assets/img/og.png       the picture shown when the site is shared (1200 x 630)
 favicon.ico, assets/img/favicon.svg, assets/img/apple-touch-icon.png   icons
@@ -36,8 +41,20 @@ robots.txt, sitemap.xml    for search engines
 CNAME, .nojekyll        for GitHub Pages: the custom domain, and "serve these files as they are"
 tests/index.html        browser tests for mathkit and the cell (open /tests/)
 tools/serve.py          local server for editing (no caching, serves 404.html)
+tests/voxel.html        draws every scene in every mood and shows how long each frame takes (open /tests/voxel.html)
 tools/make_images.py    redraws og.png and the PNG icons (needs Pillow; only if you change the name or look)
+tools/ground_truth.txt  the facts the site is allowed to state, in your own words
+tools/check_facts.py    checks a page against ground_truth.txt: every number, date, grade, name and link must be found there
+tools/pack_posters.py   shrinks the Story pictures (needs Pillow)
 ```
+
+## Changing the Story page
+
+The words live in `story/index.html`, one `<section class="slide">` per slide. Each slide names its scene (`data-scene`), its mood (`data-mood`) and where the camera starts (`data-yaw`, `data-pitch`, `data-zoom`). After changing any of those:
+
+1. Run `python tools/serve.py` and open `http://127.0.0.1:4173/story/?capture=1`. This saves a fresh still picture for every slide into `assets/img/story/`. It only works on your own machine.
+2. Run `python tools/pack_posters.py` to make the pictures small.
+3. Run `python tools/check_facts.py`. It must say that everything was found in the ground truth. If you are adding a new fact, add it to `tools/ground_truth.txt` first.
 
 ## What is already connected
 

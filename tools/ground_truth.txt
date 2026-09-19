@@ -1,0 +1,39 @@
+# The facts this site is allowed to state, in Ricky's own words.
+# tools/check_facts.py reads this file. A page may reword and trim these lines,
+# but every number, year, grade, month, counting word, name and outside link on
+# the page has to be found here. To change a fact, change it here first.
+# (Only facts that are shown on the public site belong in this file.)
+
+[identity]
+Display name: Ricky Kyaw. Official name for resume header: Myat Hein (Ricky) Kyaw.
+Primary email: origin@rickydx.dev
+Alias easter eggs on Contact page: human@rickydx.dev and stdin@rickydx.dev, with the exact line: "yes, they all reach the same human."
+Site URL: https://rickydx.dev
+
+[education]
+Kingston University, London — BSc (Hons) Computer Science and Artificial Intelligence, 2024–2027. ICPC contestant October 2026 representing Kingston. Leader of the AWS Student Builder Group at Kingston.
+Acumen International College, Yangon — NCUK International Foundation Year (A-level equivalent), Feb–Jul 2024. Maths for Engineering A*, Computer Science A*, Physics A, EAP A. Completed in 5 months while learning academic English from the start.
+ALSA International School, Yangon — IGCSE, 2022–2023. Highlights: Further Pure Maths A* (top of school), Maths A*, Physics A*, ICT A*.
+2020–2022 — interrupted years: independent study while schools were closed by COVID and conflict.
+Practising High School, Yangon University of Education ("TTC"), Yangon — KG to Grade 7, 2012–2020. Class monitor; consistently top of the grade.
+
+[story]
+Grew up in Loikaw, a small town in the hills of Myanmar; still the most beautiful place I know.
+Moved to Yangon for school; class monitor; report card never dropped below A*.
+COVID sent me home to Loikaw; then the coup came; my home state was one of the first places the fighting reached.
+On paper there is a gap between 2020 and 2022: COVID closed the schools, the coup closed the country, the war closed our door. I kept a notebook anyway.
+When the fighting came closer we were told to leave. So we left.
+2022: walked back into a classroom after two years without one; sat IGCSEs at ALSA International School, a school that no longer exists; left with four A*s including Further Pure Maths, top of my school.
+At Acumen: full foundation year in five months while learning to speak English; began English in February, finished the year by July with A*s in Maths and Computer Science.
+Arrived London 2024 speaking English I had owned for less than a year. Now: AWS Student Builder leader, ICPC this October.
+Aiming at a master's in Mathematics and Computational Finance at Oxford. I build things that last — because I know what it feels like when things don't.
+
+[credits]
+# Ricky asked for this credit on 2026-09-19: "Add Chris Tate and node that leads to original creation."
+The voxel scenes are inspired by Chris Tate's Next.js Conf 2024 scene.
+
+[links]
+https://rickydx.dev
+https://github.com/ricky-kyaw
+https://www.linkedin.com/in/ricky-kyaw/
+https://github.com/ctate/nextjs-conf-2024

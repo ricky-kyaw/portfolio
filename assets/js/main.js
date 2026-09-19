@@ -164,9 +164,24 @@ function countView() {
 
 // ---------- per-page setup, run on first load and after every soft navigation ----------
 let cell = null;
+let story = null;
 async function pageInit(main) {
   safely('reveal', () => initReveal(main));
   safely('nav', placeNavRule);
+  if (main.matches('[data-story]')) {
+    const deck = main.querySelector('[data-deck]');
+    try {
+      const mod = await import('./story.js');
+      if (!main.isConnected) return;
+      story = mod.initStory(main);
+      if (!story && deck) deck.classList.add('is-plain');
+    } catch (e) {
+      // The slides could not start: fall back to the plain scrolling article.
+      if (deck) deck.classList.add('is-plain');
+      console.error('story', e);
+    }
+    return;
+  }
   if (main.querySelector('[data-cell]')) {
     try {
       const mod = await import('./cell.js');
@@ -188,6 +203,7 @@ async function pageInit(main) {
 }
 function pageTeardown() {
   if (cell) { cell.destroy(); cell = null; }
+  if (story) { story.destroy(); story = null; }
 }
 
 safely('theme', initTheme);

@@ -824,6 +824,194 @@ html:not(.js) .cell-input { pointer-events: none; }
   .rows-list .note { grid-column: 2; }
 }
 
+/* ---------- the story: nine slides over live scenes ---------- */
+/* This page is always dark, whatever the theme: the scenes are drawn as light on night. */
+body[data-page="story"] {
+  --bg: #0B0D10;
+  --surface: #12151B;
+  --fg: #ECEEF2;
+  --muted: #9AA0AC;
+  --accent: #7EA2FF;
+  --line: #232833;
+  --line-hover: #2E3541;
+  --line-strong: #6E7582;
+  --grid-minor: transparent;
+  --grid-major: transparent;
+  --selection: rgba(126, 162, 255, .22);
+  color-scheme: dark;
+}
+/* The theme script sets the page colour inline before first paint, hence the !important. */
+html:has(> body[data-page="story"]) { background: #0B0D10 !important; }
+body[data-page="story"] .theme-btn { visibility: hidden; }
+
+.story { --ink: #ECEEF2; --night: #0B0D10; --amber: #F2B233; }
+.deck-canvas, .deck-tools, .deck-nav { display: none; }
+
+/* Plain mode (scripts off, or the slides could not start): a scrolling article. */
+.deck { counter-reset: slide; }
+.slide { counter-increment: slide; max-width: calc(720px + 2 * var(--pad)); margin: 0 auto; padding: 28px var(--pad) 20px; }
+.slide-poster { width: 100%; height: auto; image-rendering: pixelated; border: 1px solid var(--line); }
+.slide-body { margin-top: 20px; }
+.slide-title { font: 500 .875rem/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+.slide-plate { font-size: 1.125rem; line-height: 1.55; max-width: 38rem; }
+.slide-plate::before {
+  content: counter(slide, decimal-leading-zero) " / 09";
+  display: block;
+  margin-bottom: 8px;
+  font: 400 .75rem/1 var(--mono);
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+.slide-plate p + p { margin-top: .7em; }
+.slide-plate:focus { outline: none; }
+.slide-links { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 1rem; }
+.slide-links a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; color: var(--accent); }
+.story-credit { padding-top: 20px; padding-bottom: 8px; text-transform: none; letter-spacing: 0; line-height: 1.6; }
+
+/* Block lettering (drawn by pixelfont.js). */
+.pixel-text { width: min(100%, calc(var(--cols, 40) * 11px)); height: auto; overflow: visible; }
+
+/* Slide mode. */
+html.js .deck:not(.is-plain) {
+  position: relative;
+  height: calc(100vh - var(--header-h));
+  height: calc(100svh - var(--header-h));
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--night);
+  -webkit-user-select: none;
+          user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: pan-y; /* the page still scrolls up and down; sideways swipes change slide */
+  cursor: grab;
+}
+html.js .deck.is-dragging { cursor: grabbing; }
+html.js .deck.is-looking { touch-action: none; }
+
+html.js .deck:not(.is-plain) .deck-canvas {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  max-width: none;
+  image-rendering: pixelated;
+  transition: opacity 190ms var(--ease-in-out);
+}
+html.js .deck .deck-canvas.is-swapping { opacity: 0; }
+
+html.js .deck:not(.is-plain) .slide {
+  position: absolute;
+  inset: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0 var(--pad) 72px;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 320ms var(--ease-out) 120ms, visibility 0s linear 440ms;
+}
+html.js .deck:not(.is-plain) .slide.is-active,
+html.js .deck:not(.is-plain):not(.is-live) .slide:first-child {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 320ms var(--ease-out) 120ms, visibility 0s;
+}
+/* Until the scene is drawn, the first slide shows its picture; after that the canvas takes over. */
+html.js .deck:not(.is-plain) .slide-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+html.js .deck:not(.is-plain) .slide:not(:first-child) .slide-poster,
+html.js .deck.is-live:not(.is-plain) .slide-poster { display: none; }
+
+html.js .deck:not(.is-plain) .slide-body {
+  position: relative;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0;
+}
+html.js .deck:not(.is-plain) .slide-title { margin-bottom: 14px; filter: drop-shadow(0 0 18px rgba(11, 13, 16, .9)); }
+html.js .deck:not(.is-plain) .slide-plate {
+  padding: 14px 16px 16px;
+  background: var(--night);
+  border: 1px solid #2B313C;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, .6);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  -webkit-user-select: text;
+          user-select: text;
+  cursor: auto;
+}
+
+html.js .deck:not(.is-plain) .deck-tools {
+  display: flex;
+  gap: 6px;
+  position: absolute;
+  top: 12px;
+  right: var(--pad);
+}
+.deck-tool {
+  white-space: nowrap;
+  min-height: 32px;
+  padding: 0 10px;
+  font: 400 .75rem/1 var(--mono);
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: rgba(11, 13, 16, .82);
+  border: 1px solid #2B313C;
+  opacity: .75;
+  transition: opacity var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+.deck-tool[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); opacity: 1; }
+.deck-tool:focus-visible { opacity: 1; }
+@media (hover: hover) { .deck-tool:hover { opacity: 1; border-color: #4A5261; } }
+@media (pointer: coarse) { .deck-tool { min-height: 44px; padding: 0 14px; } }
+
+/* Small, quiet arrows low in the middle. The arrow keys do the same. */
+html.js .deck:not(.is-plain) .deck-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  left: 50%;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  background: rgba(11, 13, 16, .72);
+  opacity: .55;
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+.deck-nav:focus-within { opacity: 1; }
+@media (hover: hover) { html.js .deck .deck-nav:hover { opacity: 1; } }
+.deck-nav button {
+  display: grid;
+  place-items: center;
+  width: 44px; height: 44px;
+  font: 400 1.375rem/1 var(--mono);
+  color: var(--ink);
+}
+.deck-nav button span { transform: translateY(-1px); }
+.deck-nav button[aria-disabled="true"] { opacity: .25; cursor: default; }
+.deck-ticks { display: flex; gap: 5px; }
+.deck-ticks span { width: 5px; height: 5px; background: var(--ink); opacity: .3; }
+.deck-ticks span.is-on { background: var(--amber); opacity: 1; }
+
+@media (min-width: 900px) {
+  html.js .deck:not(.is-plain) .slide {
+    padding: 0 0 84px max(var(--pad), calc(50% - var(--container) / 2 + var(--pad)));
+  }
+  html.js .deck:not(.is-plain) .slide-plate { font-size: 1.125rem; padding: 18px 20px 20px; }
+}
+/* Short screens (a phone on its side): keep the text small so the scene still shows. */
+@media (max-height: 520px) {
+  html.js .deck:not(.is-plain) .slide { padding-bottom: 56px; }
+  html.js .deck:not(.is-plain) .slide-body { max-width: 30rem; }
+  html.js .deck:not(.is-plain) .slide-plate { font-size: .9375rem; padding: 10px 12px; }
+  .pixel-text { width: min(60%, calc(var(--cols, 40) * 7px)); }
+}
+
 /* ---------- scroll reveal ---------- */
 html.js [data-reveal] {
   opacity: 0;
