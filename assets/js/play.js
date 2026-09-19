@@ -21,7 +21,7 @@ export function initPlay(main) {
     board: $('[data-board]'), status: $('[data-status]'), moves: $('[data-moves]'),
     depth: $('[data-depth]'), score: $('[data-score]'), nodes: $('[data-nodes]'), best: $('[data-best]'),
     form: $('[data-move-form]'), input: $('[data-move-input]'), hint: $('[data-move-hint]'),
-    undo: $('[data-undo]'), fresh: $('[data-new]'), flip: $('[data-flip]'),
+    undo: $('[data-undo]'), fresh: $('[data-new]'), flip: $('[data-flip]'), copy: $('[data-copy-moves]'),
   };
   if (!el.board || !el.status) return null;
 
@@ -63,6 +63,7 @@ export function initPlay(main) {
     }
     el.moves.scrollTop = el.moves.scrollHeight;
     el.undo.disabled = moves.length === 0 || (moves.length === 1 && human === 'b');
+    if (el.copy) el.copy.disabled = moves.length === 0;
   }
 
   function paintStatus(extra = '') {
@@ -181,6 +182,21 @@ export function initPlay(main) {
     engineTurn();
   }
 
+  // The game as a line of text that any chess program can read: "1. e4 c5 2. Nf3 d6 *".
+  function movesAsText() {
+    const parts = [];
+    moves.forEach((m, i) => { if (i % 2 === 0) parts.push(`${i / 2 + 1}.`); parts.push(m.san); });
+    parts.push(state().result);
+    return parts.join(' ');
+  }
+  async function copyMoves() {
+    const was = el.copy.textContent;
+    let ok = false;
+    try { await navigator.clipboard.writeText(movesAsText()); ok = true; } catch (e) { ok = false; }
+    el.copy.textContent = ok ? 'Copied' : 'Could not copy';
+    later(() => { el.copy.textContent = was; }, 1400);
+  }
+
   // ---------- controls ----------
   function markChoices() {
     main.querySelectorAll('[data-side]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.side === human)));
@@ -195,6 +211,7 @@ export function initPlay(main) {
     else if (b === el.fresh) newGame();
     else if (b === el.undo) takeBack();
     else if (b === el.flip) { flipped = !flipped; paintBoard(); }
+    else if (b === el.copy) copyMoves();
   }
 
   function onSubmit(e) {

@@ -25,7 +25,7 @@
 <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
@@ -76,6 +76,7 @@
         <p class="lead" data-reveal data-reveal-delay="160">I like problems that make you think for a while and then need code that is correct and fast. I want to work in quant finance, or write software at a big tech company.</p>
         <ul class="hero-links" role="list" data-reveal data-reveal-delay="240">
           <li><a class="hover-u" href="/projects/"><span class="u">See the projects</span><span class="arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="hover-u" href="/play/"><span class="u">Play my chess engine</span><span class="arrow" aria-hidden="true">→</span></a></li>
           <li><a class="hover-u" href="/resume/"><span class="u">Read the resume</span><span class="arrow" aria-hidden="true">→</span></a></li>
         </ul>
       </div>
@@ -112,6 +113,7 @@
           </form>
           <ul class="chips" role="list" aria-label="Things to try">
             <li><a href="/projects/" data-cmd="show projects">show projects</a></li>
+            <li><a href="/play/" data-cmd="play chess">play chess</a></li>
             <li><a href="/resume/" data-cmd="show resume">show resume</a></li>
             <li><a href="/contact/" data-cmd="contact">contact</a></li>
             <li><a href="#fig1" data-cmd="random">random</a></li>
@@ -124,29 +126,37 @@
 
   <section class="plates-section" aria-labelledby="ways">
     <div class="container">
-      <h2 class="label" id="ways" data-reveal>Three ways to see the work</h2>
-      <ul class="plates" role="list" data-reveal-group="60">
+      <h2 class="label" id="ways" data-reveal>Ways to see the work</h2>
+      <ul class="plates plates--four" role="list" data-reveal-group="60">
+        <li data-reveal>
+          <a class="plate" href="/play/">
+            <span class="plate-num num">01</span>
+            <span class="plate-title"><span class="u">Play my chess engine</span></span>
+            <span class="plate-text">Ransom, my entry in the Optiver AI Chessathon, running in your browser.</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
         <li data-reveal>
           <a class="plate" href="/projects/#from-scratch">
-            <span class="plate-num num">01</span>
+            <span class="plate-num num">02</span>
             <span class="plate-title"><span class="u">Code I wrote from scratch</span></span>
-            <span class="plate-text">Hard problems, solved by hand. No shortcuts.</span>
+            <span class="plate-text">Two learning algorithms, a web server and a piece of git, written by hand to understand what is underneath.</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </li>
         <li data-reveal>
           <a class="plate" href="/projects/#built-fast">
-            <span class="plate-num num">02</span>
+            <span class="plate-num num">03</span>
             <span class="plate-title"><span class="u">Apps I built fast</span></span>
-            <span class="plate-text">Small products, built fast with AI tools. Every one of them finished.</span>
+            <span class="plate-text">Small things built quickly with AI help. Each card says how much.</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </li>
         <li data-reveal>
           <a class="plate" href="/resume/">
-            <span class="plate-num num">03</span>
+            <span class="plate-num num">04</span>
             <span class="plate-title"><span class="u">Resume</span></span>
-            <span class="plate-text">One page: skills, school, and how to reach me.</span>
+            <span class="plate-text">One page: projects, school and skills. You can print it or save it as a PDF.</span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </li>
@@ -157,7 +167,7 @@
   <section class="bridge" aria-label="My story, in one line">
     <div class="container">
       <div data-reveal>
-        <p>I grew up where life was hard and things changed fast. It made me calm when things break, and stubborn about finishing what I start.</p>
+        <p>I grew up in Loikaw, a small town in the hills of Myanmar. I build things that last — because I know what it feels like when things don’t.</p>
         <a class="hover-u" href="/story/"><span class="u">Read my story</span><span class="arrow" aria-hidden="true">→</span></a>
       </div>
     </div>

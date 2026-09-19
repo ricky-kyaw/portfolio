@@ -25,7 +25,7 @@
 <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
@@ -64,54 +64,176 @@
 <div id="route-announcer" aria-live="polite" aria-atomic="true"></div>
 <div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
 
-<main id="main" tabindex="-1" class="page">
+<main id="main" tabindex="-1" class="page projects">
   <div class="container">
     <div class="page-head">
-      <h1 data-reveal>Projects</h1>
-      <p class="page-intro" data-reveal data-reveal-delay="80">Two kinds of work. The first proves I understand how computers and math really work. The second proves I can have an idea and finish it fast.</p>
+      <p class="eyebrow" data-reveal>Projects</p>
+      <h1 data-reveal>Things I have built.</h1>
+      <p class="page-intro" data-reveal data-reveal-delay="80">A chess engine first. Then two kinds of work: code where I did the thinking myself, and small apps I built quickly with AI tools. Every card says how much an AI helped.</p>
     </div>
 
-    <section class="section" id="from-scratch" aria-labelledby="from-scratch-title">
-      <h2 id="from-scratch-title" data-reveal><span class="plate-num num">01</span><br>Code I wrote from scratch</h2>
-      <p data-reveal data-reveal-delay="60">Hard problems, solved by hand. No shortcuts.</p>
-      <ul class="plates" role="list" data-reveal-group="60">
-        <li data-reveal>
-          <div class="plate">
-            <span class="plate-title">[PROJECT_NAME]</span>
-            <span class="plate-text">[One plain sentence about what it does.]</span>
-            <span class="plate-text label">Tools: [TOOLS]</span>
-            <span class="plate-text"><a class="u u--rest" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">Code</a> · <a class="u u--rest" href="[LIVE_URL]" target="_blank" rel="noopener">Live</a></span>
+        <article class="proj proj--lead" data-reveal>
+          <p class="proj-meta num">Sep 2026</p>
+          <div class="proj-body">
+            <h2>Ransom, a chess engine</h2>
+            <p class="proj-what">My entry in the Optiver AI Chessathon. Finalist out of 450–500 teams (UK and global).</p>
+            <p>The rules banned existing engines and models, and would not accept compiled programs. So the whole engine is Python. It looks ahead through the possible moves, using SEE pruning to skip moves that clearly lose material. A small neural network, trained during the event, judges each position.</p>
+            <p>It qualified for the finals ranked 30th, with 7 wins, 4 draws and 2 losses, and went out in the last 32.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>All of it. I worked on it alone.</dd></div>
+              <div><dt>AI use</dt><dd>Built during the competition with Claude Code, as its own write-up says.</dd></div>
+              <div><dt>Tools</dt><dd>Python, numba, PyTorch for training</dd></div>
+            </dl>
+            <details>
+              <summary>More about it</summary>
+              <ul>
+                <li>The network was trained on 106,814,205 positions.</li>
+                <li>The version on the Play page is the same engine rewritten in C so a browser can run it. On 104 test positions it chooses the same move, with the same score, as the original.</li>
+              </ul>
+            </details>
+            <p class="proj-links"><a class="hover-u" href="/play/"><span class="u">Play it in your browser</span><span class="arrow" aria-hidden="true">→</span></a><a class="hover-u" href="https://github.com/ricky-kyaw/optiver-chessathon-engine" target="_blank" rel="noopener"><span class="u">Code and write-up</span><span class="arrow" aria-hidden="true">→</span></a></p>
+          </div>
+        </article>
+
+    <section class="proj-section" id="from-scratch" aria-labelledby="from-scratch-title">
+      <h2 id="from-scratch-title" data-reveal>Code I wrote from scratch</h2>
+      <p data-reveal data-reveal-delay="60">The first three I wrote by hand, to understand what is underneath. The other two are team projects. Each card says where AI came in.</p>
+      <ul class="proj-list" role="list">
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">May 2026</p>
+          <div class="proj-body">
+            <h3>Machine learning, by hand</h3>
+            <p class="proj-what">Two small learning algorithms written out by hand, to see how they work inside: linear regression and logistic regression.</p>
+            <p>Each one learns by gradient descent: make a guess, measure the error, nudge the numbers a little, and repeat. Given points on the line y = 2x + 1, the linear one finds 2.000 and 1.000. The logistic one uses the sigmoid function to sort numbers into two groups.</p>
+            <p>They are small. Each one handles a single input number, and there are no plots yet.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>All of it.</dd></div>
+              <div><dt>AI use</dt><dd>None. I coded these myself.</dd></div>
+              <div><dt>Tools</dt><dd>Python, numpy</dd></div>
+            </dl>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/machine-learning" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
           </div>
         </li>
-        <li data-reveal>
-          <div class="plate">
-            <span class="plate-title">[PROJECT_NAME]</span>
-            <span class="plate-text">[One plain sentence about what it does.]</span>
-            <span class="plate-text label">Tools: [TOOLS]</span>
-            <span class="plate-text"><a class="u u--rest" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">Code</a> · <a class="u u--rest" href="[LIVE_URL]" target="_blank" rel="noopener">Live</a></span>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Jul–Aug 2025</p>
+          <div class="proj-body">
+            <h3>A web server</h3>
+            <p class="proj-what">A small web server in Python that reads requests straight off the network connection and writes the replies itself.</p>
+            <p>It uses only what comes with Python, no web library. It can echo text back, compressed with gzip when the caller asks for that, and report which program is calling. It can serve and save files in a folder, keep a connection open for several requests, and give each connection its own thread.</p>
+            <p>Built on the CodeCrafters “Build your own HTTP server” challenge. All tests passed.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>All of it.</dd></div>
+              <div><dt>AI use</dt><dd>None.</dd></div>
+              <div><dt>Tools</dt><dd>Python: socket, threading, gzip</dd></div>
+            </dl>
+            <details>
+              <summary>What it does not do</summary>
+              <ul>
+                <li>It only answers on the machine it runs on.</li>
+                <li>A badly formed request gets no reply. The connection just closes.</li>
+              </ul>
+            </details>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/http-server-python" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+          </div>
+        </li>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Aug 2025</p>
+          <div class="proj-body">
+            <h3>A piece of git</h3>
+            <p class="proj-what">Some of the inner commands of git, the tool programmers use to keep the history of their code, written again in Python.</p>
+            <p>Starting from the CodeCrafters starter, it can store a file the way git stores it (SHA-1 hash, zlib compression) and read stored files back. It can list what is in a stored folder, record a folder as a tree, and write a commit.</p>
+            <p>Its clone command asks a server for its branches and downloads the packed data, but does not unpack it yet. In progress. Built on the CodeCrafters “Build your own Git” challenge.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>All of it.</dd></div>
+              <div><dt>AI use</dt><dd>None.</dd></div>
+              <div><dt>Tools</dt><dd>Python: zlib, hashlib, requests</dd></div>
+            </dl>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/codecrafters-git-python" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+          </div>
+        </li>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">2026</p>
+          <div class="proj-body">
+            <h3>Nemo, a money tracker</h3>
+            <p class="proj-what">A personal money tracker. You sign in, set up accounts in different currencies, and record income, spending and transfers. Accounts can sit inside other accounts, and receipts can be attached.</p>
+            <p>A small server of our own sits between the browser and the main server, so the browser never holds the sign-in tokens. It is live and still being worked on. Three people have written code for it.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>The first version of accounts, transactions, categories and transfers on the main server. Much of the sign-in work: the PIN screen, Google sign-in, email verification, lock-out after failed sign-ins and a two-device limit. Moving the whole interface to MudBlazor. Teammates started the in-between server; I extended and repaired it.</dd></div>
+              <div><dt>AI use</dt><dd>We did the backbone and the data model without AI. Now it is all AI-assisted.</dd></div>
+              <div><dt>Tools</dt><dd>C#, .NET, ASP.NET Core, Blazor WebAssembly, MudBlazor, Entity Framework Core, PostgreSQL</dd></div>
+            </dl>
+            <details>
+              <summary>What is not built yet</summary>
+              <ul>
+                <li>Budgets and reports. Those two pages are empty for now.</li>
+              </ul>
+            </details>
+            <p class="proj-note label">The code is private.</p>
+            <p class="proj-links"><a class="hover-u" href="https://nemoapp.xyz" target="_blank" rel="noopener"><span class="u">Visit Nemo</span><span class="arrow" aria-hidden="true">→</span></a></p>
+          </div>
+        </li>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">2025–2026</p>
+          <div class="proj-body">
+            <h3>One Project One Month</h3>
+            <p class="proj-what">A no-AI monthly build community for Burmese developers. I work on the backend (the server side) and on QA (testing) for its website.</p>
+            <p>Core website team of 12 contributors. 300+ participants across projects and proposals.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>Creating a developer profile, the forgot-password flow, and the list of approved project ideas with a filter by number of reactions.</dd></div>
+              <div><dt>AI use</dt><dd>None. The community builds without AI.</dd></div>
+              <div><dt>Tools</dt><dd>Java, Spring Boot, PostgreSQL</dd></div>
+            </dl>
+            <p class="proj-note label">The code is private.</p>
+            <p class="proj-links"><a class="hover-u" href="https://www.one-project-one-month.com" target="_blank" rel="noopener"><span class="u">Visit the site</span><span class="arrow" aria-hidden="true">→</span></a></p>
           </div>
         </li>
       </ul>
     </section>
 
-    <section class="section" id="built-fast" aria-labelledby="built-fast-title">
-      <h2 id="built-fast-title" data-reveal><span class="plate-num num">02</span><br>Apps I built fast</h2>
-      <p data-reveal data-reveal-delay="60">Small products, built fast with AI tools. Every one of them finished.</p>
-      <ul class="plates" role="list" data-reveal-group="60">
-        <li data-reveal>
-          <div class="plate">
-            <span class="plate-title">[PROJECT_NAME]</span>
-            <span class="plate-text">[One plain sentence about what it does.]</span>
-            <span class="plate-text label">Tools: [TOOLS]</span>
-            <span class="plate-text"><a class="u u--rest" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">Code</a> · <a class="u u--rest" href="[LIVE_URL]" target="_blank" rel="noopener">Live</a></span>
+    <section class="proj-section" id="built-fast" aria-labelledby="built-fast-title">
+      <h2 id="built-fast-title" data-reveal>Apps I built fast</h2>
+      <p data-reveal data-reveal-delay="60">Small things built quickly with AI help. Each card says how much.</p>
+      <ul class="proj-list" role="list">
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Oct 2025</p>
+          <div class="proj-body">
+            <h3>Explain It!</h3>
+            <p class="proj-what">Type a topic you find hard and get back a short explanation, written as if for a five-year-old.</p>
+            <p>You sign in with your email. The page sends your topic to a small function on AWS, which asks an AI model (Claude 3 Haiku, through Amazon Bedrock) for the answer. It keeps no history: earlier answers are gone when you refresh the page.</p>
+            <dl class="proj-facts">
+              <div><dt>My part</dt><dd>All of it.</dd></div>
+              <div><dt>AI use</dt><dd>AI guided me when I was stuck and did not want to read the documentation.</dd></div>
+              <div><dt>Tools</dt><dd>JavaScript, React, AWS Amplify, Cognito, Lambda, Bedrock</dd></div>
+            </dl>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/explain-it-app" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
           </div>
         </li>
-        <li data-reveal>
-          <div class="plate">
-            <span class="plate-title">[PROJECT_NAME]</span>
-            <span class="plate-text">[One plain sentence about what it does.]</span>
-            <span class="plate-text label">Tools: [TOOLS]</span>
-            <span class="plate-text"><a class="u u--rest" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">Code</a> · <a class="u u--rest" href="[LIVE_URL]" target="_blank" rel="noopener">Live</a></span>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Mar 2026</p>
+          <div class="proj-body">
+            <h3>Luffa Passport</h3>
+            <p class="proj-what">Loyalty cards kept in one place, as a mini app inside the Luffa app.</p>
+            <p>Tap a card to see its deals, save deals for later, and add more cards. It is a demo: the cards and deals are sample data, and it does not talk to a server.</p>
+            <p>Built with Team Fuzzy at an Encode hackathon in London.</p>
+            <dl class="proj-facts">
+              <div><dt>AI use</dt><dd>Entirely AI-assisted.</dd></div>
+              <div><dt>Tools</dt><dd>JavaScript, WXML, WXSS</dd></div>
+            </dl>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/EncHack-15" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+          </div>
+        </li>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Apr 2026</p>
+          <div class="proj-body">
+            <h3>Pandora Unmapped</h3>
+            <p class="proj-what">A globe that shows where people displaced by war have gone.</p>
+            <p>An unfinished prototype. It is written to draw arcs from Ukraine to the countries hosting its refugees, using yearly counts from UNHCR, with a timeline of the war along the bottom. A second scenario, for Myanmar, is written but cannot be chosen on screen yet.</p>
+            <p>Built for UNMAPPED, one of the themed challenges at MIT Hack-nation.</p>
+            <dl class="proj-facts">
+              <div><dt>AI use</dt><dd>Entirely AI-assisted.</dd></div>
+              <div><dt>Tools</dt><dd>TypeScript, React, deck.gl, Mapbox, Python, FastAPI, DuckDB</dd></div>
+            </dl>
+            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/PandoraBox" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
           </div>
         </li>
       </ul>

@@ -85,10 +85,10 @@ The Play page runs `assets/wasm/ransom.wasm`. It is built from the C files in `e
 
 ## Still to fill in
 
-1. **Your name.** It is "Ricky Kyaw" everywhere (taken from your GitHub handle). Search and replace if you want something else, then run `python tools/make_images.py` to redraw the share picture.
-2. **Resume PDF.** Put it at `assets/ricky-kyaw-resume.pdf`, or change the path in `resume/index.html` and `site.config.js`.
-3. **Projects, education, skills, bullet points.** Each project's "Code" link points at your GitHub profile for now; give it `data-github-repo="repo-name"` and it fills in the exact repo by itself. Replace the `[PLACEHOLDER]` text on those pages.
-4. **Booking (optional).** Replace `[CALCOM_URL]` in `contact/index.html` with your Cal.com link, or delete that row.
+1. **Your name.** The site shows "Ricky Kyaw", and the Resume page is headed "Myat Hein (Ricky) Kyaw". If the short name ever changes, run `python tools/make_images.py` afterwards to redraw the share picture.
+2. **Resume PDF (optional).** The Resume page has a "Print, or save as a PDF" button and a print layout in `site.css`, so the PDF always matches the page. If you would rather offer a file of your own, put it in `assets/` and set `resumePdf` in `site.config.js`.
+3. **Projects, education, skills.** These pages are filled in. Every fact on them is listed in `tools/ground_truth.txt`, with where it came from. To change a fact, change it there first, then on the page, then run `python tools/check_facts.py`: it must find every number, date, grade, name and link in the ground truth.
+4. **Booking (optional).** There is no booking link on the Contact page yet. If you open a Cal.com page, add one more row to the list at the bottom of `contact/index.html`, in the same shape as the LinkedIn row.
 
 ## Deploy
 
@@ -122,6 +122,6 @@ Publishing the project root also publishes `README.md`, `tools/`, `tests/` and `
 
 ## Design notes
 
-- Look: quiet engineering graph paper, IBM Plex type, one blue accent.
+- Look: quiet engineering graph paper, Instrument Sans for text and IBM Plex Mono for labels, one blue accent.
 - Motion: text links draw a thin underline; cards lift 3px with a soft shadow; sections fade in and rise 12px on scroll; pages glide instead of reloading; everything respects "reduce motion".
 - The Home cell understands plain English ("show me the projects"), does exact big-number math (`2^64`), tests primes, and computes Fibonacci numbers, all by hand-written code.

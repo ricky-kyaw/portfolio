@@ -17,6 +17,9 @@ ALSA International School, Yangon — IGCSE, 2022–2023. Highlights: Further Pu
 2020–2022 — interrupted years: independent study while schools were closed by COVID and conflict.
 Practising High School, Yangon University of Education ("TTC"), Yangon — KG to Grade 7, 2012–2020. Class monitor; consistently top of the grade.
 
+# Abbreviations spelled out (expansions of the names above, not new facts):
+EAP is English for Academic Purposes, the English module of the NCUK International Foundation Year. ICPC is the International Collegiate Programming Contest. IGCSE highlights means a selection of the grades, not all of them.
+
 [story]
 Grew up in Loikaw, a small town in the hills of Myanmar; still the most beautiful place I know.
 Moved to Yangon for school; class monitor; report card never dropped below A*.
@@ -40,6 +43,37 @@ The engine's code and its write-up are on GitHub. The Play page needs JavaScript
 # From assets/js/play.js (LEVELS):
 There are three strength settings. Gentle stops after 2 half-moves, Club after 5, Full strength thinks for about one second.
 
+[projects]
+# From Ricky's fact sheet (2026-09-19), with his later corrections:
+Optiver AI Chessathon: FINALIST out of 450–500 teams (UK and global). Chess engine with SEE pruning and a trained evaluation model, built during the event under rules banning pre-existing engines and models.
+Ricky on the chess engine (2026-09-19): "It was purely me." He worked on it alone.
+One Project One Month (OPOM): https://www.one-project-one-month.com — a no-AI monthly build community for Burmese developers. Backend and QA (not lead: corrected by Ricky on 2026-09-19). Core website team of 12 contributors; 300+ participants across projects and proposals. Java, PostgreSQL.
+Nemo / BudgetManager: https://nemoapp.xyz — live, ongoing. C# .NET, PostgreSQL, self-written Backend-for-Frontend among other things.
+Ricky on Nemo (2026-09-19): "We did the whole backbone and modelling of Nemo entirely without AI. Now it's all AI assisted."
+HTTP server from scratch: Python, CodeCrafters-based course, all tests passed. Complete.
+git from scratch: Python, CodeCrafters-based course. In progress; describe what the code shows.
+Ricky (2026-09-20), asked whether any AI helped on the web server and the git project: "None".
+Ricky on explain-it-app (2026-09-19): "AI guided me when I'm stuck and don't want to read documentations".
+Ricky on Luffa Passport (2026-09-19): AI London hackathon at Encode; entirely AI assisted.
+Ricky on Pandora Unmapped (2026-09-19): one of MIT Hack-nation's themed challenges; the whole development was entirely AI assisted.
+Ricky on the machine-learning repository (2026-09-20): "that's my proudest work because I actually tried to code it myself, although those algorithms are small ones." No AI: he coded these himself.
+# Checked first-hand in the repositories on 2026-09-19 and 2026-09-20 (one reader and one sceptic per repository):
+Machine learning (machine-learning): two small Python files using numpy, linear_regression.py and LogisticRegression.py, committed on 21 and 22 May 2026 (May 2026); Ricky is the only author. Both learn by gradient descent with one weight and one offset, so each handles a single input number. Linear regression: run on 2026-09-20, given points on the line y = 2x + 1 it prints 2.000000005 and 0.99999998, that is 2.000 and 1.000. Logistic regression uses the sigmoid function and sorts numbers into two groups, splitting at a probability of 0.5 (checked on 2026-09-20: it classifies all 8 of its built-in training points correctly). No plots yet (the last commit message says plots are still needed).
+Ransom (optiver-chessathon-engine README): Optiver AI Chessathon, September 2026 (Sep 2026). Qualified for the finals ranked 30th (7W 4D 2L: 7 wins, 4 draws, 2 losses), then went out in the last 32. Native binaries (compiled programs) were rejected, so the engine is pure Python with numba. Training data: 106,814,205 positions. The trainer uses PyTorch. README: "built during the competition with Claude Code".
+HTTP server (http-server-python): Python standard library only (socket, threading, gzip), no web library. Routes: echo with gzip when the client accepts it, User-Agent, serving and saving files in a chosen folder, persistent connections, one thread per connection. Binds to localhost only. A malformed request gets no reply. CodeCrafters "Build your own HTTP server" challenge. Commits from 30 July to 9 August 2025 (Jul–Aug 2025).
+git (codecrafters-git-python): the CodeCrafters starter supplies init (Ricky only uncommented it); his own work is cat-file, hash-object, ls-tree, write-tree, commit-tree; SHA-1 hash and zlib compression; clone asks a server for its branches and downloads the packed data but does not unpack it. Imports zlib, hashlib, requests. CodeCrafters "Build your own Git" challenge. Commits on 30 and 31 August 2025 (Aug 2025).
+One Project One Month backend (private): Java, Spring Boot, PostgreSQL. Ricky's commits, 2025 to 2026 (2025–2026): developer-profile creation, forgot-password flow, approved project ideas with a reaction-count filter.
+Nemo (private, two repositories): a personal money tracker. Nested accounts in different currencies; income, spending and transfers; receipt attachments. The browser never holds the login tokens: a server of the team's own sits between the browser and the API. Three people have written code for it (three committers). Ricky's commits in 2026: first version of accounts, transactions, categories and transfers on the server; the PIN screen, Google sign-in, email verification, lock-out after failed logins and the two-device limit; moved the interface to MudBlazor; extended and repaired the in-between server that teammates started. Budgets and reports are not built: those two pages are empty. Tools: C#, .NET, ASP.NET Core, Blazor WebAssembly, MudBlazor, Entity Framework Core, PostgreSQL.
+Explain It! (explain-it-app): sign in with email, type a topic, get a short explanation written as if for a five-year-old. The page calls a function on AWS (Lambda) that asks Claude 3 Haiku through Amazon Bedrock. There is no database and it keeps no history: earlier answers live only in the page and are gone on refresh. (The AWS function does log each request, so the page must not say "nothing is saved".) JavaScript, React, AWS Amplify, Cognito, Lambda, Bedrock. Ricky is the only author. Commits in October 2025 (Oct 2025).
+Luffa Passport (EncHack-15): a mini app for the Luffa app that keeps loyalty cards in one place: deals per card, saved deals, adding cards. A demo with sample data and no server connection. JavaScript, WXML, WXSS. README: Team Fuzzy, Encode hackathon. Commits on 21 and 22 March 2026 (Mar 2026).
+Pandora Unmapped (PandoraBox): an unfinished prototype. A globe with arcs from Ukraine to the countries hosting its refugees and a timeline of the war, using public figures from UNHCR and the World Bank. A Myanmar scenario exists as a data file but cannot be chosen on screen. README: Challenge 05 UNMAPPED. TypeScript, React, deck.gl, Mapbox, Python, FastAPI, DuckDB. Commits on 25 April 2026 (Apr 2026).
+
+[resume]
+# Ricky (2026-09-19): "I will provide the resume after awhile. For now, just use the languages you see in my code."
+Languages found in the project repositories on 2026-09-20: Python, C#, Java, JavaScript, TypeScript. Also used there: .NET, Blazor, Spring Boot, React, PostgreSQL, AWS, PyTorch, numba.
+LinkedIn linkedin.com/in/ricky-kyaw, GitHub github.com/ricky-kyaw, site rickydx.dev, Play page rickydx.dev/play, Nemo nemoapp.xyz.
+The Resume page can be printed, or saved as a PDF, from the page itself.
+
 [credits]
 # Ricky asked for this credit on 2026-09-19: "Add Chris Tate and node that leads to original creation."
 The voxel scenes are inspired by Chris Tate's Next.js Conf 2024 scene.
@@ -50,3 +84,11 @@ https://github.com/ricky-kyaw
 https://www.linkedin.com/in/ricky-kyaw/
 https://github.com/ctate/nextjs-conf-2024
 https://github.com/ricky-kyaw/optiver-chessathon-engine
+https://github.com/ricky-kyaw/http-server-python
+https://github.com/ricky-kyaw/codecrafters-git-python
+https://github.com/ricky-kyaw/explain-it-app
+https://github.com/ricky-kyaw/EncHack-15
+https://github.com/ricky-kyaw/PandoraBox
+https://www.one-project-one-month.com
+https://nemoapp.xyz
+https://github.com/ricky-kyaw/machine-learning

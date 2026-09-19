@@ -4,13 +4,14 @@
    plates · bridge · footer · shared page bits · motion · reduced motion
    ========================================================================== */
 
-/* A stand-in with matching metrics while IBM Plex Sans loads, so text barely moves. */
+/* A stand-in with matching metrics while Instrument Sans loads, so text barely moves. */
 @font-face {
-  font-family: 'Plex Sans Fallback';
+  font-family: 'Sans Fallback';
   src: local('Segoe UI'), local('Helvetica Neue'), local('Arial');
-  size-adjust: 105%;
-  ascent-override: 102.5%;
-  descent-override: 27.5%;
+  /* measured in the browser against Instrument Sans: 2% wider than Segoe UI, ascent 970 and descent 250 per 1000 */
+  size-adjust: 102%;
+  ascent-override: 95%;
+  descent-override: 24.5%;
   line-gap-override: 0%;
 }
 
@@ -29,7 +30,7 @@
   --shadow-lift: 0 12px 32px -12px rgba(20, 22, 26, .18), 0 2px 6px rgba(20, 22, 26, .06);
   --selection: rgba(36, 83, 214, .18);
 
-  --sans: 'IBM Plex Sans', 'Plex Sans Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Instrument Sans', 'Sans Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --ease-out: cubic-bezier(.22, 1, .36, 1);
@@ -406,6 +407,10 @@ html:not([data-theme="dark"]) .theme-btn .when-dark { display: none; }
   .nav-tail { min-height: 0; padding: 0; }
   .theme-btn { margin: 0 -12px 0 0; }
 }
+@media (min-width: 720px) and (max-width: 859px) {
+  .site-nav, .site-nav.is-open { gap: 12px; }
+  .site-nav ul { gap: 18px; }
+}
 
 /* ---------- main / page transitions ---------- */
 main {
@@ -440,10 +445,11 @@ main.is-entering {
 }
 
 h1 {
-  font-size: clamp(2.75rem, 1.5rem + 5vw, 4.75rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -.025em;
+  font-size: clamp(3rem, 1.4rem + 6.4vw, 5.75rem);
+  text-wrap: balance;
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.035em;
 }
 .statement {
   margin-top: 12px;
@@ -661,6 +667,9 @@ html:not(.js) .cell-input { pointer-events: none; }
 @media (min-width: 720px) {
   .plates-section { padding-top: 64px; }
   .plates { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .plates--four { grid-template-columns: repeat(2, 1fr); }
+  .plates--four li:nth-child(odd) { border-left: 0; }
+  .plates--four li:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .plates li { display: grid; }
   .plates li + li { border-top: 0; border-left: 1px solid var(--line); }
   .plate {
@@ -668,6 +677,12 @@ html:not(.js) .cell-input { pointer-events: none; }
     padding: 28px 24px 24px;
   }
   .plate .arrow { margin-top: auto; padding-top: 20px; }
+}
+@media (min-width: 1024px) {
+  .plates--four { grid-template-columns: repeat(4, 1fr); }
+  .plates--four li:nth-child(odd) { border-left: 1px solid var(--line); }
+  .plates--four li:first-child { border-left: 0; }
+  .plates--four li:nth-child(n + 3) { border-top: 0; }
 }
 @media (hover: hover) {
   .plate:hover {
@@ -737,7 +752,10 @@ html:not(.js) .cell-input { pointer-events: none; }
 /* ---------- shared bits for the other pages ---------- */
 .page { padding: 48px 0 56px; }
 .page-head { max-width: 640px; }
-.page h1 { font-size: clamp(2.25rem, 1.5rem + 3.5vw, 3.5rem); }
+.page h1 { font-size: clamp(2.375rem, 1.5rem + 4.4vw, 4.25rem); }
+/* the small mono label above a headline, with a short rule leading into it */
+.eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font: 400 .75rem/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
 .page-intro { margin-top: 16px; max-width: 58ch; }
 .section { padding-top: 40px; }
 [id] { scroll-margin-top: calc(var(--header-h) + 12px); }
@@ -823,6 +841,93 @@ html:not(.js) .cell-input { pointer-events: none; }
   .rows-list li { grid-template-columns: 160px 1fr; column-gap: 24px; }
   .rows-list .note { grid-column: 2; }
 }
+
+/* ---------- projects ---------- */
+.proj-section { padding-top: 56px; }
+.proj-section > h2 { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem); font-weight: 500; line-height: 1.2; letter-spacing: -.02em; }
+.proj-section > h2 + p { margin-top: 10px; color: var(--muted); max-width: 58ch; }
+.proj-list { list-style: none; margin: 24px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.proj { display: grid; gap: 4px 24px; padding: 28px 0 30px; border-bottom: 1px solid var(--line); }
+.proj-meta { font: 400 .8125rem/1.5 var(--mono); letter-spacing: .02em; color: var(--muted); }
+.proj-body { min-width: 0; max-width: 62ch; }
+.proj h3, .proj--lead h2 { font-size: 1.375rem; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
+.proj-what { margin-top: 8px; }
+.proj-body p + p { margin-top: 10px; }
+/* the honest lines: what was my part, and how much an AI helped */
+.proj-facts { margin: 16px 0 0; display: grid; gap: 8px; }
+.proj-facts div { display: grid; gap: 2px 12px; align-items: baseline; }
+@media (min-width: 480px) { .proj-facts div { grid-template-columns: 6.5rem 1fr; } }
+.proj-facts dt { font: 400 .75rem/1.6 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.proj-facts dd { margin: 0; font-size: .9375rem; }
+.proj-links { display: flex; flex-wrap: wrap; gap: 4px 24px; margin-top: 14px; }
+.proj-links a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: .9375rem; text-decoration: none; color: var(--accent); }
+.proj-note { margin-top: 12px; }
+.proj details { margin-top: 6px; }
+.proj summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font: 400 .8125rem/1 var(--mono);
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+.proj summary::-webkit-details-marker { display: none; }
+.proj summary::before { content: "+"; display: inline-block; width: 1ch; color: var(--fg); }
+.proj details[open] summary::before { content: "\2212"; }
+.proj details ul { margin: 2px 0 6px; padding-left: 1.2em; display: grid; gap: 6px; font-size: .9375rem; color: var(--muted); max-width: 60ch; }
+@media (hover: hover) { .proj summary:hover { color: var(--fg); } }
+/* the engine gets a frame of its own above the two lists */
+.proj--lead { margin-top: 36px; padding: 28px 24px 26px; border: 1px solid var(--line-strong); background: var(--surface); }
+.proj--lead h2 { font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem); font-weight: 500; letter-spacing: -.02em; }
+@media (min-width: 720px) {
+  .proj { grid-template-columns: 160px 1fr; padding: 34px 0 36px; }
+  .proj-meta { padding-top: 6px; }
+  .proj--lead { padding: 36px 32px 32px; }
+}
+
+/* ---------- education ---------- */
+.edu-list { list-style: none; margin: 28px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.edu-item { display: grid; gap: 6px; padding: 24px 0 26px; border-bottom: 1px solid var(--line); }
+.edu-when { font: 400 .8125rem/1.5 var(--mono); letter-spacing: .02em; color: var(--muted); }
+.edu-body h2 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; letter-spacing: -.005em; }
+.edu-aside { font-weight: 400; color: var(--muted); font-size: 1rem; white-space: nowrap; }
+.edu-where { margin-top: 2px; color: var(--muted); }
+.edu-note { margin-top: 12px; max-width: 58ch; }
+.edu-notes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 4px; max-width: 58ch; }
+.edu-item--gap .edu-note { margin-top: 6px; color: var(--muted); }
+.edu-item--gap .edu-note a { color: var(--fg); }
+.grades-label { margin-top: 14px; }
+.grades-label + .grades { margin-top: 6px; }
+.edu-notes .edu-aside { white-space: normal; font-size: .9375rem; }
+/* grades set like a small table: subject on the left, grade in a fixed column */
+.grades { margin: 14px 0 0; max-width: 26rem; border-top: 1px solid var(--line); }
+.grades div { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.grades dt { font-size: .9375rem; }
+.grades dd { margin: 0; font: 500 .9375rem/1.4 var(--mono); text-align: right; }
+.grade-note { margin-left: 8px; font: 400 .75rem/1 var(--mono); letter-spacing: .02em; color: var(--accent); }
+@media (min-width: 720px) {
+  .edu-item { grid-template-columns: 160px 1fr; column-gap: 24px; padding: 30px 0 32px; }
+  .edu-when { padding-top: 5px; }
+}
+
+/* ---------- resume ---------- */
+.resume-contact { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font: 400 .875rem/1.6 var(--mono); }
+.resume-contact a { display: inline-block; padding: 6px 0; }
+.resume-more { margin-top: 12px; }
+/* row numbers are decoration, so they are drawn here and not written into the page */
+.resume .rows-list { counter-reset: row; }
+.resume [data-count]::before { counter-increment: row; content: counter(row, decimal-leading-zero); }
+.resume-more a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: .9375rem; text-decoration: none; color: var(--accent); }
+.resume .rows-list .note { max-width: 64ch; }
+.resume-skills { margin: 16px 0 0; display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 14px; }
+.resume-skills div { display: grid; gap: 2px; }
+.resume-skills dt { font: 400 .75rem/1.6 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.resume-skills dd { margin: 0; }
+button.button-link { cursor: pointer; }
+@media (min-width: 720px) { .resume-skills div { grid-template-columns: 160px 1fr; column-gap: 24px; align-items: baseline; } }
 
 /* ---------- the story: nine slides over live scenes ---------- */
 /* This page is always dark, whatever the theme: the scenes are drawn as light on night. */
@@ -1128,7 +1233,10 @@ html:not(.js) .play-side, .play.is-broken .play-side { display: none; }
 .moves li { padding-left: .5ch; }
 .moves li::marker { color: var(--muted); }
 .moves li span { display: inline-block; min-width: 8ch; }
-.move-form { margin-top: 14px; }
+.moves-tools { margin-top: 4px; }
+.moves-tools button { min-height: 44px; font-size: .9375rem; }
+.moves-tools button:disabled { opacity: .4; cursor: default; text-decoration: none; }
+.move-form { margin-top: 6px; }
 .move-row { display: flex; gap: 14px; align-items: center; margin-top: 6px; }
 .move-row input {
   flex: 1 1 auto;
@@ -1172,4 +1280,35 @@ html.js [data-reveal].is-visible { opacity: 1; transform: none; }
   html.js [data-reveal] { opacity: 1; transform: none; }
   .plate:hover { transform: none; box-shadow: none; }
   .hover-u:hover .arrow, .plate:hover .arrow { transform: none; }
+}
+
+/* ---------- print ---------- */
+/* Printing any page gives clean black on white. On the Resume page that IS the PDF, and it fits one sheet. */
+@media print {
+  :root, :root[data-theme="dark"], body[data-page="story"] { --bg: #fff; --surface: #fff; --fg: #000; --muted: #333; --accent: #000; --line: #bbb; --line-strong: #888; color-scheme: light; }
+  .story { --ink: #000; --night: #fff; --amber: #000; }
+  html, body, html:has(> body[data-page="story"]) { background: #fff !important; }
+  body::before, .site-header, .site-footer, .skip, .no-print, .copy-btn, .theme-btn, .deck-canvas, .deck-tools, .deck-nav { display: none !important; }
+  /* nothing may print half-faded: finish every scroll fade-in at once */
+  html.js [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  body { font-size: 10pt; line-height: 1.3; }
+  .page { padding: 0; }
+  .container { max-width: none; padding: 0; }
+  .page-head { max-width: none; }
+  .page h1 { font-size: 20pt; letter-spacing: -.02em; }
+  .page-intro { margin-top: 4pt; }
+  .eyebrow { display: none; }
+  .section { padding-top: 8pt; }
+  .section h2 { font-size: 11.5pt; }
+  .rows-list { margin-top: 4pt; }
+  .rows-list li { padding: 2.75pt 0; break-inside: avoid; grid-template-columns: 84pt 1fr; column-gap: 10pt; gap: 1pt 10pt; }
+  .rows-list .note { grid-column: 2; font-size: 9pt; color: #222; max-width: none; }
+  .resume-contact { margin-top: 5pt; font-size: 8.5pt; gap: 2pt 14pt; }
+  .resume-contact a { padding: 0; }
+  .resume-skills { margin-top: 5pt; padding-top: 5pt; gap: 2pt; }
+  .resume-skills div { grid-template-columns: 84pt 1fr; column-gap: 10pt; }
+  .resume .section > p { display: none; }
+  .u, .u--rest { background-image: none !important; }
+  a { text-decoration: none; color: #000; }
+  @page { margin: 11mm 14mm; }
 }

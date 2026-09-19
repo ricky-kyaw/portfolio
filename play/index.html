@@ -25,7 +25,7 @@
 <script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
@@ -66,8 +66,8 @@
 
 <main id="main" tabindex="-1" class="page play" data-play>
   <div class="container">
-    <p class="label">Play</p>
-    <h1>Play my chess engine</h1>
+    <p class="eyebrow">Play</p>
+    <h1>Play my chess engine.</h1>
     <p class="lead play-lead">This is Ransom, the chess engine I built for the Optiver AI Chessathon. It runs right here in your browser, so nothing you do is sent anywhere.</p>
 
     <div class="play-grid">
@@ -108,6 +108,7 @@
         <section class="play-panel" aria-labelledby="play-moves">
           <h2 class="label" id="play-moves">Moves</h2>
           <ol class="moves" data-moves></ol>
+          <p class="moves-tools"><button type="button" class="linklike" data-copy-moves disabled>Copy the moves</button></p>
           <form class="move-form" data-move-form autocomplete="off">
             <label class="label" for="move-input">Or type your move</label>
             <div class="move-row">

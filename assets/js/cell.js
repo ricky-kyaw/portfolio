@@ -90,7 +90,7 @@ function makeCommands() {
   return [
     {
       name: 'help', aliases: ['?', 'commands', 'what can you do', 'what can i type', 'options'],
-      run: () => [text('You can type: show projects, show code, show apps, show resume, show story, show education, contact, skills, copy email, github, linkedin, random, dark, light, clear. Or type some math, like 2^64 or 17*23, or prime 1000000007, or fib 100.')],
+      run: () => [text('You can type: show projects, show code, show apps, show resume, play chess, show story, show education, contact, skills, copy email, github, linkedin, random, dark, light, clear. Or type some math, like 2^64 or 17*23, or prime 1000000007, or fib 100.')],
     },
     { name: 'show projects', aliases: ['projects', 'project', 'work', 'show work', 'the work', 'portfolio'], run: goTo('/projects/', 'Opening the projects…') },
     { name: 'show code', aliases: ['code', 'from scratch', 'scratch', 'code i wrote', 'code i wrote from scratch'], run: goTo('/projects/#from-scratch', 'Opening the code I wrote from scratch…') },
@@ -98,7 +98,9 @@ function makeCommands() {
     { name: 'show resume', aliases: ['resume', 'cv', 'resumé', 'résumé'], run: goTo('/resume/', 'Opening the resume…') },
     {
       name: 'download resume', aliases: ['pdf', 'download pdf', 'resume pdf', 'download'],
-      run: () => [text('Here it is: '), link('Download PDF', site.resumePdf)],
+      run: () => (site.resumePdf
+        ? [text('Here it is: '), link('Download PDF', site.resumePdf)]
+        : [text('Open '), link('the Resume page', '/resume/'), text(' and press “Print, or save as a PDF”.')]),
     },
     {
       name: 'show story', aliases: ['story', 'my story', 'about', 'about me', 'who are you', 'who'],

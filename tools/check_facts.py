@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parent.parent
 TRUTH = ROOT / "tools" / "ground_truth.txt"
 # Each page, and the sections of the ground truth its numbers and dates may come from.
 # (A year from the Education list must not drift onto a Story slide.)
-PAGES = {"story/index.html": ["story", "credits"], "play/index.html": ["play"]}
+PAGES = {"story/index.html": ["story", "credits"], "play/index.html": ["play"], "education/index.html": ["education"], "projects/index.html": ["projects", "play"],
+         "resume/index.html": ["resume", "identity", "education", "projects", "play"]}
 
 COUNTING = """one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty
 hundred thousand million first second third fourth fifth half dozen double twice""".split()
@@ -28,6 +29,10 @@ MONTHS = """january february march april may june july august september october 
 jan feb mar apr jun jul aug sep sept oct nov dec""".split()
 # Capitalised words that are ordinary English, not names.
 PLAIN = set("i i'm i've a an the then now so when on at it my in we see get".split())
+
+
+# Tags that start a new piece of text (so "Physics" and its grade "A" are not read as one word).
+BLOCKS = ("p", "h1", "h2", "h3", "h4", "li", "dt", "dd", "section", "div", "button", "label", "figcaption", "td", "th", "summary")
 
 
 class MainText(HTMLParser):
@@ -48,8 +53,10 @@ class MainText(HTMLParser):
             return
         if tag in ("script", "style"):
             self.skip += 1
-        if tag in ("p", "h1", "h2", "h3", "li", "section", "div", "button", "br"):
+        if tag in BLOCKS or tag == "br":
             self.blocks.append("")
+        else:
+            self.blocks[-1] += " "  # a <span> or <a> boundary still separates words
         if tag == "a" and a.get("href"):
             self.links.append(a["href"])
         if tag == "img" and a.get("alt"):
@@ -61,8 +68,10 @@ class MainText(HTMLParser):
             self.skip -= 1
         if tag == "main" and self.depth:
             self.depth -= 1
-        if tag in ("p", "h1", "h2", "h3", "li", "section", "div", "button"):
+        if tag in BLOCKS:
             self.blocks.append("")
+        elif self.depth:
+            self.blocks[-1] += " "
 
     def handle_data(self, data):
         if self.depth and not self.skip:

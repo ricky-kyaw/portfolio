@@ -228,6 +228,9 @@ safely('router', initRouter);
 safely('menu', initMenu);
 safely('copy', initCopy);
 safely('forms', initForms);
+// The Resume page's "Print, or save as a PDF" button. The print layout lives in site.css.
+safely('print', () => document.addEventListener('click', (e) => { if (e.target.closest('[data-print]')) window.print(); }));
+window.addEventListener('beforeprint', () => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible')));
 
 document.addEventListener('page:unload', pageTeardown);
 document.addEventListener('page:load', (e) => { pageInit(e.detail.main); countView(); });

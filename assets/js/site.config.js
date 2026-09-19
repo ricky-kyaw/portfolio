@@ -7,6 +7,6 @@ export const site = {
   linkedinUrl: 'https://www.linkedin.com/in/ricky-kyaw/',
   url: 'https://rickydx.dev',
   email: 'origin@rickydx.dev',
-  resumePdf: '/assets/ricky-kyaw-resume.pdf',
-  skills: [],                      // e.g. ['Python', 'C++', 'probability', 'linear algebra'] — shown by the "skills" command and on the Resume page
+  resumePdf: '',                   // put a path here once there is a PDF (e.g. '/assets/resume.pdf'); until then the Resume page's Print button makes one
+  skills: ['Python', 'C#', 'Java', 'JavaScript', 'TypeScript'], // the languages found in the project code; shown by the "skills" command on Home
 };
