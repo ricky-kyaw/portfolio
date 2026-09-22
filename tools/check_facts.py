@@ -21,7 +21,8 @@ TRUTH = ROOT / "tools" / "ground_truth.txt"
 # Each page, and the sections of the ground truth its numbers and dates may come from.
 # (A year from the Education list must not drift onto a Story slide.)
 PAGES = {"story/index.html": ["story", "credits"], "play/index.html": ["play"], "education/index.html": ["education"], "projects/index.html": ["projects", "play"],
-         "resume/index.html": ["resume", "identity", "education", "projects", "play"]}
+         "resume/index.html": ["resume", "identity", "education", "projects", "play"],
+         "study-log/index.html": ["study-log", "identity"]}
 
 COUNTING = """one two three four five six seven eight nine ten eleven twelve twenty thirty forty fifty
 hundred thousand million first second third fourth fifth half dozen double twice""".split()
@@ -107,14 +108,18 @@ def load_truth():
 def check(page, sections, links, allowed=None):
     truth = "\n".join(sections.values())  # names may come from any section
     strict = "\n".join(sections.get(k, "") for k in allowed) if allowed else truth  # numbers and dates may not
+    html = (ROOT / page).read_text(encoding="utf-8")
     parser = MainText()
-    parser.feed((ROOT / page).read_text(encoding="utf-8"))
+    parser.feed(html)
     blocks = [re.sub(r"\s+", " ", b).strip() for b in parser.blocks]
     blocks = [b for b in blocks if b]
     truth_lower = strict.lower()
     truth_numbers = set(re.findall(r"\d+", strict))
     truth_stems = {stem(w) for w in words_of(truth)}
     problems = []
+    # a note left in the page where a fact is still missing: the page is not ready to publish
+    for note in re.findall(r"<!--\s*(AI meter: waiting[^>]*?)\s*-->", html):
+        problems.append(f"still waiting for a fact: {note}")
 
     for block in blocks:
         for number in re.findall(r"\d+", block):

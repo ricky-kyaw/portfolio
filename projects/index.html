@@ -19,10 +19,10 @@
 <meta name="twitter:title" content="Projects — Ricky Kyaw">
 <meta name="twitter:description" content="Code Ricky Kyaw wrote from scratch, and apps built fast with AI tools.">
 <meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F8F7F2">
-<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
-<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0D10">
+<style>html{background:#0B0D10}</style>
+<script>(function(){var t='dark';try{if(localStorage.getItem('theme')==='light'){t='light'}}catch(e){}try{var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0B0D10':'#FAFAF8';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0B0D10':'#FAFAF8'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -75,116 +75,203 @@
         <article class="proj proj--lead" data-reveal>
           <p class="proj-meta num">Sep 2026</p>
           <div class="proj-body">
-            <h2>Ransom, a chess engine</h2>
-            <p class="proj-what">My entry in the Optiver AI Chessathon. Finalist out of 450–500 teams (UK and global).</p>
-            <p>The rules banned existing engines and models, and would not accept compiled programs. So the whole engine is Python. It looks ahead through the possible moves, using SEE pruning to skip moves that clearly lose material. A small neural network, trained during the event, judges each position.</p>
-            <p>It qualified for the finals ranked 30th, with 7 wins, 4 draws and 2 losses, and went out in the last 32.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>All of it. I worked on it alone.</dd></div>
-              <div><dt>AI use</dt><dd>Built during the competition with Claude Code, as its own write-up says.</dd></div>
-              <div><dt>Tools</dt><dd>Python, numba, PyTorch for training</dd></div>
-            </dl>
-            <details>
-              <summary>More about it</summary>
-              <ul>
-                <li>The network was trained on 106,814,205 positions.</li>
-                <li>The version on the Play page is the same engine rewritten in C so a browser can run it. On 104 test positions it chooses the same move, with the same score, as the original.</li>
-              </ul>
-            </details>
+            <div class="proj-head"><h2>Ransom, a chess engine</h2><span class="badge badge--win">Finalist</span></div>
+            <p class="proj-what">My Optiver AI Chessathon engine: pure Python source, no compiled files submitted.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>450–500</b> <span>teams, UK and global</span></li>
+              <li><b>30th</b> <span>rank going into the finals</span></li>
+              <li><b>7 · 4 · 2</b> <span>wins, draws, losses</span></li>
+              <li><b>Last 32</b> <span>where it went out</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>Python</li><li>numba</li><li>PyTorch for training</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li>none</li><li class="is-on">assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">Assisted. </span>Built during the competition with Claude Code, as its own write-up says.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="/play/"><span class="u">Play it in your browser</span><span class="arrow" aria-hidden="true">→</span></a><a class="hover-u" href="https://github.com/ricky-kyaw/optiver-chessathon-engine" target="_blank" rel="noopener"><span class="u">Code and write-up</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>The rules banned existing engines and models, and would not accept compiled programs. So the whole engine is Python. It looks ahead through the possible moves, using SEE pruning to skip moves that clearly lose material. A small neural network, trained during the event, judges each position.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>All of it. I worked on it alone.</dd></div></dl>
+                <ul>
+                  <li>The network was trained on 106,814,205 positions.</li>
+                  <li>The version on the Play page is the same engine rewritten in C so a browser can run it. On 104 test positions it chooses the same move, with the same score, as the original.</li>
+                </ul>
+              </div>
+            </details>
           </div>
         </article>
 
     <section class="proj-section" id="from-scratch" aria-labelledby="from-scratch-title">
       <h2 id="from-scratch-title" data-reveal>Code I wrote from scratch</h2>
-      <p data-reveal data-reveal-delay="60">The first three I wrote by hand, to understand what is underneath. The other two are team projects. Each card says where AI came in.</p>
+      <p data-reveal data-reveal-delay="60">Small programs first, written to understand what is underneath. The last two are team projects. Each card says where AI came in.</p>
       <ul class="proj-list" role="list">
         <li class="proj" data-reveal>
           <p class="proj-meta num">May 2026</p>
           <div class="proj-body">
-            <h3>Machine learning, by hand</h3>
-            <p class="proj-what">Two small learning algorithms written out by hand, to see how they work inside: linear regression and logistic regression.</p>
-            <p>Each one learns by gradient descent: make a guess, measure the error, nudge the numbers a little, and repeat. Given points on the line y = 2x + 1, the linear one finds 2.000 and 1.000. The logistic one uses the sigmoid function to sort numbers into two groups.</p>
-            <p>They are small. Each one handles a single input number, and there are no plots yet.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>All of it.</dd></div>
-              <div><dt>AI use</dt><dd>None. I coded these myself.</dd></div>
-              <div><dt>Tools</dt><dd>Python, numpy</dd></div>
-            </dl>
+            <div class="proj-head"><h3>Machine learning, by hand</h3><span class="badge badge--done">Complete</span></div>
+            <p class="proj-what">Linear and logistic regression written by hand, to see how they work inside.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>2</b> <span>algorithms, written by hand</span></li>
+              <li><b>2.000, 1.000</b> <span>what it finds for the line <span class="keep">y = 2x + 1</span></span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>Python</li><li>numpy</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li class="is-on">none</li><li>assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">None. </span>I coded these myself.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/machine-learning" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>Each one learns by gradient descent: make a guess, measure the error, nudge the numbers a little, and repeat. Given points on the line y = 2x + 1, the linear one finds 2.000 and 1.000. The logistic one uses the sigmoid function to sort numbers into two groups.</p>
+                <p>They are small. Each one handles a single input number, and there are no plots yet.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>All of it.</dd></div></dl>
+              </div>
+            </details>
           </div>
         </li>
         <li class="proj" data-reveal>
           <p class="proj-meta num">Jul–Aug 2025</p>
           <div class="proj-body">
-            <h3>A web server</h3>
-            <p class="proj-what">A small web server in Python that reads requests straight off the network connection and writes the replies itself.</p>
-            <p>It uses only what comes with Python, no web library. It can echo text back, compressed with gzip when the caller asks for that, and report which program is calling. It can serve and save files in a folder, keep a connection open for several requests, and give each connection its own thread.</p>
-            <p>Built on the CodeCrafters “Build your own HTTP server” challenge. All tests passed.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>All of it.</dd></div>
-              <div><dt>AI use</dt><dd>None.</dd></div>
-              <div><dt>Tools</dt><dd>Python: socket, threading, gzip</dd></div>
-            </dl>
-            <details>
-              <summary>What it does not do</summary>
-              <ul>
-                <li>It only answers on the machine it runs on.</li>
-                <li>A badly formed request gets no reply. The connection just closes.</li>
-              </ul>
-            </details>
+            <div class="proj-head"><h3>A web server</h3><span class="badge badge--done">Complete</span></div>
+            <p class="proj-what">A small web server in Python that reads requests straight off the connection.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>0</b> <span>web libraries</span></li>
+              <li><b>1</b> <span>thread per connection</span></li>
+              <li><b>All</b> <span>tests passed</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>Python</li><li>socket</li><li>threading</li><li>gzip</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li class="is-on">none</li><li>assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">None. </span>No AI.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/http-server-python" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>It uses only what comes with Python, no web library, and writes the replies itself. It can echo text back, compressed with gzip when the caller asks for that, and report which program is calling. It can serve and save files in a folder, keep a connection open for several requests, and give each connection its own thread.</p>
+                <p>Built on the CodeCrafters “Build your own HTTP server” challenge. All tests passed.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>All of it.</dd></div></dl>
+                <p class="proj-more-title">What it does not do</p>
+                <ul>
+                  <li>It only answers on the machine it runs on.</li>
+                  <li>A badly formed request gets no reply. The connection just closes.</li>
+                </ul>
+              </div>
+            </details>
           </div>
         </li>
         <li class="proj" data-reveal>
           <p class="proj-meta num">Aug 2025</p>
           <div class="proj-body">
-            <h3>A piece of git</h3>
-            <p class="proj-what">Some of the inner commands of git, the tool programmers use to keep the history of their code, written again in Python.</p>
-            <p>Starting from the CodeCrafters starter, it can store a file the way git stores it (SHA-1 hash, zlib compression) and read stored files back. It can list what is in a stored folder, record a folder as a tree, and write a commit.</p>
-            <p>Its clone command asks a server for its branches and downloads the packed data, but does not unpack it yet. In progress. Built on the CodeCrafters “Build your own Git” challenge.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>All of it.</dd></div>
-              <div><dt>AI use</dt><dd>None.</dd></div>
-              <div><dt>Tools</dt><dd>Python: zlib, hashlib, requests</dd></div>
-            </dl>
+            <div class="proj-head"><h3>A piece of git</h3><span class="badge badge--wip">In progress</span></div>
+            <p class="proj-what">Some of git’s inner commands, written again in Python.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>5</b> <span>commands written</span></li>
+              <li><b>1</b> <span>more begun: clone</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>Python</li><li>zlib</li><li>hashlib</li><li>requests</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li class="is-on">none</li><li>assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">None. </span>No AI.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/codecrafters-git-python" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>Git is the tool programmers use to keep the history of their code. Starting from the CodeCrafters starter, this can store a file the way git stores it (SHA-1 hash, zlib compression) and read stored files back. It can list what is in a stored folder, record a folder as a tree, and write a commit.</p>
+                <p>Its clone command asks a server for its branches and downloads the packed data, but does not unpack it yet. Built on the CodeCrafters “Build your own Git” challenge.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>All of it.</dd></div></dl>
+              </div>
+            </details>
+          </div>
+        </li>
+        <li class="proj" data-reveal>
+          <p class="proj-meta num">Aug 2025</p>
+          <div class="proj-body">
+            <div class="proj-head"><h3>A calculator</h3><span class="badge badge--live">Live</span></div>
+            <p class="proj-what">A simple calculator for the browser: plain HTML, CSS and JavaScript.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>17</b> <span>lines of JavaScript</span></li>
+              <li><b>0</b> <span>outside libraries</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li class="is-on">none</li><li>assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">None. </span>None for the code. AI helped only with putting it online.</p>
+            </div>
+            <p class="proj-links"><a class="hover-u" href="https://ricky-kyaw.github.io/calculator-app/" target="_blank" rel="noopener"><span class="u">Try it</span><span class="arrow" aria-hidden="true">→</span></a><a class="hover-u" href="https://github.com/ricky-kyaw/calculator-app" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>Digits, a decimal point, plus, minus, times, divide, AC and equals. It builds the sum as you press the keys, then hands it to JavaScript’s eval(), the language’s built-in way to work out a sum written as text.</p>
+                <p>It is published with GitHub Pages.</p>
+              </div>
+            </details>
           </div>
         </li>
         <li class="proj" data-reveal>
           <p class="proj-meta num">2026</p>
           <div class="proj-body">
-            <h3>Nemo, a money tracker</h3>
-            <p class="proj-what">A personal money tracker. You sign in, set up accounts in different currencies, and record income, spending and transfers. Accounts can sit inside other accounts, and receipts can be attached.</p>
-            <p>A small server of our own sits between the browser and the main server, so the browser never holds the sign-in tokens. It is live and still being worked on. Three people have written code for it.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>The first version of accounts, transactions, categories and transfers on the main server. Much of the sign-in work: the PIN screen, Google sign-in, email verification, lock-out after failed sign-ins and a two-device limit. Moving the whole interface to MudBlazor. Teammates started the in-between server; I extended and repaired it.</dd></div>
-              <div><dt>AI use</dt><dd>We did the backbone and the data model without AI. Now it is all AI-assisted.</dd></div>
-              <div><dt>Tools</dt><dd>C#, .NET, ASP.NET Core, Blazor WebAssembly, MudBlazor, Entity Framework Core, PostgreSQL</dd></div>
-            </dl>
-            <details>
-              <summary>What is not built yet</summary>
-              <ul>
-                <li>Budgets and reports. Those two pages are empty for now.</li>
-              </ul>
-            </details>
-            <p class="proj-note label">The code is private.</p>
+            <div class="proj-head"><h3>Nemo, a money tracker</h3><span class="badge badge--live">Live</span></div>
+            <p class="proj-what">A personal money tracker with accounts in different currencies, built by three people.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>about 5</b> <span>active users now: the developers and their family</span></li>
+              <li><b>3</b> <span>people have written code for it</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>C#</li><li>.NET</li><li>ASP.NET Core</li><li>Blazor WebAssembly</li><li>MudBlazor</li><li>Entity Framework Core</li><li>PostgreSQL</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li>none</li><li class="is-on">assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">Assisted. </span>We did the backbone and the data model without AI. Now it is all AI-assisted.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://nemoapp.xyz" target="_blank" rel="noopener"><span class="u">Visit Nemo</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>You sign in, set up accounts in different currencies, and record income, spending and transfers. Accounts can sit inside other accounts, and receipts can be attached.</p>
+                <p>A small server of our own sits between the browser and the main server, so the browser never holds the sign-in tokens. It is live and still being worked on.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>The first version of accounts, transactions, categories and transfers on the main server. Much of the sign-in work: the PIN screen, Google sign-in, email verification, lock-out after failed sign-ins and a two-device limit. Moving the whole interface to MudBlazor. Teammates started the in-between server; I extended and repaired it.</dd></div></dl>
+                <p class="proj-more-title">What is not built yet</p>
+                <ul>
+                  <li>Budgets and reports. Those two pages are empty for now.</li>
+                </ul>
+                <p class="proj-note label">The code is private.</p>
+              </div>
+            </details>
           </div>
         </li>
         <li class="proj" data-reveal>
           <p class="proj-meta num">2025–2026</p>
           <div class="proj-body">
-            <h3>One Project One Month</h3>
-            <p class="proj-what">A no-AI monthly build community for Burmese developers. I work on the backend (the server side) and on QA (testing) for its website.</p>
-            <p>Core website team of 12 contributors. 300+ participants across projects and proposals.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>Creating a developer profile, the forgot-password flow, and the list of approved project ideas with a filter by number of reactions.</dd></div>
-              <div><dt>AI use</dt><dd>None. The community builds without AI.</dd></div>
-              <div><dt>Tools</dt><dd>Java, Spring Boot, PostgreSQL</dd></div>
-            </dl>
-            <p class="proj-note label">The code is private.</p>
+            <div class="proj-head"><h3>One Project One Month</h3><span class="badge badge--live">Live</span></div>
+            <p class="proj-what">A no-AI monthly build community for Burmese developers. I do backend and testing.</p>
+            <ul class="proj-stats" role="list">
+              <li><b>12</b> <span>core website team</span></li>
+              <li><b>300+</b> <span>participants across projects and proposals</span></li>
+            </ul>
+            <ul class="pills" role="list" aria-label="Built with"><li>Java</li><li>Spring Boot</li><li>PostgreSQL</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li class="is-on">none</li><li>assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">None. </span>The community builds without AI.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://www.one-project-one-month.com" target="_blank" rel="noopener"><span class="u">Visit the site</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>I work on the backend (the server side) and on QA (testing) for its website.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>Creating a developer profile, the forgot-password flow, and the list of approved project ideas with a filter by number of reactions.</dd></div></dl>
+                <p class="proj-note label">The code is private.</p>
+              </div>
+            </details>
           </div>
         </li>
       </ul>
@@ -197,43 +284,43 @@
         <li class="proj" data-reveal>
           <p class="proj-meta num">Oct 2025</p>
           <div class="proj-body">
-            <h3>Explain It!</h3>
-            <p class="proj-what">Type a topic you find hard and get back a short explanation, written as if for a five-year-old.</p>
-            <p>You sign in with your email. The page sends your topic to a small function on AWS, which asks an AI model (Claude 3 Haiku, through Amazon Bedrock) for the answer. It keeps no history: earlier answers are gone when you refresh the page.</p>
-            <dl class="proj-facts">
-              <div><dt>My part</dt><dd>All of it.</dd></div>
-              <div><dt>AI use</dt><dd>AI guided me when I was stuck and did not want to read the documentation.</dd></div>
-              <div><dt>Tools</dt><dd>JavaScript, React, AWS Amplify, Cognito, Lambda, Bedrock</dd></div>
-            </dl>
+            <div class="proj-head"><h3>Explain It!</h3><span class="badge badge--done">Complete</span></div>
+            <p class="proj-what">Type a hard topic, get an explanation written for a five-year-old.</p>
+            <ul class="pills" role="list" aria-label="Built with"><li>JavaScript</li><li>React</li><li>AWS Amplify</li><li>Cognito</li><li>Lambda</li><li>Bedrock</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li>none</li><li class="is-on">assisted</li><li>vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">Assisted. </span>AI guided me when I was stuck and did not want to read the documentation.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/explain-it-app" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>You sign in with your email. The page sends your topic to a small function on AWS, which asks an AI model (Claude 3 Haiku, through Amazon Bedrock) for the answer. It keeps no history: earlier answers are gone when you refresh the page.</p>
+                <dl class="proj-facts"><div><dt>My part</dt><dd>All of it.</dd></div></dl>
+              </div>
+            </details>
           </div>
         </li>
         <li class="proj" data-reveal>
           <p class="proj-meta num">Mar 2026</p>
           <div class="proj-body">
-            <h3>Luffa Passport</h3>
-            <p class="proj-what">Loyalty cards kept in one place, as a mini app inside the Luffa app.</p>
-            <p>Tap a card to see its deals, save deals for later, and add more cards. It is a demo: the cards and deals are sample data, and it does not talk to a server.</p>
-            <p>Built with Team Fuzzy at an Encode hackathon in London.</p>
-            <dl class="proj-facts">
-              <div><dt>AI use</dt><dd>Entirely AI-assisted.</dd></div>
-              <div><dt>Tools</dt><dd>JavaScript, WXML, WXSS</dd></div>
-            </dl>
+            <div class="proj-head"><h3>Luffa Passport</h3><span class="badge badge--demo">Hackathon demo</span></div>
+            <p class="proj-what">Loyalty cards kept in one place, as a mini app inside Luffa.</p>
+            <ul class="pills" role="list" aria-label="Built with"><li>JavaScript</li><li>WXML</li><li>WXSS</li></ul>
+            <div class="ai">
+              <p class="ai-label">AI use</p>
+              <ol class="ai-steps" role="list" aria-hidden="true"><li>none</li><li>assisted</li><li class="is-on">vibecoded</li></ol>
+              <p class="ai-note"><span class="visually-hidden">Vibecoded. </span>Entirely AI-assisted.</p>
+            </div>
             <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/EncHack-15" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
-          </div>
-        </li>
-        <li class="proj" data-reveal>
-          <p class="proj-meta num">Apr 2026</p>
-          <div class="proj-body">
-            <h3>Pandora Unmapped</h3>
-            <p class="proj-what">A globe that shows where people displaced by war have gone.</p>
-            <p>An unfinished prototype. It is written to draw arcs from Ukraine to the countries hosting its refugees, using yearly counts from UNHCR, with a timeline of the war along the bottom. A second scenario, for Myanmar, is written but cannot be chosen on screen yet.</p>
-            <p>Built for UNMAPPED, one of the themed challenges at MIT Hack-nation.</p>
-            <dl class="proj-facts">
-              <div><dt>AI use</dt><dd>Entirely AI-assisted.</dd></div>
-              <div><dt>Tools</dt><dd>TypeScript, React, deck.gl, Mapbox, Python, FastAPI, DuckDB</dd></div>
-            </dl>
-            <p class="proj-links"><a class="hover-u" href="https://github.com/ricky-kyaw/PandoraBox" target="_blank" rel="noopener"><span class="u">Code</span><span class="arrow" aria-hidden="true">→</span></a></p>
+            <details>
+              <summary>More</summary>
+              <div class="proj-more">
+                <p>Tap a card to see its deals, save deals for later, and add more cards. It is a demo: the cards and deals are sample data, and it does not talk to a server.</p>
+                <p>Built with Team Fuzzy at an Encode hackathon in London.</p>
+              </div>
+            </details>
           </div>
         </li>
       </ul>
@@ -247,6 +334,7 @@
       <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="/study-log/">Study log</a></li>
     </ul>
     <div class="footer-note label">
       <p>Made by hand, in plain HTML, CSS and JavaScript.</p>

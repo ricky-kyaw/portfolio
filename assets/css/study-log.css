@@ -1,0 +1,190 @@
+/* ==========================================================================
+   Study Log. Every rule here starts with .study-log, so nothing in this file
+   can touch another page. Colours come only from the tokens in site.css,
+   which is why both themes work without a second set of rules.
+   ========================================================================== */
+
+.study-log [hidden] { display: none !important; }
+
+.study-log .sl-wait { margin-top: 32px; color: var(--muted); }
+/* With scripts on, the "needs JavaScript" words stay out of sight until the page's own
+   script takes the line over. The head script drops .js again if scripts never start. */
+html.js .study-log .sl-wait:not([data-sl-live]) { visibility: hidden; }
+.study-log .sl-body { margin-top: 36px; }
+
+/* ---------- the owner's banner: loud on purpose, and never shown to visitors ---------- */
+.study-log .sl-banner {
+  margin-bottom: 12px;
+  padding: 16px 18px;
+  background: var(--fg);
+  color: var(--bg);
+  border-left: 6px solid var(--accent);
+  font: 500 1.0625rem/1.4 var(--mono);
+  letter-spacing: .02em;
+  font-variant-numeric: tabular-nums;
+}
+.study-log .sl-private { margin-bottom: 24px; }
+.study-log .sl-private button { min-height: 44px; }
+
+/* ---------- the two-button switch ---------- */
+.study-log .sl-toggle { display: flex; max-width: 360px; }
+.study-log .sl-toggle button {
+  flex: 1 1 0;
+  min-height: 44px;
+  padding: 0 12px;
+  margin-left: -1px;
+  border: 1px solid var(--line-strong);
+  font: 400 .8125rem/1.1 var(--mono);
+  letter-spacing: .02em;
+  color: var(--fg);
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.study-log .sl-toggle button:first-child { margin-left: 0; }
+.study-log .sl-toggle button[aria-pressed="true"] { position: relative; background: var(--fg); border-color: var(--fg); color: var(--bg); }
+/* the focused button sits on top, so its ring is never cut by its neighbour */
+.study-log .sl-toggle button:focus-visible { position: relative; z-index: 1; }
+
+/* ---------- the figures ---------- */
+.study-log .sl-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 28px 0 0;
+  border-top: 1px solid var(--line-strong);
+}
+.study-log .sl-stats div { min-width: 0; padding: 16px 12px 18px 0; border-bottom: 1px solid var(--line); }
+@media (max-width: 719px) { .study-log .sl-stats div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); } }
+.study-log .sl-stats dt { font: 400 .75rem/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.study-log .sl-stats dd { margin: 6px 0 0; font-size: clamp(1.875rem, 1.3rem + 2.6vw, 3rem); line-height: 1.05; letter-spacing: -.03em; white-space: nowrap; }
+.study-log .sl-unit { font: 400 .8125rem/1 var(--mono); letter-spacing: .02em; color: var(--muted); }
+.study-log .sl-line { margin-top: 16px; min-height: 1.6em; color: var(--muted); }
+.study-log .sl-overlay { margin-top: 4px; }
+
+@media (min-width: 720px) {
+  .study-log .sl-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .study-log .sl-stats div { padding: 20px 16px 22px 0; }
+  .study-log .sl-stats div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+}
+
+/* ---------- the heatmap ---------- */
+.study-log .sl-heat {
+  --sl-gap: 3px;
+  margin-top: 20px;
+  padding: 16px 0 14px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+/* On a narrow phone the grid scrolls sideways inside this box. The page never does. */
+.study-log .sl-scroll { overflow-x: auto; overscroll-behavior-x: contain; margin-bottom: 6px; padding: 2px 12px 10px 0; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+.study-log .sl-scroll:focus-visible { outline-offset: 4px; }
+.study-log .sl-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 18px repeat(7, auto);
+  grid-template-columns: 30px repeat(39, minmax(12px, 1fr));
+  gap: var(--sl-gap);
+  /* never narrower than 39 squares of 12px: below that the box scrolls instead */
+  min-width: calc(30px + 39 * (12px + var(--sl-gap)));
+}
+.study-log .sl-corner,
+.study-log .sl-day {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  /* a little wider than its column, so squares slide under it cleanly */
+  margin: calc(var(--sl-gap) * -1) 0;
+  padding: var(--sl-gap) 0;
+  background: var(--surface);
+  font: 400 .6875rem/1 var(--mono);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+}
+.study-log .sl-month { min-width: 0; overflow: visible; white-space: nowrap; font: 400 .6875rem/18px var(--mono); letter-spacing: .02em; color: var(--muted); }
+.study-log .sl-cell { display: block; min-width: 0; aspect-ratio: 1; border-radius: 2px; background: var(--line); }
+.study-log .sl-cell.is-l1 { background: var(--line-strong); background: color-mix(in srgb, var(--accent) 55%, var(--surface)); }
+.study-log .sl-cell.is-l2 { background: var(--accent); }
+.study-log .sl-cell.is-future { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.study-log .sl-cell.is-today { outline: 1px solid var(--fg); outline-offset: 1px; }
+
+.study-log .sl-foot { display: grid; gap: 8px; padding-right: 12px; }
+.study-log .sl-readout { min-height: 1.5em; color: var(--fg); }
+.study-log .sl-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; }
+.study-log .sl-legend li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.study-log .sl-legend .sl-cell { width: 12px; flex: none; }
+
+@media (min-width: 720px) {
+  .study-log .sl-heat { padding: 20px 0 16px 20px; }
+  .study-log .sl-scroll { padding-right: 20px; }
+  .study-log .sl-foot { grid-template-columns: 1fr auto; align-items: center; gap: 16px; padding-right: 20px; }
+}
+@media (min-width: 900px) {
+  .study-log .sl-heat { --sl-gap: 4px; }
+  .study-log .sl-grid { grid-template-columns: 34px repeat(39, minmax(12px, 1fr)); }
+}
+
+/* ---------- lock in ---------- */
+.study-log .sl-lock h2 + p { max-width: 58ch; }
+.study-log .sl-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; margin-top: 16px; }
+.study-log .sl-actions .linklike,
+.study-log .sl-clear .linklike,
+.study-log .sl-json .linklike { min-height: 44px; font-size: .9375rem; }
+.study-log .sl-btn {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--fg);
+  border-radius: 999px;
+  font: 600 .9375rem/1 var(--sans);
+  color: var(--fg);
+  transition: background-color 240ms var(--ease-out), color 240ms var(--ease-out), transform 80ms var(--ease-out);
+}
+.study-log .sl-btn:active { transform: scale(.98); }
+@media (hover: hover) { .study-log .sl-btn:hover { background: var(--fg); color: var(--bg); } }
+
+.study-log .sl-form { display: grid; gap: 16px; max-width: 360px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.study-log .sl-field { display: grid; gap: 6px; }
+.study-log .sl-field label { font: 400 .8125rem/1.5 var(--mono); letter-spacing: .02em; color: var(--muted); }
+.study-log .sl-field input,
+.study-log .sl-field select {
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--fg);
+  font: 400 1rem/1.5 var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.study-log .sl-field input:focus,
+.study-log .sl-field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+.study-log .sl-error { font-size: .9375rem; font-weight: 600; }
+.study-log .sl-error:empty { display: none; }
+.study-log .sl-form .sl-actions { margin-top: 0; }
+
+.study-log .sl-result { max-width: 640px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.study-log .sl-result:focus { outline: none; }
+.study-log .sl-json { display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px; margin-top: 8px; }
+.study-log .sl-json code {
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font: 400 .8125rem/1.5 var(--mono);
+  overflow-wrap: anywhere;
+  -webkit-user-select: all;
+          user-select: all;
+}
+.study-log .sl-copy-note { min-height: 1.5em; }
+.study-log .sl-clear { margin-top: 8px; font-size: .9375rem; }
+
+@media print {
+  .study-log .sl-toggle, .study-log .sl-lock, .study-log .sl-banner, .study-log .sl-private { display: none !important; }
+  .study-log .sl-scroll { overflow: visible; }
+  .study-log .sl-cell { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

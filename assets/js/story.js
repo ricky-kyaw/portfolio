@@ -1,13 +1,21 @@
-// The Story page: nine fullscreen slides over live voxel scenes.
+// The Story page: nine fullscreen slides.
 //
-// Without JavaScript the page is a plain scrolling article with a picture per
-// chapter. With it, the chapters become slides: on-screen arrows, the arrow
-// keys and a swipe move between them; you can drag the scene to look around;
-// and on the Loikaw slides, press and hold to see the town clearly.
+// Without JavaScript the page is a plain scrolling article with a picture per chapter. With it, the
+// chapters become slides: on-screen arrows, the arrow keys and a swipe move between them.
+//
+// Three kinds of background, so the words stay the hero:
+//   3d     Yangon and London only: small block cities you can turn by dragging (voxel/engine.js).
+//   wall   everything else (story-walls.js): the Loikaw photograph redrawn in a few inks, or a drawn
+//          sky with flat silhouettes. One small motion each: clouds, smoke, rain.
+// On the first Loikaw slide, press and hold brings the photograph's real colours back.
+// People who ask for less motion, and devices that turn out to be slow, get still pictures.
 
 import { Renderer } from './voxel/engine.js';
 import { SCENES, MOODS } from './voxel/scenes.js';
+import { WallRenderer, WALLS, horizonTile } from './story-walls.js';
 import { applyPixelText } from './pixelfont.js';
+
+const PHOTO = '/assets/img/story/loikaw.webp';
 
 export function initStory(main) {
   const deck = main.querySelector('[data-deck]');
@@ -25,32 +33,47 @@ export function initStory(main) {
   const status = document.getElementById('status');
   const renderer = new Renderer(canvas);
   if (!renderer.ctx) return null; // no drawing surface: the page stays a plain article
+  const walls = new WallRenderer(canvas);
   const built = {};
   const cam = { yaw: 0, pitch: 0.56, zoom: 1, shiftX: 0, shiftY: 0 };
 
   let index = -1;
-  let scene = null, mood = null;
+  let tier = '';                 // '3d' or 'wall', for the slide on show
+  let scene = null, mood = null, wall = '';
   let clarity = 0, clarityTarget = 0;
   let rotating = !reduced.matches && !coarse.matches;
   let rotateSince = performance.now();
   let looking = false;          // touch devices: drag orbits instead of swiping
   let velocity = 0;             // leftover spin after a drag
   let dirty = true;
-  let fitScale = 1, slideZoom = 1; // the window's share of the zoom, and the slide's
+  let fitScale = 1, slideZoom = 1, slideShiftY = 0; // the window's share of the zoom, and the slide's
   const applyZoom = () => { cam.zoom = slideZoom * fitScale; };
   let raf = 0, last = 0, alive = true;
   let swapTimer = 0, sayTimer = 0;
+  let drawnOnce = false;
+  let onScreen = true;          // the small motions rest while the deck is scrolled out of view
+  let slow = false, costly = 0; // a device that cannot keep up with the clouds, smoke or rain gets still pictures
+  let heavy = 0;                // slow pictures in a row while a city turns by itself
+  let ticked = false;           // the next picture is being drawn only because the clouds or smoke moved
+  let lastMotion = 0;
+  const t0 = performance.now();
+  let photoAsked = false;
 
-  // ---------- size: one scene pixel is always a whole number of screen pixels ----------
+  const animated = () => !reduced.matches && !slow;
+  // does the slide on show have a small motion of its own?
+  const moves = () => (tier === '3d' ? Boolean(mood && mood.rain) : Boolean(wall && (WALLS[wall].clouds || WALLS[wall].smoke)));
+
+  // ---------- size: one picture pixel is always a whole number of screen pixels ----------
   function fit() {
     const rect = deck.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 3);
-    // one scene pixel is about one CSS pixel (two on big windows), and never more than the budget below
+    // one picture pixel is about one CSS pixel (two on big windows), and never more than the budget below
     let k = Math.max(1, Math.round((rect.width >= 1140 ? 2 : 1) * dpr));
     while (((rect.width * dpr) / k) * ((rect.height * dpr) / k) > 900000) k++;
     const W = Math.ceil((rect.width * dpr) / k), H = Math.ceil((rect.height * dpr) / k);
     renderer.resize(W, H);
+    walls.resize(W, H);
     canvas.style.width = (W * k) / dpr + 'px';
     canvas.style.height = (H * k) / dpr + 'px';
     // keep the whole model on screen: shrink it on short, wide windows and when it is moved aside
@@ -59,20 +82,34 @@ export function initStory(main) {
     applyZoom();
     place();
     dirty = true;
-    if (scene) draw(); // sizing a canvas wipes it; do not leave it blank for a frame
+    if (drawnOnce) draw(); // sizing a canvas wipes it; do not leave it blank for a frame
   }
 
   // Wide screens: the text sits bottom-left, so the model moves right.
   // Narrow screens: the text fills the bottom, so the model sits in the space above it.
+  // The most zoom that keeps the top of the tallest landmark on screen from every side and at every tilt: the
+  // picture is W by H, the model's centre sits at 0.64 + shiftY of the height, and the peak can rise at most
+  // (the square root of its height squared plus its distance from the centre squared) blocks above that.
+  function zoomCap(sc, shiftY, W, H) {
+    const [px, py, pz] = sc.peak || [sc.size[0] / 2, sc.tallest, sc.size[2] / 2];
+    const reach = Math.hypot(py, Math.hypot(px - sc.size[0] / 2, pz - sc.size[2] / 2));
+    return Math.max(0.3, (((0.64 + shiftY) * H - 12) / reach) * (sc.span / W));
+  }
+
   function place() {
     const rect = deck.getBoundingClientRect();
     if (!rect.height) return;
-    if (rect.width >= 900) { cam.shiftX = 0.1; cam.shiftY = 0; return; }
+    if (rect.width >= 900) {
+      cam.shiftX = 0.1; cam.shiftY = slideShiftY;
+      if (scene) cam.zoom = Math.min(slideZoom * fitScale, zoomCap(scene, cam.shiftY, rect.width, rect.height));
+      return;
+    }
     const body = slides[index] && slides[index].querySelector('.slide-body');
     const top = body ? body.getBoundingClientRect().top - rect.top : rect.height * 0.6;
     const middle = (56 + Math.max(160, top)) / 2;
     cam.shiftX = 0;
-    cam.shiftY = Math.max(-0.4, Math.min(0, middle / rect.height - 0.64 + 0.07));
+    cam.shiftY = Math.max(-0.4, Math.min(0, middle / rect.height - 0.64 + 0.07)) + slideShiftY;
+    if (scene) cam.zoom = Math.min(slideZoom * fitScale, zoomCap(scene, cam.shiftY, rect.width, rect.height));
   }
 
   function sceneFor(name) {
@@ -80,11 +117,45 @@ export function initStory(main) {
     return built[name];
   }
 
+  // The Loikaw photograph is fetched the first time a slide needs it. Until it arrives the slide shows a plain sky.
+  function askForPhoto() {
+    if (photoAsked) return;
+    photoAsked = true;
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => { if (alive) { walls.setPhoto(img); deck.classList.add('has-photo'); syncHold(); wake(); } };
+    // if it never arrives, the Loikaw slides keep their still pictures (see .has-photo in site.css)
+    img.src = PHOTO;
+  }
+
   // ---------- drawing ----------
   function draw() {
-    if (!scene) return;
-    renderer.render(scene, cam, mood, clarity);
+    const t = animated() ? (performance.now() - t0) / 1000 : 0;
+    const began = performance.now();
+    const wasTick = ticked;
+    ticked = false;
+    if (tier === '3d') {
+      if (!scene) return;
+      renderer.render(scene, cam, mood, clarity);
+      if (mood.rain) renderer.rain(animated() ? t : 3.3, mood.rainInk);
+    } else if (wall) {
+      walls.render(wall, t, clarity);
+    } else return;
+    drawnOnce = true;
     dirty = false;
+    const cost = performance.now() - began;
+    if (!animated() || dragging) return;
+    if (tier === '3d') {
+      // three slow pictures in a row while a city turns by itself: it stops turning (it can still be dragged)
+      if (rotating || Math.abs(velocity) > 0.0005) {
+        heavy = cost > 48 ? heavy + 1 : 0;
+        if (heavy >= 3) { heavy = 0; velocity = 0; if (rotating) setRotating(false); }
+      }
+    } else if (wasTick) {
+      // three slow pictures in a row from the clouds or the smoke alone: this device gets still pictures
+      costly = cost > 48 ? costly + 1 : 0;
+      if (costly >= 3) slow = true;
+    }
   }
 
   function frame(now) {
@@ -94,20 +165,34 @@ export function initStory(main) {
     if (now - last < 30) { schedule(); return; } // about 30 frames a second is plenty
     last = now;
 
-    if (rotating && !dragging) {
-      if (now - rotateSince < 25000) { cam.yaw += dt * 0.07; dirty = true; }
-      else setRotating(false); // it has turned long enough; the button offers to turn it again
+    if (tier === '3d') {
+      if (rotating && !dragging) {
+        if (now - rotateSince < 25000) { cam.yaw += dt * 0.07; dirty = true; }
+        else setRotating(false); // it has turned long enough; the button offers to turn it again
+      }
+      if (Math.abs(velocity) > 0.0005 && !dragging) { cam.yaw += velocity; velocity *= 0.9; dirty = true; }
     }
-    if (Math.abs(velocity) > 0.0005 && !dragging) { cam.yaw += velocity; velocity *= 0.9; dirty = true; }
     if (clarity !== clarityTarget) {
       const step = reduced.matches ? 1 : dt * 2.6;
       clarity = clarityTarget > clarity ? Math.min(clarityTarget, clarity + step) : Math.max(clarityTarget, clarity - step);
       dirty = true;
     }
+    // the small motions tick slowly: clouds and smoke about 12 times a second, rain about 20
+    if (animated() && onScreen && moves() && now - lastMotion >= (tier === '3d' ? 50 : 80)) {
+      lastMotion = now;
+      if (tier === '3d' && !dirty && drawnOnce) {
+        // rain falls over the last picture: the city is not drawn again
+        const began = performance.now();
+        renderer.rain((now - t0) / 1000, mood.rainInk);
+        costly = performance.now() - began > 24 ? costly + 1 : 0;
+        if (costly >= 3) slow = true;
+      } else if (!dirty) { dirty = true; ticked = tier !== '3d'; }
+    }
     if (dirty) draw();
     if (wantsFrames()) schedule();
   }
-  const wantsFrames = () => alive && !document.hidden && (dirty || dragging || clarity !== clarityTarget || Math.abs(velocity) > 0.0005 || (rotating && performance.now() - rotateSince < 25000));
+  const wantsFrames = () => alive && !document.hidden && (dirty || dragging || clarity !== clarityTarget || Math.abs(velocity) > 0.0005
+    || (tier === '3d' && rotating && performance.now() - rotateSince < 25000) || (animated() && onScreen && moves()));
   function schedule() { if (!raf && alive) raf = requestAnimationFrame(frame); }
   function wake() { dirty = true; schedule(); }
 
@@ -125,6 +210,8 @@ export function initStory(main) {
   function go(i, { announce = true, focus = false, write = true } = {}) {
     i = Math.max(0, Math.min(slides.length - 1, i));
     if (i === index) return;
+    clearTimeout(holdTimer); // a press that has not become a hold yet belongs to the slide that is leaving
+    if (holding) { holding = false; clarityTarget = 0; }
     // If the keyboard focus sits in the slide that is about to go quiet, carry it to the new one.
     const leaving = slides[index];
     if (leaving && leaving.contains(document.activeElement)) focus = true;
@@ -143,25 +230,36 @@ export function initStory(main) {
     const swap = () => {
       swapTimer = 0;
       const s = slides[index]; // the newest slide, however many changes were asked for meanwhile
-      scene = sceneFor(s.dataset.scene);
-      mood = MOODS[s.dataset.mood] || MOODS['loikaw-day'];
-      cam.yaw = scene.start.yaw + Number(s.dataset.yaw || 0);
-      cam.pitch = scene.start.pitch + Number(s.dataset.pitch || 0);
-      slideZoom = Number(s.dataset.zoom || 1);
-      applyZoom();
-      place();
+      tier = s.dataset.tier === '3d' ? '3d' : 'wall';
+      if (tier === '3d') {
+        scene = sceneFor(s.dataset.scene);
+        mood = MOODS[s.dataset.mood] || MOODS['yangon-day'];
+        wall = '';
+        cam.yaw = scene.start.yaw + Number(s.dataset.yaw || 0);
+        cam.pitch = scene.start.pitch + Number(s.dataset.pitch || 0);
+        slideZoom = Number(s.dataset.zoom || 1);
+        slideShiftY = Number(s.dataset.shiftY || 0);
+        applyZoom();
+        place();
+        rotateSince = performance.now();
+      } else {
+        wall = WALLS[s.dataset.wall] ? s.dataset.wall : 'dawn';
+        scene = null; mood = null;
+        if (WALLS[wall].kind === 'photo') askForPhoto();
+      }
       clarity = clarityTarget = 0;
       velocity = 0;
-      rotateSince = performance.now();
+      costly = 0; heavy = 0;
+      syncTools();
       draw();
       canvas.classList.remove('is-swapping');
       schedule();
     };
     clearTimeout(swapTimer);
-    if (scene && !reduced.matches) { canvas.classList.add('is-swapping'); swapTimer = setTimeout(() => alive && swap(), 190); } else swap();
+    if (drawnOnce && !reduced.matches) { canvas.classList.add('is-swapping'); swapTimer = setTimeout(() => alive && swap(), 190); } else swap();
 
-    const canHold = s.hasAttribute('data-hold');
-    if (ui.clear) { ui.clear.hidden = !canHold; ui.clear.setAttribute('aria-pressed', 'false'); }
+    if (ui.clear) ui.clear.setAttribute('aria-pressed', 'false');
+    syncHold();
     if (looking) setLooking(false);
 
     if (write) {
@@ -203,19 +301,25 @@ export function initStory(main) {
     wake();
   }
 
-  // ---------- pointer: drag to look around, swipe to change slide, hold to see clearly ----------
+  // Press-and-hold belongs to the Loikaw slides, once the photograph is there to show.
+  function canHold() { const s = slides[index]; return Boolean(s && s.hasAttribute('data-hold') && walls.photo); }
+  function syncHold() { if (ui.clear) ui.clear.hidden = !canHold(); }
+
+  // ---------- pointer: drag to look around (cities only), swipe to change slide, hold to see the colours ----------
   let dragging = false, pointerId = null, startX = 0, startY = 0, lastX = 0, lastY = 0, startT = 0, moved = 0, holdTimer = 0, holding = false;
   const interactive = (t) => t.closest && t.closest('a, button, .slide-plate, .deck-tools, .deck-nav');
 
   function onDown(e) {
     if (interactive(e.target) || (e.pointerType === 'mouse' && e.button !== 0)) return;
     pointerId = e.pointerId; startX = lastX = e.clientX; startY = lastY = e.clientY; startT = performance.now(); moved = 0;
-    const orbit = e.pointerType !== 'touch' || looking;
+    const orbit = tier === '3d' && (e.pointerType !== 'touch' || looking);
     dragging = orbit;
-    if (orbit) { try { deck.setPointerCapture(e.pointerId); } catch (err) { /* fine */ } deck.classList.add('is-dragging'); }
-    if (slides[index] && slides[index].hasAttribute('data-hold')) {
+    // keep hold of the pointer: a release over the header or outside the window still ends the drag or the hold
+    try { deck.setPointerCapture(e.pointerId); } catch (err) { /* fine */ }
+    if (orbit) deck.classList.add('is-dragging');
+    if (canHold()) {
       clearTimeout(holdTimer);
-      holdTimer = setTimeout(() => { if (moved < 8) { holding = true; setClear(true); } }, 300);
+      holdTimer = setTimeout(() => { if (moved < 8 && pointerId !== null && canHold()) { holding = true; setClear(true); } }, 300);
     }
   }
   function onMove(e) {
@@ -278,6 +382,7 @@ export function initStory(main) {
   };
 
   const ro = 'ResizeObserver' in window ? new ResizeObserver(() => { fit(); schedule(); }) : null;
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; if (onScreen) schedule(); }) : null;
   const deckEvents = [['pointerdown', onDown], ['pointermove', onMove], ['pointerup', onUp], ['pointercancel', onUp], ['contextmenu', onContext], ['click', onClick]];
   // older Safari only knows addListener
   const watch = (mq, fn, on) => {
@@ -285,12 +390,19 @@ export function initStory(main) {
     else if (mq.addListener) mq[on ? 'addListener' : 'removeListener'](fn);
   };
 
-  // Touch screens get a "look around" switch (a drag there means swipe); the slow turn is for mice only.
-  const syncTools = () => {
-    if (ui.look) ui.look.hidden = !coarse.matches;
-    if (ui.rotate) ui.rotate.hidden = coarse.matches || reduced.matches;
+  // "turn" and "look around" belong to the two cities only. Touch screens get "look around"
+  // (a drag there means swipe); the slow turn is for mice, and not for people who asked for less motion.
+  function syncTools() {
+    const city = tier === '3d';
+    if (ui.look) ui.look.hidden = !city || !coarse.matches;
+    if (ui.rotate) ui.rotate.hidden = !city || coarse.matches || reduced.matches;
+    deck.classList.toggle('is-city', city);
+    if (!city && looking) setLooking(false);
+  }
+  const onMedia = () => {
     if (coarse.matches || reduced.matches) rotating = false;
     if (!coarse.matches && looking) setLooking(false);
+    syncTools();
     setRotating(rotating);
     fit();
   };
@@ -305,8 +417,9 @@ export function initStory(main) {
     window.removeEventListener('hashchange', onHash);
     window.removeEventListener('resize', fit);
     if (ro) ro.disconnect();
-    watch(coarse, syncTools, false);
-    watch(reduced, syncTools, false);
+    if (io) io.disconnect();
+    watch(coarse, onMedia, false);
+    watch(reduced, onMedia, false);
   }
 
   try {
@@ -316,10 +429,11 @@ export function initStory(main) {
     document.addEventListener('visibilitychange', onVisible);
     window.addEventListener('hashchange', onHash);
     if (ro) ro.observe(deck); else window.addEventListener('resize', fit);
-    watch(coarse, syncTools, true);
-    watch(reduced, syncTools, true);
+    if (io) io.observe(deck);
+    watch(coarse, onMedia, true);
+    watch(reduced, onMedia, true);
     deck.classList.add('is-live');
-    syncTools();
+    onMedia();
     go(Math.max(0, fromHash()), { announce: false, focus: fromHash() >= 0, write: false });
   } catch (e) {
     // Put the page back the way a plain article expects it, then let main.js report the failure.
@@ -329,20 +443,36 @@ export function initStory(main) {
     throw e;
   }
 
-  // ---------- dev only: save one picture per slide for the no-script page ----------
+  // ---------- dev only: save one still picture per slide for the no-script page ----------
   if (/[?&]capture=1/.test(location.search) && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) capture();
   async function capture() {
     rotating = false;
     const off = document.createElement('canvas');
-    const r2 = new Renderer(off);
-    r2.resize(720, 405);
+    const r2 = new Renderer(off), w2 = new WallRenderer(off);
+    const img = new Image();
+    img.src = PHOTO;
+    try { await img.decode(); w2.setPhoto(img); } catch (e) { /* the photo slides are saved as plain skies */ }
     for (let i = 0; i < slides.length; i++) {
-      const s = slides[i], sc = sceneFor(s.dataset.scene);
-      const c = { yaw: sc.start.yaw + Number(s.dataset.yaw || 0), pitch: sc.start.pitch + Number(s.dataset.pitch || 0), zoom: Number(s.dataset.zoom || 1) * 0.82, shiftX: 0, shiftY: 0.08 };
-      r2.render(sc, c, MOODS[s.dataset.mood], 0);
+      const s = slides[i];
+      if (s.dataset.tier === '3d') {
+        const sc = sceneFor(s.dataset.scene);
+        r2.W = 0; r2.resize(720, 405);
+        const c = { yaw: sc.start.yaw + Number(s.dataset.yaw || 0), pitch: sc.start.pitch + Number(s.dataset.pitch || 0), zoom: Number(s.dataset.zoom || 1) * 0.8, shiftX: 0, shiftY: 0.08 };
+        c.zoom = Math.min(c.zoom, zoomCap(sc, c.shiftY, 720, 405));
+        const m = MOODS[s.dataset.mood];
+        r2.render(sc, c, m, 0);
+        if (m.rain) r2.rain(3.3, m.rainInk);
+      } else {
+        w2.W = 0; w2.resize(720, 405);
+        w2.render(s.dataset.wall, 8, 0);
+      }
       const blob = await new Promise((ok) => off.toBlob(ok, 'image/png'));
       await fetch(`/__capture/slide-${i + 1}.png`, { method: 'POST', body: blob });
     }
+    // and the faint skyline along the bottom of every page (see body::before in site.css)
+    const hz = document.createElement('canvas');
+    horizonTile(hz);
+    await fetch('/__capture/horizon.png', { method: 'POST', body: await new Promise((ok) => hz.toBlob(ok, 'image/png')) });
     document.title = 'captured';
   }
 

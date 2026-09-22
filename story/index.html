@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Story — Ricky Kyaw</title>
-<meta name="description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
+<meta name="description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides.">
 <link rel="canonical" href="https://rickydx.dev/story/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ricky Kyaw">
 <meta property="og:title" content="Story — Ricky Kyaw">
-<meta property="og:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
+<meta property="og:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides.">
 <meta property="og:url" content="https://rickydx.dev/story/">
 <meta property="og:image" content="https://rickydx.dev/assets/img/og.png">
 <meta property="og:image:width" content="1200">
@@ -17,12 +17,12 @@
 <meta property="og:image:alt" content="Ricky Kyaw. I write software and solve math problems. A random walk drawn on graph paper.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Story — Ricky Kyaw">
-<meta name="twitter:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides you can look around in.">
+<meta name="twitter:description" content="Loikaw, Yangon, London. Where Ricky Kyaw comes from, in nine slides.">
 <meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F8F7F2">
-<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
-<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0D10">
+<style>html{background:#0B0D10}</style>
+<script>(function(){var t='dark';try{if(localStorage.getItem('theme')==='light'){t='light'}}catch(e){}try{var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0B0D10':'#FAFAF8';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0B0D10':'#FAFAF8'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -69,7 +69,7 @@
   <div class="deck" data-deck>
     <canvas class="deck-canvas" aria-hidden="true"></canvas>
       <div class="deck-slides">
-        <section class="slide" id="slide-1" aria-label="Slide 1 of 9" data-scene="loikaw" data-mood="loikaw-day" data-zoom="1.0" data-yaw="0" data-pitch="0" data-hold>
+        <section class="slide" id="slide-1" aria-label="Slide 1 of 9" data-tier="wall" data-wall="loikaw-gold" data-hold>
           <img class="slide-poster" src="/assets/img/story/slide-1.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>Loikaw</h2>
@@ -78,7 +78,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-2" aria-label="Slide 2 of 9" data-scene="yangon" data-mood="yangon-day" data-zoom="1.0" data-yaw="0" data-pitch="0">
+        <section class="slide" id="slide-2" aria-label="Slide 2 of 9" data-tier="3d" data-scene="yangon" data-mood="yangon-day" data-zoom="0.85" data-shift-y="0.06">
           <img class="slide-poster" src="/assets/img/story/slide-2.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>Yangon</h2>
@@ -87,7 +87,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-3" aria-label="Slide 3 of 9" data-scene="loikaw" data-mood="loikaw-drained" data-zoom="1.0" data-yaw="0.55" data-pitch="0" data-hold>
+        <section class="slide" id="slide-3" aria-label="Slide 3 of 9" data-tier="wall" data-wall="loikaw-dusk">
           <img class="slide-poster" src="/assets/img/story/slide-3.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <div class="slide-plate">
@@ -95,7 +95,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-4" aria-label="Slide 4 of 9" data-scene="loikaw" data-mood="loikaw-dark" data-zoom="1.25" data-yaw="0.2" data-pitch="0.06" data-hold>
+        <section class="slide" id="slide-4" aria-label="Slide 4 of 9" data-tier="wall" data-wall="loikaw-pale">
           <img class="slide-poster" src="/assets/img/story/slide-4.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>2020–2022</h2>
@@ -105,7 +105,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-5" aria-label="Slide 5 of 9" data-scene="loikaw" data-mood="loikaw-leaving" data-zoom="0.6" data-yaw="3.1" data-pitch="0" data-hold>
+        <section class="slide" id="slide-5" aria-label="Slide 5 of 9" data-tier="wall" data-wall="loikaw-leaving">
           <img class="slide-poster" src="/assets/img/story/slide-5.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <div class="slide-plate">
@@ -114,7 +114,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-6" aria-label="Slide 6 of 9" data-scene="yangon" data-mood="yangon-return" data-zoom="1.1" data-yaw="-0.5" data-pitch="0">
+        <section class="slide" id="slide-6" aria-label="Slide 6 of 9" data-tier="wall" data-wall="dawn">
           <img class="slide-poster" src="/assets/img/story/slide-6.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>2022</h2>
@@ -124,7 +124,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-7" aria-label="Slide 7 of 9" data-scene="yangon" data-mood="yangon-dawn" data-zoom="0.95" data-yaw="2.4" data-pitch="0">
+        <section class="slide" id="slide-7" aria-label="Slide 7 of 9" data-tier="wall" data-wall="sunrise">
           <img class="slide-poster" src="/assets/img/story/slide-7.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>Acumen</h2>
@@ -134,7 +134,7 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-8" aria-label="Slide 8 of 9" data-scene="london" data-mood="london-day" data-zoom="1.0" data-yaw="0.8" data-pitch="0">
+        <section class="slide" id="slide-8" aria-label="Slide 8 of 9" data-tier="3d" data-scene="london" data-mood="london-rain" data-zoom="0.85" data-shift-y="0.06">
           <img class="slide-poster" src="/assets/img/story/slide-8.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <h2 class="slide-title" data-pixel>London 2024</h2>
@@ -144,12 +144,11 @@
             </div>
           </div>
         </section>
-        <section class="slide" id="slide-9" aria-label="Slide 9 of 9" data-scene="london" data-mood="london-night" data-zoom="0.85" data-yaw="1.15" data-pitch="0">
+        <section class="slide" id="slide-9" aria-label="Slide 9 of 9" data-tier="wall" data-wall="onward">
           <img class="slide-poster" src="/assets/img/story/slide-9.png" alt="" width="720" height="405" loading="lazy" decoding="async">
           <div class="slide-body">
             <div class="slide-plate">
-              <p>I am aiming at a master's in Mathematics and Computational Finance at Oxford.</p>
-              <p>I build things that last — because I know what it feels like when things don't.</p>
+              <p>Oxford is next. A master’s in Mathematics and Computational Finance. I have started from zero before and it worked. It will work again.</p>
               <p class="slide-links"><a class="hover-u" href="/projects/"><span class="u">See what I have built</span><span class="arrow" aria-hidden="true">→</span></a><a class="hover-u" href="/contact/"><span class="u">Get in touch</span><span class="arrow" aria-hidden="true">→</span></a></p>
             </div>
           </div>
@@ -158,7 +157,7 @@
     <div class="deck-tools">
       <button class="deck-tool" type="button" data-clear hidden aria-pressed="false">hold to see it clearly</button>
       <button class="deck-tool" type="button" data-look hidden aria-pressed="false">look around</button>
-      <button class="deck-tool" type="button" data-rotate>pause</button>
+      <button class="deck-tool" type="button" data-rotate hidden>pause</button>
     </div>
     <nav class="deck-nav" aria-label="Slides">
       <button type="button" data-prev aria-label="Previous slide"><span aria-hidden="true">‹</span></button>
@@ -175,6 +174,7 @@
       <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="/study-log/">Study log</a></li>
     </ul>
     <div class="footer-note label">
       <p>Made by hand, in plain HTML, CSS and JavaScript.</p>

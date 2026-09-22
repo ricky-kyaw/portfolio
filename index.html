@@ -19,10 +19,10 @@
 <meta name="twitter:title" content="Ricky Kyaw">
 <meta name="twitter:description" content="Ricky Kyaw writes software and solves math problems. Projects, resume, and a way to get in touch.">
 <meta name="twitter:image" content="https://rickydx.dev/assets/img/og.png">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F8F7F2">
-<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
-<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0D10">
+<style>html{background:#0B0D10}</style>
+<script>(function(){var t='dark';try{if(localStorage.getItem('theme')==='light'){t='light'}}catch(e){}try{var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0B0D10':'#FAFAF8';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0B0D10':'#FAFAF8'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -127,40 +127,69 @@
   <section class="plates-section" aria-labelledby="ways">
     <div class="container">
       <h2 class="label" id="ways" data-reveal>Ways to see the work</h2>
-      <ul class="plates plates--four" role="list" data-reveal-group="60">
-        <li data-reveal>
-          <a class="plate" href="/play/">
+      <ul class="plates plates--bento" role="list" data-reveal-group="60">
+        <li class="bento-play" data-reveal>
+          <a class="plate plate--play" href="/play/">
             <span class="plate-num num">01</span>
-            <span class="plate-title"><span class="u">Play my chess engine</span></span>
-            <span class="plate-text">Ransom, my entry in the Optiver AI Chessathon, running in your browser.</span>
+            <span class="mini" data-miniboard aria-hidden="true">
+              <span class="mini-bar"><span class="mini-bar-fill"></span></span>
+              <span class="mini-board"></span>
+            </span>
+            <span class="plate-copy">
+              <span class="plate-title"><span class="u">Play my chess engine</span></span>
+              <span class="plate-text">Ransom, my entry in the Optiver AI Chessathon, running in your browser.</span>
+              <span class="plate-aside label">On the board: a recorded game, Ransom against itself.</span>
+            </span>
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </li>
-        <li data-reveal>
-          <a class="plate" href="/projects/#from-scratch">
-            <span class="plate-num num">02</span>
-            <span class="plate-title"><span class="u">Code I wrote from scratch</span></span>
-            <span class="plate-text">Two learning algorithms, a web server and a piece of git, written by hand to understand what is underneath.</span>
-            <span class="arrow" aria-hidden="true">→</span>
+        <li class="bento-code" data-reveal>
+          <a class="plate plate--code" href="/projects/#from-scratch">
+            <span class="plate-copy">
+              <span class="plate-num num">02</span>
+              <span class="plate-title"><span class="u">Code I wrote from scratch</span></span>
+              <span class="plate-text">Two learning algorithms, a web server and a piece of git, written by hand to understand what is underneath.</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </span>
+            <span class="codewin" aria-hidden="true">
+              <span class="codewin-bar"><span class="codewin-dots"></span><span class="codewin-name">linear_regression.py</span></span>
+              <span class="codewin-body"><span class="ln" data-n="15"><b>for</b> _ <b>in</b> range(self.epochs):</span><span class="ln" data-n="16">    <i># Hypothesis</i></span><span class="ln" data-n="17">    y_pred = (self.w * X) + self.b</span><span class="ln" data-n="18"></span><span class="ln" data-n="19">    <i># Gradient Descent</i></span><span class="ln" data-n="20">    dw = -2/N * np.sum(X * (y_true - y_pred))</span><span class="ln" data-n="21">    db = -2/N * np.sum(y_true - y_pred)</span><span class="ln" data-n="22"></span><span class="ln" data-n="23">    <i># Update Rule</i></span><span class="ln" data-n="24">    self.w -= (self.learning_rate * dw)</span><span class="ln" data-n="25">    self.b -= (self.learning_rate * db)</span></span>
+            </span>
           </a>
         </li>
-        <li data-reveal>
-          <a class="plate" href="/projects/#built-fast">
-            <span class="plate-num num">03</span>
-            <span class="plate-title"><span class="u">Apps I built fast</span></span>
-            <span class="plate-text">Small things built quickly with AI help. Each card says how much.</span>
-            <span class="arrow" aria-hidden="true">→</span>
+        <li class="bento-apps" data-reveal>
+          <a class="plate plate--app" href="/projects/#built-fast">
+            <span class="plate-copy">
+              <span class="plate-num num">03</span>
+              <span class="plate-title"><span class="u">Apps I built fast</span></span>
+              <span class="plate-text">Small things built quickly with AI help. Each card says how much.</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </span>
+            <span class="appwin" aria-hidden="true">
+              <span class="appwin-bar"><span class="codewin-dots"></span><span class="appwin-name">Explain It!</span></span>
+              <span class="appwin-body"><span class="appwin-title">Explain It!</span><span class="appwin-line">Type a hard topic, get an explanation written for a five-year-old.</span></span>
+            </span>
           </a>
         </li>
-        <li data-reveal>
-          <a class="plate" href="/resume/">
-            <span class="plate-num num">04</span>
-            <span class="plate-title"><span class="u">Resume</span></span>
-            <span class="plate-text">One page: projects, school and skills. You can print it or save it as a PDF.</span>
-            <span class="arrow" aria-hidden="true">→</span>
+        <li class="bento-paper" data-reveal>
+          <a class="plate plate--paper" href="/resume/">
+            <span class="plate-copy">
+              <span class="plate-num num">04</span>
+              <span class="plate-title"><span class="u">Resume</span></span>
+              <span class="plate-text">One page: projects, school and skills. You can print it or save it as a PDF.</span>
+              <span class="arrow" aria-hidden="true">→</span>
+            </span>
+            <span class="sheet" aria-hidden="true">
+              <svg class="sheet-print" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M7 9V4h10v5"/><path d="M7 17H4.5V9.5h15V17H17"/><path d="M7 14h10v6H7z"/></svg>
+              <span class="sheet-name"></span><span class="sheet-rule"></span>
+              <span class="sheet-line"></span><span class="sheet-line sheet-line--short"></span><span class="sheet-line"></span>
+              <span class="sheet-rule"></span>
+              <span class="sheet-line"></span><span class="sheet-line sheet-line--short"></span>
+            </span>
           </a>
         </li>
       </ul>
+      <p class="plates-more" data-reveal><a class="hover-u" href="/study-log/"><span class="u">Study log: the hours I put into preparing for a master’s, in the open</span><span class="arrow" aria-hidden="true">→</span></a></p>
     </div>
   </section>
 
@@ -181,6 +210,7 @@
       <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="/study-log/">Study log</a></li>
     </ul>
     <div class="footer-note label">
       <p>Made by hand, in plain HTML, CSS and JavaScript.</p>

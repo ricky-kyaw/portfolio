@@ -1,20 +1,18 @@
-// Light and dark. A tiny inline script in the <head> of every page applies
-// the saved (or system) theme before the first paint, so nothing flashes.
-// This module handles the toggle and remembers the choice. The button is a
-// plain action button: its label says what pressing it will do.
+// Light and dark. The site is dark unless the visitor picks light. A tiny inline
+// script in the <head> of every page applies the saved choice before the first
+// paint, so nothing flashes. This module handles the toggle and remembers the
+// choice. The button is a plain action button: its label says what pressing it will do.
 
 const KEY = 'theme';
-const BG = { light: '#F8F7F2', dark: '#0F1217' };
+const BG = { light: '#FAFAF8', dark: '#0B0D10' };
 
 export function currentTheme() {
-  const set = document.documentElement.dataset.theme;
-  if (set === 'light' || set === 'dark') return set;
-  return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
 }
 
 export function setTheme(theme, { remember = true } = {}) {
   const html = document.documentElement;
-  if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (theme !== 'light') theme = 'dark';
   html.classList.add('is-theming');
   html.dataset.theme = theme;
   html.style.background = BG[theme];
@@ -35,13 +33,4 @@ export function initTheme() {
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-theme-toggle]')) toggleTheme();
   });
-  // If the visitor never chose, follow the system when it changes.
-  const mq = matchMedia('(prefers-color-scheme: dark)');
-  const follow = (ev) => {
-    let saved = null;
-    try { saved = localStorage.getItem(KEY); } catch (e) { /* ignore */ }
-    if (!saved) setTheme(ev.matches ? 'dark' : 'light', { remember: false });
-  };
-  if (mq.addEventListener) mq.addEventListener('change', follow);
-  else if (mq.addListener) mq.addListener(follow);
 }

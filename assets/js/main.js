@@ -166,6 +166,8 @@ function countView() {
 let cell = null;
 let story = null;
 let play = null;
+let studyLog = null;
+let plates = null;
 async function pageInit(main) {
   safely('reveal', () => initReveal(main));
   safely('nav', placeNavRule);
@@ -198,6 +200,16 @@ async function pageInit(main) {
     }
     return;
   }
+  if (main.matches('[data-study-log]')) {
+    try {
+      const mod = await import('./study-log.js');
+      if (!main.isConnected) return;
+      studyLog = mod.initStudyLog(main);
+    } catch (e) {
+      console.error('study log', e);
+    }
+    return;
+  }
   if (main.querySelector('[data-cell]')) {
     try {
       const mod = await import('./cell.js');
@@ -205,6 +217,15 @@ async function pageInit(main) {
       cell = mod.initCell(main, { navigate });
     } catch (e) {
       console.error('cell', e);
+    }
+  }
+  if (main.querySelector('[data-miniboard]')) {
+    try {
+      const mod = await import('./home-plates.js');
+      if (!main.isConnected) return;
+      plates = mod.initHomePlates(main);
+    } catch (e) {
+      console.error('plates', e);
     }
   }
   if (main.querySelector('[data-github-repo]')) {
@@ -221,6 +242,8 @@ function pageTeardown() {
   if (cell) { cell.destroy(); cell = null; }
   if (story) { story.destroy(); story = null; }
   if (play) { play.destroy(); play = null; }
+  if (studyLog) { studyLog.destroy(); studyLog = null; }
+  if (plates) { plates.destroy(); plates = null; }
 }
 
 safely('theme', initTheme);
@@ -230,7 +253,12 @@ safely('copy', initCopy);
 safely('forms', initForms);
 // The Resume page's "Print, or save as a PDF" button. The print layout lives in site.css.
 safely('print', () => document.addEventListener('click', (e) => { if (e.target.closest('[data-print]')) window.print(); }));
-window.addEventListener('beforeprint', () => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible')));
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  // paper cannot be clicked: open every "More" for the print, and close them again afterwards
+  document.querySelectorAll('.proj details:not([open])').forEach((d) => { d.open = true; d.dataset.printOpened = '1'; });
+});
+window.addEventListener('afterprint', () => document.querySelectorAll('.proj details[data-print-opened]').forEach((d) => { d.open = false; delete d.dataset.printOpened; }));
 
 document.addEventListener('page:unload', pageTeardown);
 document.addEventListener('page:load', (e) => { pageInit(e.detail.main); countView(); });

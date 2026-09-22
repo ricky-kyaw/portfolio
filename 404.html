@@ -6,10 +6,10 @@
 <title>Not here — Ricky Kyaw</title>
 <meta name="description" content="That page is not here.">
 <meta name="robots" content="noindex">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#F8F7F2">
-<style>html{background:#F8F7F2}@media (prefers-color-scheme:dark){html{background:#0F1217}}</style>
-<script>(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0F1217':'#F8F7F2';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0F1217':'#F8F7F2'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0B0D10">
+<style>html{background:#0B0D10}</style>
+<script>(function(){var t='dark';try{if(localStorage.getItem('theme')==='light'){t='light'}}catch(e){}try{var d=document.documentElement;d.setAttribute('data-theme',t);d.style.background=t==='dark'?'#0B0D10':'#FAFAF8';var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='dark'?'#0B0D10':'#FAFAF8'}if('noModule' in HTMLScriptElement.prototype){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('js-ready')){d.classList.remove('js')}},3000)}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -71,6 +71,7 @@
       <li><!--email_off--><a class="u" href="mailto:origin@rickydx.dev">origin@rickydx.dev</a><!--/email_off--><button class="copy-btn" type="button" data-copy="origin@rickydx.dev">copy</button></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://github.com/ricky-kyaw" target="_blank" rel="noopener">GitHub</a></li>
       <li><span class="sep" aria-hidden="true">·</span><a class="u" href="https://www.linkedin.com/in/ricky-kyaw/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><span class="sep" aria-hidden="true">·</span><a class="u" href="/study-log/">Study log</a></li>
     </ul>
     <div class="footer-note label">
       <p>Made by hand, in plain HTML, CSS and JavaScript.</p>

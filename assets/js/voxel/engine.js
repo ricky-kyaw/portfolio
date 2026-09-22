@@ -108,7 +108,7 @@ const EDGE_V = [[0, 0, 1], [0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]];
 // A fixed sun, so light and shade stay put while you walk around the model.
 const SHADE = [1.0, 0.72, 0.28, 0.50, 0.38];
 
-// materials: id -> [r, g, b, accent]   accent: 0 none, 1 amber, 2 blue, 3 a lit window
+// materials: id -> [r, g, b, accent]   accent: 0 none, 1 amber, 2 water (it mirrors), 3 a lit window, 4 red
 export function buildFaces(grid, materials, shade = SHADE) {
   const { X, Y, Z } = grid;
   let n = 0;
@@ -177,13 +177,17 @@ export class Renderer {
     this.out = new Uint32Array(this.img.data.buffer);
     this.col = new Uint32Array(W * H);
     this.zb = new Float32Array(W * H);
+    this.hb = new Float32Array(W * H);     // how high above the ground each pixel's surface is, for reflections
+    this.refl = new Uint32Array(W * H);    // what the water mirrors at each pixel (0 = nothing)
+    this.reflH = new Float32Array(W * H);
+    this.still = null;                     // a copy of the last picture, so rain can be redrawn over it cheaply
   }
 
   // scene: { faces, size: [X, Y, Z], ring: Float32Array(360), span }  (span: how many voxels fill the picture's width at zoom 1)
   // cam:   { yaw, pitch, zoom, shiftX, shiftY }
   // mood:  see MOODS in scenes.js (optional extras: dot 1|2|4, line, contrast)
   render(scene, cam, mood, clarity) {
-    const { W, H, out, col, zb } = this;
+    const { W, H, out, col, zb, hb, refl, reflH } = this;
     if (!W || !H) return; // not sized yet
     const dot = mood.dot || 2;                 // dither cell size in pixels
     const shift = dot <= 1 ? 0 : dot < 4 ? 1 : 2;
@@ -271,6 +275,7 @@ export class Renderer {
       const d0 = wx * dX + wy * dY + wz * dZ;
       const ax = Ax[d], ay = Ay[d], bx = Bx[d], by = By[d], k = inv[d], du = dU[d], dv = dV[d];
       const c = fcol[i], ce = fedge[i], fl = fflag[i];
+      const hgt = fy[i] + (d === 0 ? 1 : 0.5);
       const eu = eU[d], ev = eV[d], eu1 = 1 - eu, ev1 = 1 - ev;
       for (let y = y0; y <= y1; y++) {
         const qy = y + 0.5 - py0;
@@ -285,8 +290,34 @@ export class Renderer {
           const p = row + x;
           if (depth > zb[p]) {
             zb[p] = depth;
+            hb[p] = hgt;
             col[p] = fl && ((fl & 1 && u < eu) || (fl & 2 && u >= eu1) || (fl & 4 && v < ev) || (fl & 8 && v >= ev1)) ? ce : c;
           }
+        }
+      }
+    }
+
+    // ---- still water mirrors what stands above it ----
+    // The view has no perspective, so a point h above the water shows again 2h lower on the screen: the mirror
+    // image is made by copying pixels straight down. Where two things land on one spot, the lower one wins.
+    const mirror = scene.waterY != null && mood.reflect !== false;
+    if (mirror) {
+      refl.fill(0);
+      const kpx = cp * s, level = scene.waterY;
+      for (let y = 0; y < H; y++) {
+        const row = y * W;
+        for (let x = 0; x < W; x++) {
+          const p = row + x;
+          if (zb[p] === -1e9) continue;
+          const c = col[p];
+          if ((c >>> 24) === 2) continue;
+          const h = hb[p] - level;
+          if (h <= 0.2) continue;
+          const ty = y + Math.round(2 * h * kpx);
+          if (ty >= H) continue;
+          const tp = ty * W + x;
+          if (zb[tp] === -1e9 || (col[tp] >>> 24) !== 2) continue;
+          if (refl[tp] === 0 || h < reflH[tp]) { refl[tp] = ((c & 0xFFFFFF) | (((c >>> 24) + 1) << 24)) >>> 0; reflH[tp] = h; }
         }
       }
     }
@@ -295,6 +326,7 @@ export class Renderer {
     const inkA = pack(hex(mood.inkDark)), inkB = pack(hex(mood.inkLight));
     const amA = pack(hex(mood.amberLo)), amB = pack(hex(mood.amberHi));
     const blA = pack(hex(mood.blueLo)), blB = pack(hex(mood.blueHi));
+    const rdA = pack(hex(mood.redLo || '#5A1512')), rdB = pack(hex(mood.redHi || '#E8402F'));
     const gain = Math.round(mood.gain * 256);
     const contrast = Math.round((mood.contrast || 1.35) * 256);
     const lights = mood.lights ? 1 : 0;
@@ -307,7 +339,14 @@ export class Renderer {
         const p = row + x;
         if (zb[p] === -1e9) continue;
         const c = col[p];
-        const r = c & 255, g = (c >>> 8) & 255, b = (c >>> 16) & 255, acc = c >>> 24;
+        let r = c & 255, g = (c >>> 8) & 255, b = (c >>> 16) & 255, acc = c >>> 24;
+        // water showing a mirror image: every other line stays water, the lines between show a dimmer copy in its own colours
+        if (mirror && acc === 2 && refl[p] && ((y >> shift) & 1) === 0) {
+          const m = refl[p];
+          r = (m & 255) * 0.8 | 0; g = ((m >>> 8) & 255) * 0.8 | 0; b = ((m >>> 16) & 255) * 0.8 | 0;
+          acc = (m >>> 24) - 1;
+          if (acc === 3) acc = 0;
+        }
         const bx = (x >> shift) & 3;
         // the dissolve uses a shifted pattern so it does not line up with the shading dots
         if (clearLevel > 0 && clearLevel > BAYER[by * 4 + ((bx + 2) & 3)]) {
@@ -319,7 +358,28 @@ export class Renderer {
         let L = ((r * 77 + g * 150 + b * 29) >> 8) * gain >> 8;
         L = (((L - 120) * contrast) >> 8) + 128;
         const on = L > BAYER[by * 4 + bx];
-        out[p] = acc === 1 ? (on ? amB : amA) : acc === 2 ? (on ? blB : blA) : (on ? inkB : inkA);
+        out[p] = acc === 1 ? (on ? amB : amA) : acc === 2 ? (on ? blB : blA) : acc === 4 ? (on ? rdB : rdA) : (on ? inkB : inkA);
+      }
+    }
+    if (mood.rain) { if (!this.still || this.still.length !== out.length) this.still = new Uint32Array(out.length); this.still.set(out); }
+    this.ctx.putImageData(this.img, 0, 0);
+  }
+
+  // Rain over the last picture: short slanted streaks, without drawing the city again. t is in seconds.
+  rain(t, inkHex) {
+    const { W, H, out, still } = this;
+    if (!still || still.length !== out.length) return;
+    out.set(still);
+    const c = hex(inkHex), px = (255 << 24 | c[2] << 16 | c[1] << 8 | c[0]) >>> 0;
+    const drops = Math.round((W * H) / 4200);
+    for (let i = 0; i < drops; i++) {
+      const hsh = Math.imul(i + 1, 2654435761) >>> 0;
+      const speed = 0.9 + ((hsh >>> 8) & 255) / 255 * 0.7;
+      const x0 = hsh % W, len = 5 + (hsh & 7);
+      const y0 = (((hsh >>> 12) % H) + t * H * speed) % (H + 40) - 20;
+      for (let k = 0; k < len; k++) {
+        const y = (y0 + k) | 0, x = (x0 - (k >> 1) + W) % W;
+        if (y >= 0 && y < H) out[y * W + x] = px;
       }
     }
     this.ctx.putImageData(this.img, 0, 0);

@@ -18,22 +18,26 @@ Then open http://localhost:4173/. The site uses root-relative links (`/projects/
 
 ```
 index.html              Home
-story/  education/  projects/  play/  resume/  contact/     one folder per page (clean URLs)
+story/  education/  projects/  play/  resume/  contact/  study-log/     one folder per page (clean URLs)
 404.html                the page shown for a wrong address (GitHub Pages and Cloudflare Pages pick it up by name)
 assets/css/site.css     all styles, mobile first
 assets/js/main.js       entry point: page transitions, fade-ins, theme, menu, copy buttons, contact form
 assets/js/router.js     fetch-and-swap page transitions (no white flash, no reload)
 assets/js/reveal.js     scroll fade-ins
-assets/js/theme.js      light / dark
+assets/js/theme.js      light / dark (dark unless the visitor picks light)
 assets/js/cell.js       the notebook cell on Home (commands)
 assets/js/mathkit.js    exact math, primes, Fibonacci — written by hand, no eval()
 assets/js/figure.js     Figure 1, the random walk
 assets/js/github.js     pulls your public repos to fill project links
-assets/js/story.js      the Story page: nine slides, arrows / arrow keys / swipe, drag to look around, hold to see clearly
-assets/js/voxel/engine.js   draws the little block cities: a small 3D renderer written by hand (no WebGL, no library)
-assets/js/voxel/scenes.js   builds Loikaw, Yangon and London out of blocks, and sets the mood of each slide
+assets/js/story.js      the Story page: nine slides, arrows / arrow keys / swipe; drag to turn the two cities; hold to see the Loikaw photo's colours
+assets/js/story-walls.js    the quiet backgrounds: the Loikaw photograph redrawn in a few inks (four ways), and three drawn skies with flat Burmese pagoda skylines (the last one runs into London)
+assets/js/voxel/engine.js   draws the two block cities: a small 3D renderer written by hand (no WebGL, no library), with water reflections and rain
+assets/js/voxel/scenes.js   builds Yangon and London out of blocks (and an older Loikaw), and sets the mood of each
+assets/js/home-plates.js    the small board on Home: replays one recorded game of Ransom against itself
+assets/js/study-log.js      the Study Log page: streaks, the 39-week grid, "Lock in"; assets/css/study-log.css holds its styles
+data/study-log.json     the study hours. You add a line and commit; the page reads it
 assets/js/pixelfont.js  the chunky block lettering on the slide titles (drawn from grids, no font file)
-assets/img/story/       one still picture per slide, shown when scripts are off and while the scene loads
+assets/img/story/       one still picture per slide, shown when scripts are off and while the scene loads; loikaw.webp is the photograph behind the Loikaw slides; horizon.png is the faint skyline along the bottom of every page in the dark theme
 assets/js/play.js       the Play page: a game of chess against Ransom, the engine
 assets/js/play/rules.js    the rules of chess (the page's own referee): legal moves, check, mate, draws, notation
 assets/js/play/board.js    the board: click, drag or arrow keys; assets/js/play/pieces.js draws the pieces from grids
@@ -49,6 +53,7 @@ CNAME, .nojekyll        for GitHub Pages: the custom domain, and "serve these fi
 tests/index.html        browser tests for mathkit and the cell (open /tests/)
 tools/serve.py          local server for editing (no caching, serves 404.html)
 tests/voxel.html        draws every scene in every mood and shows how long each frame takes (open /tests/voxel.html)
+tests/study-log.html    tests for the Study Log: London dates, streaks, the grid, bad data (open /tests/study-log.html)
 tests/rules.html        tests for the chess rules: move counts to a fixed depth on 110 positions, notation, draws (open /tests/rules.html)
 tools/make_images.py    redraws og.png and the PNG icons (needs Pillow; only if you change the name or look)
 tools/ground_truth.txt  the facts the site is allowed to state, in your own words
@@ -58,11 +63,19 @@ tools/pack_posters.py   shrinks the Story pictures (needs Pillow)
 
 ## Changing the Story page
 
-The words live in `story/index.html`, one `<section class="slide">` per slide. Each slide names its scene (`data-scene`), its mood (`data-mood`) and where the camera starts (`data-yaw`, `data-pitch`, `data-zoom`). After changing any of those:
+The words live in `story/index.html`, one `<section class="slide">` per slide. A slide is one of two kinds. `data-tier="3d"` (Yangon and London only) names a scene (`data-scene`), a mood (`data-mood`) and where the camera starts (`data-yaw`, `data-pitch`, `data-zoom`, and `data-shift-y` to move the city up or down). `data-tier="wall"` names a background from `assets/js/story-walls.js` (`data-wall`); `data-hold` on the first Loikaw slide lets press-and-hold bring the photograph's colours back. After changing any of those:
 
-1. Run `python tools/serve.py` and open `http://127.0.0.1:4173/story/?capture=1`. This saves a fresh still picture for every slide into `assets/img/story/`. It only works on your own machine.
+1. Run `python tools/serve.py` and open `http://127.0.0.1:4173/story/?capture=1`. This saves a fresh still picture for every slide, and the skyline `horizon.png`, into `assets/img/story/`. It only works on your own machine.
 2. Run `python tools/pack_posters.py` to make the pictures small.
 3. Run `python tools/check_facts.py`. It must say that everything was found in the ground truth. If you are adding a new fact, add it to `tools/ground_truth.txt` first.
+
+## Adding study hours
+
+1. Open `/study-log/?owner=1` once in your own browser. That turns on your private view (it is remembered in that browser only, and the address is cleaned straight away).
+2. Press "Lock in today", enter the hours (0 to 12) and the phase (1 to 4). The page shows one line of JSON and a Copy button.
+3. Paste that line into the `entries` list in `data/study-log.json`, commit and push. The public page reads that file.
+
+The blunt "STREAK BROKEN" banner only ever shows in your private view. Visitors see calm wording, and can keep a streak of their own that stays in their browser.
 
 ## Changing the chess engine
 
@@ -122,6 +135,6 @@ Publishing the project root also publishes `README.md`, `tools/`, `tests/` and `
 
 ## Design notes
 
-- Look: quiet engineering graph paper, Instrument Sans for text and IBM Plex Mono for labels, one blue accent.
+- Look: near-black (#0B0D10) pages with an 8% edge vignette, a 2% grain and a faint pixel skyline along the bottom; the light theme is off-white (#FAFAF8) with the vignette only. Instrument Sans for text, IBM Plex Mono for labels, one blue accent, and links inside the page are blue.
 - Motion: text links draw a thin underline; cards lift 3px with a soft shadow; sections fade in and rise 12px on scroll; pages glide instead of reloading; everything respects "reduce motion".
 - The Home cell understands plain English ("show me the projects"), does exact big-number math (`2^64`), tests primes, and computes Fibonacci numbers, all by hand-written code.

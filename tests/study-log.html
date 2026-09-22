@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>running…</title>
+<meta name="robots" content="noindex">
+<style>
+  body { font: 14px/1.5 ui-monospace, Menlo, Consolas, monospace; margin: 1.5rem; color: #14161A; background: #F8F7F2; }
+  .bad { color: #B42318; } .ok { color: #1F7A3A; }
+</style>
+</head>
+<body>
+<h1 style="font-size:1rem">Study Log tests (dates, streaks and the heatmap)</h1>
+<pre id="log"></pre>
+<script type="module">
+  // Every date here is made up for the test. None of it is Ricky's real record.
+  import { londonToday, dayNumber, dayString, isDate, cleanEntries, streakInfo, bucket, cellLabel, heatmapWeeks, monthLabels, statusText, ownerBannerText, entryLine, dayWord, searchWithoutOwner, overlayEntries, initStudyLog } from '../assets/js/study-log.js';
+
+  const log = document.getElementById('log');
+  let pass = 0, fail = 0;
+  const say = (ok, text) => { (ok ? pass++ : fail++); if (!ok) log.insertAdjacentHTML('beforeend', `<span class="bad">FAIL ${text}</span>\n`); };
+  const eq = (got, want, text) => say(JSON.stringify(got) === JSON.stringify(want), `${text}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
+
+  const at = (iso) => londonToday(new Date(iso));
+  const E = (date, hours = 6, phase = 1) => ({ date, hours, phase });
+  // a run of studied days ending on `end`
+  const run = (end, n, hours = 6) => Array.from({ length: n }, (_, i) => E(dayString(dayNumber(end) - (n - 1 - i)), hours));
+
+  // ---- the London date ----
+  eq(at('2026-12-31T23:59:59Z'), '2026-12-31', 'winter: one second before midnight');
+  eq(at('2027-01-01T00:00:00Z'), '2027-01-01', 'winter: midnight');
+  eq(at('2026-06-30T22:59:59Z'), '2026-06-30', 'summer: one second before London midnight (23:00 UTC)');
+  eq(at('2026-06-30T23:00:00Z'), '2026-07-01', 'summer: London midnight is 23:00 UTC');
+  // clocks go back on 2026-10-25 at 01:00 UTC
+  eq(at('2026-10-24T22:59:59Z'), '2026-10-24', 'night before clocks go back: 23:59:59 in London');
+  eq(at('2026-10-24T23:00:00Z'), '2026-10-25', 'clocks go back: the day starts at 23:00 UTC');
+  eq(at('2026-10-25T00:30:00Z'), '2026-10-25', 'clocks go back: the first 01:30');
+  eq(at('2026-10-25T01:30:00Z'), '2026-10-25', 'clocks go back: the second 01:30');
+  eq(at('2026-10-25T23:30:00Z'), '2026-10-25', 'clocks go back: 23:30 UTC is now still the same day');
+  eq(at('2026-10-26T00:00:00Z'), '2026-10-26', 'clocks go back: the next day starts at 00:00 UTC');
+  // clocks go forward on 2027-03-28 at 01:00 UTC
+  eq(at('2027-03-27T23:59:59Z'), '2027-03-27', 'night before clocks go forward');
+  eq(at('2027-03-28T00:00:00Z'), '2027-03-28', 'clocks go forward: the day starts at 00:00 UTC');
+  eq(at('2027-03-28T22:59:59Z'), '2027-03-28', 'clocks go forward: 23:59:59 in London');
+  eq(at('2027-03-28T23:00:00Z'), '2027-03-29', 'clocks go forward: the next day starts at 23:00 UTC');
+  say(/^\d{4}-\d{2}-\d{2}$/.test(londonToday()), 'londonToday() with no argument gives a date');
+  // the visitor's own time zone must not matter: these instants are different calendar days in Tokyo and Los Angeles
+  eq(at('2026-09-21T14:30:00Z'), '2026-09-21', 'an afternoon in London');
+
+  // ---- day sums ----
+  eq(dayString(dayNumber('2026-10-24') + 2), '2026-10-26', 'two days across the autumn clock change');
+  eq(dayString(dayNumber('2027-03-27') + 2), '2027-03-29', 'two days across the spring clock change');
+  eq(dayNumber('2026-10-26') - dayNumber('2026-10-25'), 1, 'the 25-hour day is one day');
+  eq(dayNumber('2027-03-29') - dayNumber('2027-03-28'), 1, 'the 23-hour day is one day');
+  eq(dayString(dayNumber('2028-02-28') + 1), '2028-02-29', 'leap day');
+  eq([isDate('2026-09-21'), isDate('2026-02-30'), isDate('2026-13-01'), isDate('2026-9-21'), isDate('21/09/2026'), isDate(20260921), isDate(null)], [true, false, false, false, false, false, false], 'isDate');
+
+  // ---- cleaning the data ----
+  eq(cleanEntries(null), [], 'no list');
+  eq(cleanEntries({}), [], 'not a list');
+  eq(cleanEntries([]), [], 'empty list');
+  eq(cleanEntries([E('2026-09-03'), E('2026-09-01'), E('2026-09-02')]).map((e) => e.date), ['2026-09-01', '2026-09-02', '2026-09-03'], 'unsorted input is sorted');
+  eq(cleanEntries([E('2026-09-01', 2), E('2026-09-02', 3), E('2026-09-01', 5, 2)]), [E('2026-09-01', 5, 2), E('2026-09-02', 3)], 'duplicate dates: the later entry wins');
+  eq(cleanEntries([E('2026-09-01', 15), E('2026-09-02', -3), E('2026-09-03', 12.5)]).map((e) => e.hours), [12, 0, 12], 'hours are kept within 0 to 12');
+  eq(cleanEntries([E('2026-09-01', 5.5)]).map((e) => e.hours), [5.5], 'half hours are kept');
+  eq(cleanEntries([E('2026-02-30'), E('not a date'), E('2026-09-01', 6, 5), E('2026-09-02', 6, 0), E('2026-09-03', 6, 1.5), E('2026-09-04', 6, '2'), E('2026-09-05', '6'), E('2026-09-06', NaN), null, 7, 'x', E('2026-09-07')]).map((e) => e.date), ['2026-09-07'], 'bad dates, phases and hours are left out');
+  eq(Object.keys(cleanEntries([{ date: '2026-09-01', hours: 1, phase: 1, note: 'x' }])[0]), ['date', 'hours', 'phase'], 'extra fields are dropped');
+
+  // ---- streaks ----
+  const T = '2026-09-21';
+  eq(streakInfo([], T), { current: 0, longest: 0, total: 0, broken: false, daysMissed: 0, hoursLost: 0, lastStudied: null, phase: null }, 'no entries: no streak and nothing broken');
+  eq(streakInfo(run(T, 5), T).current, 5, 'five days ending today');
+  eq(streakInfo(run('2026-09-20', 5), T).current, 5, 'today is empty: the streak is counted through yesterday');
+  eq(streakInfo(run('2026-09-20', 5), T).broken, false, 'today is empty: not broken');
+  eq(streakInfo([...run('2026-09-20', 5), E(T, 0)], T).current, 5, 'a 0-hour entry today does not end the streak before midnight');
+  eq(streakInfo([...run('2026-09-20', 5), E(T, 0)], T).broken, false, 'a 0-hour entry today: not broken');
+
+  const gap = (n) => streakInfo(run(dayString(dayNumber(T) - n - 1), 3), T);
+  eq([gap(1).current, gap(1).broken, gap(1).daysMissed, gap(1).hoursLost], [0, true, 1, 6], 'a gap of 1 day');
+  eq([gap(2).current, gap(2).broken, gap(2).daysMissed, gap(2).hoursLost], [0, true, 2, 12], 'a gap of 2 days');
+  eq([gap(10).current, gap(10).broken, gap(10).daysMissed, gap(10).hoursLost], [0, true, 10, 60], 'a gap of 10 days');
+  eq(gap(10).lastStudied, '2026-09-10', 'last studied day after a gap of 10');
+  eq(gap(2).longest, 3, 'a broken streak still counts as the longest');
+  eq(streakInfo(run('2026-09-19', 3), T, 4).hoursLost, 4, 'hours lost follow the target when one is given');
+
+  const zeroYesterday = [...run('2026-09-19', 4), E('2026-09-20', 0)];
+  eq([streakInfo(zeroYesterday, T).current, streakInfo(zeroYesterday, T).broken, streakInfo(zeroYesterday, T).daysMissed, streakInfo(zeroYesterday, T).lastStudied], [0, true, 1, '2026-09-19'], 'a 0-hour entry does not count as studied');
+  eq(streakInfo([E('2026-09-20', 0), E(T, 0)], T), { current: 0, longest: 0, total: 0, broken: false, daysMissed: 0, hoursLost: 0, lastStudied: null, phase: 1 }, 'only 0-hour entries: no streak, nothing broken');
+  eq(streakInfo([E('2026-09-18'), E('2026-09-19', 0), E('2026-09-20'), E(T)], T).current, 2, 'a 0-hour day in the middle splits the run');
+
+  const mixed = [...run('2026-08-10', 7, 2), ...run('2026-09-01', 3, 4.5), ...run(T, 2, 1)];
+  eq(streakInfo(mixed, T).longest, 7, 'longest streak');
+  eq(streakInfo(mixed, T).current, 2, 'current streak next to a longer old one');
+  eq(streakInfo(mixed, T).total, 7 * 2 + 3 * 4.5 + 2, 'total hours');
+  eq(streakInfo([...mixed].reverse(), T).longest, 7, 'longest streak from unsorted input');
+  eq(streakInfo([...mixed].reverse(), T).current, 2, 'current streak from unsorted input');
+  eq(streakInfo([E(T, 2), E(T, 0)], T).current, 0, 'duplicate dates: a later 0-hour entry replaces the earlier one');
+  eq(streakInfo([E(T, 0), E(T, 2)], T).current, 1, 'duplicate dates: a later studied entry replaces the earlier one');
+  eq(streakInfo([E(T, 2), E(T, 3)], T).total, 3, 'duplicate dates are not added twice');
+  eq(streakInfo([E('2026-09-19', 6, 2), E('2026-09-20', 6, 3), E('2026-09-10', 6, 4)], T).phase, 3, 'the phase comes from the most recent entry');
+  eq(streakInfo([E('2026-09-20', 6, 2), E('2026-09-25', 6, 4)], T), { current: 1, longest: 1, total: 6, broken: false, daysMissed: 0, hoursLost: 0, lastStudied: '2026-09-20', phase: 2 }, 'entries dated after today are ignored');
+  // a streak that runs across both clock changes
+  eq(streakInfo(run('2026-10-27', 5), '2026-10-27').current, 5, 'a streak across the autumn clock change');
+  eq(streakInfo(run('2027-03-30', 5), '2027-03-30').current, 5, 'a streak across the spring clock change');
+  eq(streakInfo(run('2026-10-24', 3), '2026-10-26').daysMissed, 1, 'days missed across the autumn clock change');
+
+  // ---- the two wordings ----
+  eq(statusText(gap(2), T), 'Last session: 3 days ago.', 'the calm public line');
+  eq(statusText(streakInfo(run(T, 2), T), T), 'Today is logged.', 'the line when today is done');
+  say(statusText(streakInfo(run('2026-09-20', 2), T), T).startsWith('Last session: yesterday.'), 'the line when today is still open');
+  eq(ownerBannerText(gap(2)), 'STREAK BROKEN. Days missed: 2. Total hours lost: 12.', "the owner's banner");
+  eq(ownerBannerText(gap(10)), 'STREAK BROKEN. Days missed: 10. Total hours lost: 60.', "the owner's banner after 10 days");
+  eq(ownerBannerText(streakInfo(run('2026-09-20', 2), T)), '', 'no banner while the streak is alive');
+  eq(ownerBannerText(streakInfo([], T)), '', 'no banner with no entries');
+  eq(entryLine({ date: '2026-09-21', hours: 5.5, phase: 2 }), '{"date":"2026-09-21","hours":5.5,"phase":2}', 'the line to paste');
+
+  eq([0, 1, 2, 10].map(dayWord), ['days', 'day', 'days', 'days'], '1 day, not 1 days');
+
+  // ---- the owner switch leaves the address ----
+  eq(searchWithoutOwner('?owner=1'), '', 'owner=1 is taken out');
+  eq(searchWithoutOwner('?owner=0'), '', 'owner=0 is taken out');
+  eq(searchWithoutOwner('?a=b&owner=1&c=d'), '?a=b&c=d', 'other parts of the address stay');
+  eq(searchWithoutOwner(''), '', 'an empty search stays empty');
+  eq(searchWithoutOwner('?a=b'), '?a=b', 'a search without the switch is unchanged');
+
+  // ---- the owner's overlay: the file wins where it has the date ----
+  {
+    const file = [E('2026-09-19', 6, 2), E('2026-09-21', 6, 2)];
+    const mine = [E('2026-09-20', 3, 2), E('2026-09-21', 2, 2)];
+    const o = overlayEntries(file, mine);
+    eq(o.entries, [E('2026-09-19', 6, 2), E('2026-09-20', 3, 2), E('2026-09-21', 6, 2)], 'overlay: dates missing from the file are added, the file wins the rest');
+    eq([o.laid, o.differ], [1, ['2026-09-21']], 'overlay: what was laid over and what differs');
+    eq(streakInfo(o.entries, T).total, 15, 'overlay: the total matches the file for a date the file has');
+    const f = overlayEntries(file, mine, ['2026-09-21']);
+    eq([f.entries[2].hours, f.laid, f.differ], [2, 2, []], 'overlay: an entry saved just now on this page is shown before the file');
+    eq(overlayEntries(file, [E('2026-09-21', 6, 2)]), { entries: cleanEntries(file), laid: 0, differ: [] }, 'overlay: the same entry in both places is not a difference');
+    eq(overlayEntries([], mine), { entries: cleanEntries(mine), laid: 2, differ: [] }, 'overlay: an empty file shows what this browser saved');
+    eq(overlayEntries(file, []), { entries: cleanEntries(file), laid: 0, differ: [] }, 'overlay: nothing saved here shows the file');
+  }
+
+  // ---- colour steps ----
+  eq([0, 0.5, 3.5, 4, 8, 9, 12].map(bucket), [0, 1, 1, 2, 2, 2, 2], 'bucket edges at 0, 0.5, 3.5, 4, 8, 9, 12');
+  eq([null, undefined, NaN, -1].map(bucket), [0, 0, 0, 0], 'no hours is the empty step');
+
+  // ---- the heatmap ----
+  {
+    const weeks = heatmapWeeks([E(T, 5.5, 2), E('2026-09-20', 0.5, 1), E('2026-09-19', 0, 3)], T); // T is a Monday
+    eq(weeks.length, 39, '39 columns');
+    say(weeks.every((w) => w.length === 7), '7 cells in every column');
+    eq(weeks[0][0].date, '2025-12-29', 'the first cell is the Monday 38 weeks before this week');
+    eq(weeks[38][0].date, T, 'the last column starts on this Monday');
+    eq(weeks[38][6].date, '2026-09-27', 'the last column ends on this Sunday');
+    eq(weeks[38].map((c) => c.future), [false, true, true, true, true, true, true], 'on a Monday the other six days are in the future');
+    eq(weeks[38].map((c) => c.today), [true, false, false, false, false, false, false], 'today is marked');
+    eq(weeks.flat().filter((c) => c.future).length, 6, 'no other future days');
+    eq([weeks[38][0].level, weeks[37][6].level, weeks[37][5].level, weeks[37][4].level], [2, 1, 0, 0], 'levels in the grid');
+    eq(weeks[38][0].label, 'Mon 21 Sep 2026: 5.5 hours, phase 2', 'the name of a studied day');
+    eq(weeks[37][6].label, 'Sun 20 Sep 2026: 0.5 hours, phase 1', 'the name of a short day');
+    eq(weeks[37][5].label, 'Sat 19 Sep 2026: 0 hours, phase 3', 'the name of a 0-hour day');
+    eq(weeks[37][4].label, 'Fri 18 Sep 2026: no entry', 'the name of a day with no entry');
+    eq(weeks[38][1].label, 'Tue 22 Sep 2026: not yet', 'the name of a future day');
+    eq(cellLabel({ date: '2026-09-21', hours: 1, phase: 4, future: false }), 'Mon 21 Sep 2026: 1 hour, phase 4', 'one hour, not one hours');
+    const all = weeks.flat();
+    say(all.every((c, i) => i === 0 || dayNumber(c.date) === dayNumber(all[i - 1].date) + 1), 'every cell is the day after the one before');
+    eq(new Set(all.map((c) => c.date)).size, 273, '273 different dates');
+    const labels = monthLabels(weeks);
+    eq(labels.length, 39, 'one month slot per column');
+    eq(labels.filter(Boolean), ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'], 'month names, without a squeezed first one');
+    eq(labels[38], '', 'no new month in the last column here');
+  }
+  {
+    const weeks = heatmapWeeks([E('2026-09-28', 3)], '2026-09-27'); // a Sunday
+    eq(weeks[38][6].date, '2026-09-27', 'on a Sunday the grid ends today');
+    eq(weeks.flat().filter((c) => c.future).length, 0, 'on a Sunday nothing is in the future');
+    eq(weeks[38][6].today, true, 'Sunday is marked as today');
+  }
+  {
+    const weeks = heatmapWeeks([E('2026-10-30', 9)], '2026-10-28'); // a Wednesday, just after the clocks go back
+    eq(weeks[38].map((c) => c.date), ['2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29', '2026-10-30', '2026-10-31', '2026-11-01'], 'the week after the autumn clock change');
+    eq(weeks[37].map((c) => c.date), ['2026-10-19', '2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23', '2026-10-24', '2026-10-25'], 'the week of the autumn clock change');
+    eq(weeks[38].map((c) => c.future), [false, false, false, true, true, true, true], 'future days midweek');
+    eq([weeks[38][4].hours, weeks[38][4].level], [null, 0], 'an entry on a future day is not drawn');
+    const all = weeks.flat();
+    eq(new Set(all.map((c) => c.date)).size, 273, 'no date is repeated or skipped at the clock change');
+  }
+  {
+    const weeks = heatmapWeeks([], '2027-03-31'); // a Wednesday, just after the clocks go forward
+    eq(weeks[37][6].date, '2027-03-28', 'the Sunday the clocks go forward');
+    eq(weeks[38][0].date, '2027-03-29', 'the Monday after');
+    eq(heatmapWeeks([], '2027-03-31', 4).length, 4, 'a different number of weeks');
+    say(weeks.flat().every((c) => c.level === 0 && c.hours === null), 'an empty log gives an empty grid');
+  }
+
+  // ---- the page itself, with a made-up file and made-up saved entries ----
+  // What this browser had saved is put back at the end.
+  {
+    const KEYS = ['studylog:owner', 'studylog:local'];
+    const before = KEYS.map((k) => localStorage.getItem(k));
+    const realFetch = window.fetch;
+    const html = await realFetch('/study-log/index.html', { cache: 'no-store' }).then((r) => r.text());
+    const source = new DOMParser().parseFromString(html, 'text/html').querySelector('main');
+    const today = londonToday();
+    const ago = (n) => dayString(dayNumber(today) - n);
+
+    async function page({ body, owner, local }) {
+      const main = document.importNode(source, true);
+      main.style.display = 'none';
+      document.body.append(main);
+      if (owner) localStorage.setItem(KEYS[0], '1'); else localStorage.removeItem(KEYS[0]);
+      localStorage.setItem(KEYS[1], JSON.stringify(local));
+      window.fetch = () => Promise.resolve(new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } }));
+      const app = initStudyLog(main);
+      window.fetch = realFetch;
+      for (let i = 0; i < 80 && main.querySelector('[data-sl-body]').hidden; i++) await new Promise((r) => setTimeout(r, 50));
+      const text = (name) => main.querySelector(`[data-sl-${name}]`).textContent;
+      const got = { line: text('line'), banner: text('banner'), bannerHidden: main.querySelector('[data-sl-banner]').hidden, total: text('total'), units: [text('current-unit'), text('longest-unit')], overlay: text('overlay'), live: main.querySelector('[data-sl-status]').hasAttribute('data-sl-live') };
+      app.destroy();
+      main.remove();
+      return got;
+    }
+
+    const broken = await page({ body: '{"target_hours":6,"entries":[,]}', owner: true, local: [E(ago(5), 6, 1)] });
+    eq([broken.line, broken.bannerHidden, broken.banner], ['The data file could not be read. Showing only what this browser saved.', true, ''], 'a file that cannot be read is said so, with no banner, even when this browser has entries');
+    eq(broken.live, true, 'the waiting line is marked as live');
+
+    const fine = await page({ body: JSON.stringify({ target_hours: 6, entries: [E(ago(5), 6, 1)] }), owner: true, local: [] });
+    eq([fine.bannerHidden, fine.banner], [false, 'STREAK BROKEN. Days missed: 4. Total hours lost: 24.'], 'the banner still shows when the file loads');
+
+    const stale = await page({ body: JSON.stringify({ target_hours: 6, entries: [E(today, 6, 2)] }), owner: true, local: [E(today, 2, 2)] });
+    eq([stale.total, stale.units], ['6', ['day', 'day']], "the owner's view shows the file's value for a date the file has, and says 1 day");
+    say(stale.overlay.includes('different entry'), 'the overlay note says the file differs');
+
+    const visitor = await page({ body: '{"target_hours":6,"entries":[,]}', owner: false, local: [E(ago(5), 6, 1)] });
+    eq([visitor.line, visitor.bannerHidden], ['The log could not be loaded. Please try again later.', true], 'a visitor is told the log could not be loaded');
+
+    KEYS.forEach((k, i) => (before[i] === null ? localStorage.removeItem(k) : localStorage.setItem(k, before[i])));
+  }
+
+  log.insertAdjacentHTML('beforeend', `<span class="${fail ? 'bad' : 'ok'}">${pass} passed, ${fail} failed</span>\n`);
+  document.title = fail ? `FAILED ${fail}` : `ok ${pass}`;
+</script>
+</body>
+</html>

@@ -30,6 +30,8 @@ When the fighting came closer we were told to leave. So we left.
 At Acumen: full foundation year in five months while learning to speak English; began English in February, finished the year by July with A*s in Maths and Computer Science.
 Arrived London 2024 speaking English I had owned for less than a year. Now: AWS Student Builder leader, ICPC this October.
 Aiming at a master's in Mathematics and Computational Finance at Oxford. I build things that last — because I know what it feels like when things don't.
+Last slide, exact words from Ricky (2026-09-22, replacing the 2026-09-20 text): "Oxford is next. A master's in Mathematics and Computational Finance. I have started from zero before and it worked. It will work again."
+Story backgrounds (2026-09-21): Ricky supplied one dusk photograph of Taung Kwe pagoda in Loikaw as the base picture for the four Loikaw slides. It is stored with all metadata removed. Ricky (2026-09-22): not his own photo, but free-licensed and usable; a credit line goes in the footer if the source asks for one. Asked for the source and licence so a credit line could be written, Ricky said "Forget about it" (2026-09-22): no credit line. Press-and-hold shows its real colours on slide 1 only (2026-09-22).
 
 [play]
 # Not from Ricky's fact sheet: each line here was checked first-hand on 2026-09-19.
@@ -42,6 +44,9 @@ It is tested against the original on 104 positions: same move, same score, same 
 The engine's code and its write-up are on GitHub. The Play page needs JavaScript and WebAssembly; nothing is sent to a server.
 # From assets/js/play.js (LEVELS):
 There are three strength settings. Gentle stops after 2 half-moves, Club after 5, Full strength thinks for about one second.
+
+Home page, plate 01 (2026-09-21): the small board replays the first game in engine-port/tests/golden_games.json: the original Ransom engine playing both sides from the starting position, 80 moves at depth 6, with the engine's own score for each move. Home plate 02 shows lines 15 to 25 of linear_regression.py from Ricky's public machine-learning repository.
+Home plate 03 (Ricky, 2026-09-22): an app window naming Explain It!, text only (its name and the Projects card's one line), until he sends a screenshot.
 
 [projects]
 # From Ricky's fact sheet (2026-09-19), with his later corrections:
@@ -57,7 +62,17 @@ Ricky on explain-it-app (2026-09-19): "AI guided me when I'm stuck and don't wan
 Ricky on Luffa Passport (2026-09-19): AI London hackathon at Encode; entirely AI assisted.
 Ricky on Pandora Unmapped (2026-09-19): one of MIT Hack-nation's themed challenges; the whole development was entirely AI assisted.
 Ricky on the machine-learning repository (2026-09-20): "that's my proudest work because I actually tried to code it myself, although those algorithms are small ones." No AI: he coded these himself.
+# Ricky's whitelist for the big numbers on project cards (2026-09-20 and 2026-09-21). New stat rows may use only these, or numbers checked first-hand in a repository:
+Chess: finalist out of 450–500 teams (UK and global); qualified for the finals ranked 30th; 7 wins, 4 draws, 2 losses; went out in the last 32 (Last 32); worked alone. Wording approved by Ricky: "pure Python source, no compiled files submitted."
+OPOM: core website team of 12; 300+ participants; Java, PostgreSQL.
+Nemo: live at nemoapp.xyz; about 5 active users currently (the developers and their family); ongoing; C# .NET, PostgreSQL, self-written Backend-for-Frontend among other components.
+HTTP server: all tests passed.
+Pandora Unmapped was removed from the site on Ricky's instruction (2026-09-20). The Gemini chatbot is not on the site at all (2026-09-21).
+AI meter on each card: none, assisted or vibecoded. Ricky confirmed on 2026-09-22: Ransom assisted, Explain It! assisted (his earlier word "vibecoded" for it was wrong), Luffa Passport vibecoded, calculator none ("AI helped me only with hosting/deployment, not with the code itself").
+Status badges: Finalist (Ransom), Complete (web server), In progress (git), Live (Nemo, One Project One Month and the calculator: each address answered on 2026-09-21), Hackathon demo (Luffa Passport). Machine learning and Explain It! were first left without a badge under Ricky's rule (2026-09-22: Live only with a public address, Complete only if the code looks finished, In progress only if obviously mid-way, otherwise no badge and ask him). Ricky (2026-09-22): "They are finished." Both cards show Complete. He plans to add more machine-learning algorithms written from scratch (a random forest regressor and more), so that repository will grow.
 # Checked first-hand in the repositories on 2026-09-19 and 2026-09-20 (one reader and one sceptic per repository):
+Calculator (calculator-app), read first-hand on 2026-09-20: plain HTML, CSS and JavaScript. Files: index.html, script.js (17 lines of JavaScript, as GitHub counts them) and style.css, with 0 outside libraries (no dependencies) and no tests. Keys: digits, a decimal point, plus, minus, times, divide, AC and equals. The sum is handed to JavaScript's eval(), the language's built-in way to work out a sum written as text. A Dockerfile serves it with nginx; two GitHub Pages workflows publish it. 4 commits, all on 28 August 2025 (Aug 2025). Live at https://ricky-kyaw.github.io/calculator-app/ and the code is at https://github.com/ricky-kyaw/calculator-app
+git card numbers: 5 commands written (cat-file, hash-object, ls-tree, write-tree, commit-tree) and 1 more begun (clone). Web server card numbers: 0 web libraries, 1 thread per connection. Machine learning card numbers: 2 algorithms; 2.000, 1.000 for the line y = 2x + 1. Nemo: 3 people have written code for it.
 Machine learning (machine-learning): two small Python files using numpy, linear_regression.py and LogisticRegression.py, committed on 21 and 22 May 2026 (May 2026); Ricky is the only author. Both learn by gradient descent with one weight and one offset, so each handles a single input number. Linear regression: run on 2026-09-20, given points on the line y = 2x + 1 it prints 2.000000005 and 0.99999998, that is 2.000 and 1.000. Logistic regression uses the sigmoid function and sorts numbers into two groups, splitting at a probability of 0.5 (checked on 2026-09-20: it classifies all 8 of its built-in training points correctly). No plots yet (the last commit message says plots are still needed).
 Ransom (optiver-chessathon-engine README): Optiver AI Chessathon, September 2026 (Sep 2026). Qualified for the finals ranked 30th (7W 4D 2L: 7 wins, 4 draws, 2 losses), then went out in the last 32. Native binaries (compiled programs) were rejected, so the engine is pure Python with numba. Training data: 106,814,205 positions. The trainer uses PyTorch. README: "built during the competition with Claude Code".
 HTTP server (http-server-python): Python standard library only (socket, threading, gzip), no web library. Routes: echo with gzip when the client accepts it, User-Agent, serving and saving files in a chosen folder, persistent connections, one thread per connection. Binds to localhost only. A malformed request gets no reply. CodeCrafters "Build your own HTTP server" challenge. Commits from 30 July to 9 August 2025 (Jul–Aug 2025).
@@ -78,6 +93,9 @@ The Resume page can be printed, or saved as a PDF, from the page itself.
 # Ricky asked for this credit on 2026-09-19: "Add Chris Tate and node that leads to original creation."
 The voxel scenes are inspired by Chris Tate's Next.js Conf 2024 scene.
 
+[study-log]
+Study Log page rules from Ricky (2026-09-20 and 2026-09-21): a record of hours preparing for a master's in Mathematics and Computational Finance. Target 6 hours a day. Hours per day from 0 to 12 in steps of 0.5. Phase 1, Phase 2, Phase 3, Phase 4 (no names given yet). Heatmap of the last 39 weeks: none, under 4 h, 4 h or more. One square is one day. Weeks run from Monday at the top to Sunday. The last 14 days are listed for screen readers, newest first. Days follow London time (Europe/London); today stays open until midnight. Hours lost = 6 × days missed. The banner "STREAK BROKEN. Days missed: X. Total hours lost: Y." shows only in Ricky's private view; visitors get calm wording. data/study-log.json starts empty and only Ricky adds entries. Linked from Home and the footer, not from the top menu.
+
 [links]
 https://rickydx.dev
 https://github.com/ricky-kyaw
@@ -88,7 +106,8 @@ https://github.com/ricky-kyaw/http-server-python
 https://github.com/ricky-kyaw/codecrafters-git-python
 https://github.com/ricky-kyaw/explain-it-app
 https://github.com/ricky-kyaw/EncHack-15
-https://github.com/ricky-kyaw/PandoraBox
 https://www.one-project-one-month.com
 https://nemoapp.xyz
 https://github.com/ricky-kyaw/machine-learning
+https://github.com/ricky-kyaw/calculator-app
+https://ricky-kyaw.github.io/calculator-app/
